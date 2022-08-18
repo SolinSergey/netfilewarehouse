@@ -25,6 +25,7 @@ public class NetFileWarehouse extends Application {
         Scene scene = new Scene(fxmlLoader.load(), 1280, 960);
         stage.setTitle("Hello!");
         stage.setScene(scene);
+        NetFileWarehouseController.mainStage=stage;
         stage.show();
     }
 

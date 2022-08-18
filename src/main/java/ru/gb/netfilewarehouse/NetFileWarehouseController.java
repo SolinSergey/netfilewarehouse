@@ -17,12 +17,12 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class NetFileWarehouseController implements Initializable {
-
+    public static Stage mainStage;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         System.out.println("in Init");
-       // showAuthDialog(mainStage);
+        showAuthDialog(mainStage);
 
     }
 
