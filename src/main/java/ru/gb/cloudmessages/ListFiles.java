@@ -1,2 +1,23 @@
-package ru.gb.cloudmessages;public class ListFiles {
+package ru.gb.cloudmessages;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+public class ListFiles implements CloudMessage{
+
+    private final List<String> files;
+
+    public ListFiles(Path path) throws IOException {
+        files = Files.list(path)
+                .map(p -> p.getFileName().toString())
+                .collect(Collectors.toList());
+    }
+
+    public List<String> getFiles() {
+        return files;
+    }
 }

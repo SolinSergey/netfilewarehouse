@@ -1,13 +1,17 @@
-package ru.gb.netfilewarehouse;
+package ru.gb.cloudmessages;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class FileInfo {
+    private String filename;
+    private FileType type;
+    private long size;
     public enum FileType {
         FILE("F"), DIRECTORY("D");
         private String name;
+
 
         FileType(String name) {
             this.name = name;
@@ -19,10 +23,6 @@ public class FileInfo {
 
 
     }
-
-    private String filename;
-    private FileType type;
-    private long size;
 
     public String getFilename() {
         return filename;

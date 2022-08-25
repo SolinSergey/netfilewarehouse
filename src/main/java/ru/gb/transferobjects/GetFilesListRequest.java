@@ -1,7 +1,14 @@
 package ru.gb.transferobjects;
 
-public class GetListFliesRequest extends BasicRequest {
-    public GetListFliesRequest(String token) {
+public class GetFilesListRequest extends BasicRequest {
+    private final String path;
+
+    public String getPath() {
+        return path;
+    }
+
+    public GetFilesListRequest(String token, String path) {
         super(token);
+        this.path = path;
     }
 }
