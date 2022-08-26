@@ -25,9 +25,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
       if (msg instanceof ListFiles listFiles){
           listFiles = (ListFiles) msg;
           System.out.println(listFiles.getFiles().toString());
-          System.out.println(NetFileWarehouseController.getInstance());
-          //NetFileWarehouseController.getInstance().initLocalPanel();
-          NetFileWarehouseController.getInstance().serverListView.getItems().addAll("1","2","3");
+          ObjectRegistry.getInstance(NetFileWarehouseController.class).serverListView.getItems().addAll(listFiles.getFiles());
 
       }
     }

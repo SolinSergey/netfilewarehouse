@@ -43,10 +43,8 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 public class NetFileWarehouseController implements Initializable {
-    private static final NetFileWarehouseController INSTANCE = new NetFileWarehouseController();
-    public static NetFileWarehouseController getInstance(){
-        return INSTANCE;
-    }
+
+
     private static final int MAX_SIZE_OBJECT = 1_000_000_000;
     public static Stage mainStage;
     @FXML
@@ -63,12 +61,8 @@ public class NetFileWarehouseController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        try {
-            initNetClient();
+        ObjectRegistry.reg(this.getClass(),this);
 
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
         System.out.println("in Init");
 
         //showAuthDialog(mainStage);
@@ -85,11 +79,11 @@ public class NetFileWarehouseController implements Initializable {
         //    throw new RuntimeException(e);
         //}
 
-        disksBox.getItems().clear();
-        for (Path p: FileSystems.getDefault().getRootDirectories()){
-            disksBox.getItems().add(p.toString());
-        }
-        disksBox.getSelectionModel().select(0);
+        //disksBox.getItems().clear();
+        //for (Path p: FileSystems.getDefault().getRootDirectories()){
+        //    disksBox.getItems().add(p.toString());
+        //}
+        //disksBox.getSelectionModel().select(0);
 
         //updateList(Paths.get("."));
 
@@ -251,39 +245,9 @@ public class NetFileWarehouseController implements Initializable {
 
     public void clickbtnLocalToCloudCopy(MouseEvent mouseEvent) {
         System.out.println("Копировать в облако");
-        GetFilesListRequest getFilesListRequest = new GetFilesListRequest("Bogdan:1234", "/");
-        channel.writeAndFlush(getFilesListRequest);
+        //GetFilesListRequest getFilesListRequest = new GetFilesListRequest("Bogdan:1234", "/");
+        //channel.writeAndFlush(getFilesListRequest);
 
     }
 
-    public void initNetClient() throws InterruptedException {
-
-        EventLoopGroup eventLoopGroup = new NioEventLoopGroup();
-        Bootstrap bootstrap = new Bootstrap();
-        bootstrap.group(eventLoopGroup)
-                .channel(NioSocketChannel.class)
-                .remoteAddress("localhost", 8189)
-                .handler(new ChannelInitializer<SocketChannel>() {
-
-                    @Override
-                    protected void initChannel(SocketChannel socketChannel) throws Exception {
-                        socketChannel.pipeline().addLast(
-                                new ObjectDecoder(MAX_SIZE_OBJECT, ClassResolvers.cacheDisabled(null)),
-                                new ObjectEncoder(),
-                                new ClientHandler()
-                        );
-                    }
-                });
-        try {
-            ChannelFuture channelFuture = bootstrap.connect().sync();
-            channel = channelFuture.channel();
-            buffer = channel.alloc().buffer();
-            //channelFuture.channel().closeFuture().sync();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
-
-
-    }
 }
