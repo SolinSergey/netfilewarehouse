@@ -9,4 +9,6 @@ module ru.gb.netfilewarehouse {
     exports ru.gb.netfilewarehouse;
     exports ru.gb.cloudmessages;
     opens ru.gb.cloudmessages to javafx.fxml;
+    exports ru.gb.hlam;
+    opens ru.gb.hlam to javafx.fxml;
 }

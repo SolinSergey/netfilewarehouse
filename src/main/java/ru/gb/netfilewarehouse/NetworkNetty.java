@@ -11,12 +11,18 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
+import ru.gb.cloudmessages.UploadFileRequest;
+import ru.gb.service.UploadFileService;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 
 public class NetworkNetty {
+    public static final String TOKEN = "Bogdan:1234";
 
-    public static final int MAX_OBJECT_SIZE = 20 * 1_000_000;
+    public static final int MAX_OBJECT_SIZE = 300 * 1_000_000;
 
     private final Channel clientChannel;
 
@@ -39,5 +45,13 @@ public class NetworkNetty {
 
         ChannelFuture channelFuture = bootstrap.connect();
         this.clientChannel = channelFuture.channel();
+    }
+
+    public Channel getClientChannel() {
+        return clientChannel;
+    }
+
+    public void uploadFile(UploadFileRequest uploadFileRequest) {
+        clientChannel.writeAndFlush(uploadFileRequest);
     }
 }

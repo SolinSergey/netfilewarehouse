@@ -1,21 +1,7 @@
 package ru.gb.netfilewarehouse;
 
-import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
-import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.serialization.ClassResolvers;
-import io.netty.handler.codec.serialization.ObjectDecoder;
-import io.netty.handler.codec.serialization.ObjectEncoder;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -28,28 +14,26 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import ru.gb.cloudmessages.FileInfo;
-import ru.gb.cloudmessages.ListFiles;
-import ru.gb.transferobjects.GetFilesListRequest;
+import ru.gb.cloudmessages.GetFilesListRequest;
+import ru.gb.cloudmessages.UploadFileRequest;
+import ru.gb.hlam.FileInfo;
+import ru.gb.hlam.ListFiles;
+import ru.gb.service.UploadFileService;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.*;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
+
+import static ru.gb.netfilewarehouse.NetworkNetty.TOKEN;
 
 public class NetFileWarehouseController implements Initializable {
 
 
     private static final int MAX_SIZE_OBJECT = 1_000_000_000;
     public static Stage mainStage;
-    @FXML
-    public TableView<FileInfo> filesTableLocal;
-    public TableView <FileInfo> filesTableServer;
     public ComboBox disksBox;
     public TextField pathField;
     public Button btnLocalToCloudCopy;
@@ -98,74 +82,32 @@ public class NetFileWarehouseController implements Initializable {
         System.out.println(files);
 
     }
-    public void initServerPanel(List<String> files){
 
-        //serverListView.getItems().clear();
-        //serverListView.getItems().addAll(files);
-        //serverListView.getItems().sorted();
-
-    }
     public void initLocalPanel() throws IOException {
-        Path path=Paths.get(".//test");
+        Path path=Paths.get(System.getProperty("user.dir")+"//test");
         List<String> files;
         files = Files.list(path)
                 .map(p -> p.getFileName().toString())
                 .collect(Collectors.toList());
+        updateLocalList(files);
 
+    }
+    public void updateServerList(List listFiles){
+        serverListView.getItems().clear();
+        System.out.println(listFiles.toString());
+        serverListView.getItems().addAll(listFiles);
+        //serverListView.getItems().sorted();
+    }
+
+
+    public void updateLocalList (List files){
         localListView.getItems().clear();
         localListView.getItems().addAll(files);
         localListView.getItems().sorted();
 
+        //Alert alert = new Alert(Alert.AlertType.WARNING,"Не удалось обновить список файлов",ButtonType.OK);
+        //alert.showAndWait();
 
-
-
-        //localListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-
-
-      /*  TableColumn<FileInfo,String> fileTypeColumn = new TableColumn<>();
-        fileTypeColumn.setCellValueFactory(param->new SimpleStringProperty(param.getValue().getType().getName()));
-        fileTypeColumn.setPrefWidth(20);
-
-        TableColumn<FileInfo,String> filenameColumn = new TableColumn<>("Имя");
-        filenameColumn.setCellValueFactory(param->new SimpleStringProperty(param.getValue().getFilename()));
-        filenameColumn.setPrefWidth(267);
-        filenameColumn.setResizable(false);
-
-        TableColumn<FileInfo,Long> fileSizeColumn=new TableColumn<>("Размер");
-        fileSizeColumn.setCellValueFactory(param->new SimpleObjectProperty<>(param.getValue().getSize()));
-        fileSizeColumn.setPrefWidth(141);
-        fileSizeColumn.setCellFactory(column->{
-            return new TableCell<FileInfo,Long>(){
-                @Override
-                protected void updateItem(Long item,boolean empty){
-                    if (item==null||empty){
-                        setText(null);
-                        setStyle("");
-                    } else {
-                        String text=String.format("%,d bytes",item);
-                        if (item==-1L){
-                            text="[DIR]";
-                        }
-                        setText(text);
-                    }
-                }
-            };
-        });
-
-        filesTableLocal.getColumns().addAll(fileTypeColumn,filenameColumn,fileSizeColumn);
-        filesTableLocal.getSortOrder().add(fileTypeColumn);
-        filesTableLocal.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);*/
-    }
-    public void updateList (Path path){
-        try {
-            pathField.setText(path.normalize().toAbsolutePath().toString());
-            filesTableLocal.getItems().clear();
-            filesTableLocal.getItems().addAll(Files.list(path).map(FileInfo::new).collect(Collectors.toList()));
-            filesTableLocal.sort();
-        } catch (IOException e) {
-            Alert alert = new Alert(Alert.AlertType.WARNING,"Не удалось обновить список файлов",ButtonType.OK);
-            alert.showAndWait();
-        }
 
     }
     public void showAuthDialog(Stage stage) {
@@ -213,30 +155,19 @@ public class NetFileWarehouseController implements Initializable {
     public void btnPathUpAction(ActionEvent actionEvent) {
        Path upperPath =Paths.get(pathField.getText()).getParent();
        if (upperPath!=null){
-           updateList(upperPath);
+           //updateList(upperPath);
        }
     }
 
     public void selectDiskAction(ActionEvent actionEvent) {
         ComboBox <String> element = (ComboBox<String>) actionEvent.getSource();
-        updateList(Paths.get(element.getSelectionModel().getSelectedItem()));
+        //updateList(Paths.get(element.getSelectionModel().getSelectedItem()));
     }
 
     public void onMouseClicked(MouseEvent mouseEvent) {
-        if (mouseEvent.getClickCount()==2){
-            Path path=Paths.get(pathField.getText()).resolve(filesTableLocal.getSelectionModel().getSelectedItem().getFilename());
-            if (Files.isDirectory(path)){
-                updateList(path);
-            }
-        }
+
     }
 
-    public String getSelectedFilename(){
-        if (!filesTableLocal.isFocused()){
-            return null;
-        }
-        return filesTableLocal.getSelectionModel().getSelectedItem().getFilename();
-    }
 
     public String getCurrentPath(){
         return pathField.getText();
@@ -245,7 +176,13 @@ public class NetFileWarehouseController implements Initializable {
 
     public void clickbtnLocalToCloudCopy(MouseEvent mouseEvent) {
         System.out.println("Копировать в облако");
-        //GetFilesListRequest getFilesListRequest = new GetFilesListRequest("Bogdan:1234", "/");
+        String selectFile;
+        selectFile = localListView.getSelectionModel().getSelectedItem().toString();
+        System.out.println(selectFile);
+        UploadFileService uploadFileService;
+        uploadFileService = ObjectRegistry.getInstance(UploadFileService.class);
+        uploadFileService.uploadFile(selectFile);
+        GetFilesListRequest getFilesListRequest = new GetFilesListRequest(TOKEN,"");
         //channel.writeAndFlush(getFilesListRequest);
 
     }
