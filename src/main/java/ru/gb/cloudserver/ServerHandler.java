@@ -18,8 +18,9 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ServerHandler extends ChannelInboundHandlerAdapter {
 
+public class ServerHandler extends ChannelInboundHandlerAdapter {
+    private static final String SERVER_PATH = System.getProperty("user.dir");
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws IOException {
         System.out.println(ctx.channel().remoteAddress());
@@ -48,7 +49,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
     }
 
     public List<String> getList() throws IOException {
-        Path path= Paths.get("/");
+        Path path= Paths.get(SERVER_PATH+"//test2//");
         List<String> files;
         files = Files.list(path)
                 .map(p -> p.getFileName().toString())

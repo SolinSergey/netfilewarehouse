@@ -23,23 +23,21 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         BasicResponse response = (BasicResponse) msg;
         NetFileWarehouseController netFileWarehouseController = ObjectRegistry.getInstance(NetFileWarehouseController.class);
-        if (response instanceof GetFilesListResponse) {
-            GetFilesListResponse getFilesListResponse = (GetFilesListResponse) response;
-            netFileWarehouseController.updateServerList(getFilesListResponse.getList());
+        if (response instanceof GetFilesListResponse getFilesListResponse) {
+            Platform.runLater(()->{
+                netFileWarehouseController.updateServerList(getFilesListResponse.getList());
+            });
+
         } else if (response instanceof UploadFileResponse) {
             String message = response.getErrorMessage();
             System.out.println(message);
-           //if (message.equals("OK")) {
-               //GetFilesListRequest getFilesListRequest = new GetFilesListRequest(TOKEN, "");
-                //ctx.writeAndFlush(getFilesListRequest);
+            if (message.equals("OK")) {
+                GetFilesListRequest getFilesListRequest = new GetFilesListRequest(TOKEN, "");
+                ctx.writeAndFlush(getFilesListRequest);
             } else {
                 System.out.println(response.getErrorMessage());
             }
         }
-
-    @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        cause.printStackTrace();
     }
 }
 

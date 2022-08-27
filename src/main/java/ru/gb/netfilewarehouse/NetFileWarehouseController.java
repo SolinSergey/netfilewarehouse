@@ -92,7 +92,7 @@ public class NetFileWarehouseController implements Initializable {
         updateLocalList(files);
 
     }
-    public void updateServerList(List listFiles){
+    public void updateServerList(List <String> listFiles){
         serverListView.getItems().clear();
         System.out.println(listFiles.toString());
         serverListView.getItems().addAll(listFiles);
