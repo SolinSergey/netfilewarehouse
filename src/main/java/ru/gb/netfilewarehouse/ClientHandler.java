@@ -3,12 +3,12 @@ package ru.gb.netfilewarehouse;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import javafx.application.Platform;
-import ru.gb.cloudmessages.GetFilesListRequest;
+import ru.gb.cloudmessages.*;
 import ru.gb.netfilewarehouse.ObjectRegistry;
 import ru.gb.netfilewarehouse.NetFileWarehouseController;
-import ru.gb.cloudmessages.BasicResponse;
-import ru.gb.cloudmessages.GetFilesListResponse;
-import ru.gb.cloudmessages.UploadFileResponse;
+import ru.gb.service.DownloadFileService;
+
+import java.io.IOException;
 
 import static ru.gb.netfilewarehouse.NetworkNetty.TOKEN;
 
@@ -28,15 +28,32 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
                 netFileWarehouseController.updateServerList(getFilesListResponse.getList());
             });
 
-        } else if (response instanceof UploadFileResponse) {
+        }
+        if (response instanceof UploadFileResponse) {
             String message = response.getErrorMessage();
             System.out.println(message);
             if (message.equals("OK")) {
                 GetFilesListRequest getFilesListRequest = new GetFilesListRequest(TOKEN, "");
                 ctx.writeAndFlush(getFilesListRequest);
-            } else {
+            }
+            else {
                 System.out.println(response.getErrorMessage());
             }
+        }
+
+        if (response instanceof DownloadFileResponse){
+            System.out.println("Пришел DownloadFileResponse");
+            System.out.println("Поступил объект с файлом: " + ((DownloadFileResponse) response).getFileName());
+            DownloadFileService downloadFileService;
+            downloadFileService = ObjectRegistry.getInstance(DownloadFileService.class);
+            downloadFileService.saveDownloadFile((DownloadFileResponse) response);
+            Platform.runLater(()->{
+                try {
+                    netFileWarehouseController.updateLocalList(netFileWarehouseController.getList());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
         }
     }
 }

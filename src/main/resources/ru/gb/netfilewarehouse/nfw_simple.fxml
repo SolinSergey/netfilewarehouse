@@ -28,7 +28,7 @@
             <Font size="14.0" />
          </font>
       </Button>
-      <Button contentDisplay="CENTER" focusTraversable="false" layoutX="558.0" layoutY="359.0" mnemonicParsing="false" prefHeight="94.0" prefWidth="171.0" text="Скопировать из облака" textOverrun="CLIP">
+      <Button onMouseClicked="#clickbtnCloudToLocalCopy" contentDisplay="CENTER" focusTraversable="false" layoutX="558.0" layoutY="359.0" mnemonicParsing="false" prefHeight="94.0" prefWidth="171.0" text="Скопировать из облака" textOverrun="CLIP">
          <font>
             <Font size="14.0" />
          </font>

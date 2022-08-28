@@ -11,6 +11,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
+import ru.gb.cloudmessages.DownloadFileRequest;
 import ru.gb.cloudmessages.UploadFileRequest;
 import ru.gb.service.UploadFileService;
 
@@ -53,5 +54,10 @@ public class NetworkNetty {
 
     public void uploadFile(UploadFileRequest uploadFileRequest) {
         clientChannel.writeAndFlush(uploadFileRequest);
+    }
+
+    public void sendDownloadRequest(DownloadFileRequest downloadFileRequest) {
+        System.out.println("NettyNetwork.sendRequest    " + downloadFileRequest.getFileName());
+        clientChannel.writeAndFlush(downloadFileRequest);
     }
 }

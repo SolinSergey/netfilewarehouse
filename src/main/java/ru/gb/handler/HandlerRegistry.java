@@ -15,6 +15,7 @@ public class HandlerRegistry {
         handlerMap.put(GetFilesListRequest.class, new GetFilesListHandler());
         handlerMap.put(RegisterUserRequest.class, new RegisterUserHandler());
         handlerMap.put(UploadFileRequest.class, new UploadFileHandler());
+        handlerMap.put(DownloadFileRequest.class, new DownloadFileHandler());
 
         HANDLERS_MAP = Collections.unmodifiableMap(handlerMap);
     }

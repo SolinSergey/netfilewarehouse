@@ -18,6 +18,7 @@ import ru.gb.cloudmessages.GetFilesListRequest;
 import ru.gb.cloudmessages.UploadFileRequest;
 import ru.gb.hlam.FileInfo;
 import ru.gb.hlam.ListFiles;
+import ru.gb.service.DownloadFileService;
 import ru.gb.service.UploadFileService;
 
 import java.io.IOException;
@@ -53,7 +54,7 @@ public class NetFileWarehouseController implements Initializable {
         //initLocalPanel();
         //initServerPanel();
         try {
-            initLocalPanel();
+            updateLocalList(getList());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -73,23 +74,30 @@ public class NetFileWarehouseController implements Initializable {
 
 
     }
-    public void getList() throws IOException {
-        Path path=Paths.get("/");
-        List<String> files;
-        files = Files.list(path)
-                .map(p -> p.getFileName().toString())
-                .collect(Collectors.toList());
-        System.out.println(files);
+    public List<String> getList() throws IOException {
+        List<String> files = null;
+        try{
+            Path path=Paths.get(System.getProperty("user.dir")+"//test");
+            files = Files.list(path)
+                    .map(p -> p.getFileName().toString())
+                    .collect(Collectors.toList());
+
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        return files;
+        //System.out.println(files);
 
     }
 
     public void initLocalPanel() throws IOException {
-        Path path=Paths.get(System.getProperty("user.dir")+"//test");
         List<String> files;
-        files = Files.list(path)
-                .map(p -> p.getFileName().toString())
-                .collect(Collectors.toList());
-        updateLocalList(files);
+        files = getList();
+        //Path path=Paths.get(System.getProperty("user.dir")+"//test");
+        //files = Files.list(path)
+         //       .map(p -> p.getFileName().toString())
+         //       .collect(Collectors.toList());
+        //updateLocalList(files);
 
     }
     public void updateServerList(List <String> listFiles){
@@ -182,9 +190,18 @@ public class NetFileWarehouseController implements Initializable {
         UploadFileService uploadFileService;
         uploadFileService = ObjectRegistry.getInstance(UploadFileService.class);
         uploadFileService.uploadFile(selectFile);
-        GetFilesListRequest getFilesListRequest = new GetFilesListRequest(TOKEN,"");
+        //GetFilesListRequest getFilesListRequest = new GetFilesListRequest(TOKEN,"");
         //channel.writeAndFlush(getFilesListRequest);
 
     }
 
+    public void clickbtnCloudToLocalCopy(MouseEvent mouseEvent) {
+        System.out.println("Копировать из облака на локальный компьютер");
+        String selectFile;
+        selectFile = serverListView.getSelectionModel().getSelectedItem().toString();
+        System.out.println(selectFile);
+        DownloadFileService downloadFileService;
+        downloadFileService = ObjectRegistry.getInstance(DownloadFileService.class);
+        downloadFileService.sendRequest(selectFile);
+    }
 }

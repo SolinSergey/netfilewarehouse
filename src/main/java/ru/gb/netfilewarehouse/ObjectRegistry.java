@@ -1,6 +1,7 @@
 package ru.gb.netfilewarehouse;
 
 import ru.gb.service.AuthService;
+import ru.gb.service.DownloadFileService;
 import ru.gb.service.UploadFileService;
 
 import java.util.HashMap;
@@ -15,6 +16,9 @@ public class ObjectRegistry {
 
         UploadFileService uploadFileService = new UploadFileService();
         reg(UploadFileService.class, uploadFileService);
+
+        DownloadFileService downloadFileService = new DownloadFileService();
+        reg(DownloadFileService.class, downloadFileService);
 
         AuthService authService = new AuthService();
         reg(AuthService.class, authService);
