@@ -6,14 +6,16 @@ import javafx.application.Platform;
 import ru.gb.cloudmessages.*;
 import ru.gb.netfilewarehouse.ObjectRegistry;
 import ru.gb.netfilewarehouse.NetFileWarehouseController;
+import ru.gb.service.CryptService;
 import ru.gb.service.DownloadFileService;
 
 import java.io.IOException;
 
-import static ru.gb.netfilewarehouse.NetworkNetty.TOKEN;
+
 
 public class ClientHandler extends ChannelInboundHandlerAdapter {
 
+    private String userToken;
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         System.out.println(ctx.channel().remoteAddress());
@@ -21,6 +23,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
+        userToken = ObjectRegistry.getInstance(CryptService.class).getUserToken();
         BasicResponse response = (BasicResponse) msg;
         NetFileWarehouseController netFileWarehouseController = ObjectRegistry.getInstance(NetFileWarehouseController.class);
         if (response instanceof GetFilesListResponse getFilesListResponse) {
@@ -33,7 +36,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
             String message = response.getErrorMessage();
             System.out.println(message);
             if (message.equals("OK")) {
-                GetFilesListRequest getFilesListRequest = new GetFilesListRequest(TOKEN, "");
+                GetFilesListRequest getFilesListRequest = new GetFilesListRequest(userToken, "");
                 ctx.writeAndFlush(getFilesListRequest);
             }
             else {

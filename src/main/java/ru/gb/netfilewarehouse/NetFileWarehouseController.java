@@ -18,22 +18,27 @@ import ru.gb.cloudmessages.GetFilesListRequest;
 import ru.gb.cloudmessages.UploadFileRequest;
 import ru.gb.hlam.FileInfo;
 import ru.gb.hlam.ListFiles;
+import ru.gb.service.AuthService;
+import ru.gb.service.CryptService;
 import ru.gb.service.DownloadFileService;
 import ru.gb.service.UploadFileService;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.net.URL;
 import java.nio.file.*;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-import static ru.gb.netfilewarehouse.NetworkNetty.TOKEN;
 
 public class NetFileWarehouseController implements Initializable {
 
 
     private static final int MAX_SIZE_OBJECT = 1_000_000_000;
+    private String userToken;
     public static Stage mainStage;
     public ComboBox disksBox;
     public TextField pathField;
@@ -43,15 +48,24 @@ public class NetFileWarehouseController implements Initializable {
     public ListView <String> serverListView;
 
     ByteBuf buffer;
+    String userName;
+    String userPassword;
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        boolean isAuthentic=false;
+
         ObjectRegistry.reg(this.getClass(),this);
 
         System.out.println("in Init");
 
-        //showAuthDialog(mainStage);
-        //initLocalPanel();
+        do {
+            showAuthDialog(mainStage);
+
+
+        }while (!isAuthentic);
+
         //initServerPanel();
         try {
             updateLocalList(getList());
@@ -151,6 +165,14 @@ public class NetFileWarehouseController implements Initializable {
             public void handle(ActionEvent actionEvent) {
                 System.out.println(loginArea.getText());
                 System.out.println(passwordArea.getText());
+                userName = loginArea.getText();
+                userPassword = ObjectRegistry.getInstance(CryptService.class).getCryptString(passwordArea.getText());
+                ObjectRegistry.getInstance(CryptService.class).generateToken(loginArea.getText(),passwordArea.getText());
+                System.out.println("Сгенерирован токен пользователя: " + ObjectRegistry.getInstance(CryptService.class).getUserToken());
+                userToken=ObjectRegistry.getInstance(CryptService.class).getUserToken();
+
+                ObjectRegistry.getInstance(AuthService.class).sendAuthRequest(userName,userPassword);
+
                 dialogAuth.close();
             }
         });
@@ -159,6 +181,8 @@ public class NetFileWarehouseController implements Initializable {
 
         dialogAuth.showAndWait();
     }
+
+
 
     public void btnPathUpAction(ActionEvent actionEvent) {
        Path upperPath =Paths.get(pathField.getText()).getParent();

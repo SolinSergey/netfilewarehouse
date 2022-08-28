@@ -1,6 +1,7 @@
 package ru.gb.netfilewarehouse;
 
 import ru.gb.service.AuthService;
+import ru.gb.service.CryptService;
 import ru.gb.service.DownloadFileService;
 import ru.gb.service.UploadFileService;
 
@@ -22,6 +23,9 @@ public class ObjectRegistry {
 
         AuthService authService = new AuthService();
         reg(AuthService.class, authService);
+
+        CryptService cryptService = new CryptService();
+        reg(CryptService.class,cryptService);
     }
 
     public static void reg(Class<?> clazz,Object instance){

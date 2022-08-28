@@ -11,13 +11,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 
-import static ru.gb.netfilewarehouse.NetworkNetty.TOKEN;
 
 public class DownloadFileService {
-
+    String userToken;
     public void sendRequest(String filename){
+        userToken = ObjectRegistry.getInstance(CryptService.class).getUserToken();
         System.out.println("DownloadFileService.sendRequest    " + filename);
-        DownloadFileRequest downloadFileRequest=new DownloadFileRequest(TOKEN,filename);
+        DownloadFileRequest downloadFileRequest=new DownloadFileRequest(userToken,filename);
         NetworkNetty networkNetty= ObjectRegistry.getInstance(NetworkNetty.class);
         networkNetty.sendDownloadRequest(downloadFileRequest);
     }

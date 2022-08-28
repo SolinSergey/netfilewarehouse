@@ -18,7 +18,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-import static ru.gb.netfilewarehouse.NetworkNetty.TOKEN;
 
 public class DownloadFileHandler implements RequestHandler<DownloadFileRequest, DownloadFileResponse> {
 
@@ -35,7 +34,6 @@ public class DownloadFileHandler implements RequestHandler<DownloadFileRequest, 
         byte[] filePartData;
         try {
             filePartData = Files.readAllBytes(path);
-            System.out.println(Arrays.toString(filePartData));
             DownloadFileResponse downloadFileResponse = new DownloadFileResponse("",request.getAuthToken(),fileName,filePartData);
             System.out.println("DownloadFileResponse Отправлен: " + downloadFileResponse.toString());
             return downloadFileResponse;

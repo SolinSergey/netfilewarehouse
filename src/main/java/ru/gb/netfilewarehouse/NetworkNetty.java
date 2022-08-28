@@ -11,8 +11,10 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
+import ru.gb.cloudmessages.AuthRequest;
 import ru.gb.cloudmessages.DownloadFileRequest;
 import ru.gb.cloudmessages.UploadFileRequest;
+import ru.gb.service.CryptService;
 import ru.gb.service.UploadFileService;
 
 import java.io.File;
@@ -21,7 +23,6 @@ import java.nio.file.Paths;
 
 
 public class NetworkNetty {
-    public static final String TOKEN = "Bogdan:1234";
 
     public static final int MAX_OBJECT_SIZE = 300 * 1_000_000;
 
@@ -57,7 +58,12 @@ public class NetworkNetty {
     }
 
     public void sendDownloadRequest(DownloadFileRequest downloadFileRequest) {
-        System.out.println("NettyNetwork.sendRequest    " + downloadFileRequest.getFileName());
+        System.out.println("NettyNetwork.sendDownloadRequest    " + downloadFileRequest.getFileName());
         clientChannel.writeAndFlush(downloadFileRequest);
+    }
+
+    public void sendAuthRequest(AuthRequest authRequest){
+        System.out.println("NettyNetwork.sendAuthRequest    " + authRequest.getUsername() + " " + authRequest.getPassword());
+        clientChannel.writeAndFlush(authRequest);
     }
 }
