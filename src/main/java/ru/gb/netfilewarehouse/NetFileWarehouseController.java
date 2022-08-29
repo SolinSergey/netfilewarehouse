@@ -67,7 +67,7 @@ public class NetFileWarehouseController implements Initializable {
         }
 
         boolean isAuthorized=false;
-        boolean isGetAuthResponse;
+        boolean isGetAuthResponse=false;
         do {
             ObjectRegistry.getInstance(AuthService.class).showAuthDialog(mainStage);
             String userName=ObjectRegistry.getInstance(AuthService.class).getUserName();
@@ -83,7 +83,6 @@ public class NetFileWarehouseController implements Initializable {
             if (!token.equals("NotAutorized")) {
                 isAuthorized = true;
             }
-            else isAuthorized = false;
             System.out.println(isAuthorized);
             System.out.println(ObjectRegistry.getInstance(AuthService.class).getAuthToken());
         }while (!isAuthorized);

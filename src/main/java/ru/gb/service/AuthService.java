@@ -23,12 +23,13 @@ public class AuthService {
 
     private boolean isGetAuthResponse;
 
-    private String userName;
+    private String userName="";
 
-    private String userPassword;
+    private String userPassword="";
 
 
     public void sendAuthRequest(String userName, String userPassword){
+        isGetAuthResponse = false;
         AuthRequest authRequest = new AuthRequest(userName,userPassword);
         ObjectRegistry.getInstance(NetworkNetty.class).sendAuthRequest(authRequest);
     }
