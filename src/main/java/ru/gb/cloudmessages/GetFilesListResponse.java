@@ -12,7 +12,7 @@ public class GetFilesListResponse extends BasicResponse {
     }
 
     public GetFilesListResponse(String errorMessage, List<String> list) {
-        super(errorMessage);
+        super(errorMessage,null);
         this.list = list;
     }
 

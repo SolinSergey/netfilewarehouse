@@ -17,6 +17,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.sql.*;
+import java.sql.SQLException;
 
 
 public class ServerHandler extends ChannelInboundHandlerAdapter {
@@ -31,16 +33,25 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext channelHandlerContext, Object msg) throws IOException {
         BasicRequest request = (BasicRequest) msg;
-        AuthService authService = ObjectRegistry.getInstance(AuthService.class);
-        String authToken = request.getAuthToken();
-        if (!(request instanceof RegisterUserRequest) && !authService.auth(authToken)) {
-            BasicResponse authErrorResponse = new BasicResponse("Not authenticated!");
-            channelHandlerContext.writeAndFlush(authErrorResponse);
+        //AuthService authService = ObjectRegistry.getInstance(AuthService.class);
+        //String authToken;
+        //System.out.println(authService.auth("123"));
+        //if (!authService.auth(authToken)) {
+        //    BasicResponse authErrorResponse = new BasicResponse("Not authenticated!");
+        //    channelHandlerContext.writeAndFlush(authErrorResponse);
+        //}
+        if (request instanceof AuthRequest){
+            System.out.println("Пришел запрос на авторизацию: "+ ((AuthRequest) request).getUsername() + " " + ((AuthRequest) request).getPassword());
+            RequestHandler handler = HandlerRegistry.getHandler(request.getClass());
+            BasicResponse response = handler.handle(request, channelHandlerContext);
+            System.out.println("AuthResponse отправлен: " + response.getErrorMessage() + response.getAuthToken());
+            channelHandlerContext.writeAndFlush(response);
         }
-
-        RequestHandler handler = HandlerRegistry.getHandler(request.getClass());
-        BasicResponse response = handler.handle(request, channelHandlerContext);
-        channelHandlerContext.writeAndFlush(response);
+        else{
+            RequestHandler handler = HandlerRegistry.getHandler(request.getClass());
+            BasicResponse response = handler.handle(request, channelHandlerContext);
+            channelHandlerContext.writeAndFlush(response);
+        }
     }
 
     @Override

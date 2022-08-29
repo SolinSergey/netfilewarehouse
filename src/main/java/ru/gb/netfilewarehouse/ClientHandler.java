@@ -6,6 +6,7 @@ import javafx.application.Platform;
 import ru.gb.cloudmessages.*;
 import ru.gb.netfilewarehouse.ObjectRegistry;
 import ru.gb.netfilewarehouse.NetFileWarehouseController;
+import ru.gb.service.AuthService;
 import ru.gb.service.CryptService;
 import ru.gb.service.DownloadFileService;
 
@@ -16,6 +17,8 @@ import java.io.IOException;
 public class ClientHandler extends ChannelInboundHandlerAdapter {
 
     private String userToken;
+
+
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         System.out.println(ctx.channel().remoteAddress());
@@ -23,9 +26,24 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
-        userToken = ObjectRegistry.getInstance(CryptService.class).getUserToken();
+        //userToken = ObjectRegistry.getInstance(CryptService.class).getUserToken();
         BasicResponse response = (BasicResponse) msg;
         NetFileWarehouseController netFileWarehouseController = ObjectRegistry.getInstance(NetFileWarehouseController.class);
+
+        if (response instanceof AuthResponse){
+            System.out.println("AuthResponse получен");
+
+            if (!response.getAuthToken().equals("NotAutorized")){
+                System.out.println("authToken="+response.getAuthToken());
+                ObjectRegistry.getInstance(AuthService.class).setAuthToken(response.getAuthToken());
+            }
+            else{
+                System.out.println("Авторизация не выполнена");
+                ObjectRegistry.getInstance(AuthService.class).setAuthToken(response.getAuthToken());
+            }
+        }
+
+
         if (response instanceof GetFilesListResponse getFilesListResponse) {
             Platform.runLater(()->{
                 netFileWarehouseController.updateServerList(getFilesListResponse.getList());

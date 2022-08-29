@@ -29,6 +29,7 @@ import java.net.URL;
 import java.nio.file.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.*;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -48,44 +49,44 @@ public class NetFileWarehouseController implements Initializable {
     public ListView <String> serverListView;
 
     ByteBuf buffer;
-    String userName;
-    String userPassword;
+
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        ObjectRegistry.reg(this.getClass(),this);
         boolean isAuthentic=false;
 
-        ObjectRegistry.reg(this.getClass(),this);
 
         System.out.println("in Init");
 
-        do {
-            showAuthDialog(mainStage);
-
-
-        }while (!isAuthentic);
-
-        //initServerPanel();
         try {
             updateLocalList(getList());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        //try {
-        //    getList();
-        //} catch (IOException e) {
-        //    throw new RuntimeException(e);
-        //}
 
-        //disksBox.getItems().clear();
-        //for (Path p: FileSystems.getDefault().getRootDirectories()){
-        //    disksBox.getItems().add(p.toString());
-        //}
-        //disksBox.getSelectionModel().select(0);
+        boolean isAuthorized=false;
+        boolean isGetAuthResponse;
+        do {
+            ObjectRegistry.getInstance(AuthService.class).showAuthDialog(mainStage);
+            String userName=ObjectRegistry.getInstance(AuthService.class).getUserName();
+            String userPassword = ObjectRegistry.getInstance(AuthService.class).getUserPassword();
+            ObjectRegistry.getInstance(AuthService.class).sendAuthRequest(userName,userPassword);
+            do{
+                isGetAuthResponse=ObjectRegistry.getInstance(AuthService.class).isGetAuthResponse();
+            }while (!isGetAuthResponse);
 
-        //updateList(Paths.get("."));
+            String token = ObjectRegistry.getInstance(AuthService.class).getAuthToken();
+            System.out.println("Token****** " + token);
 
+            if (!token.equals("NotAutorized")) {
+                isAuthorized = true;
+            }
+            else isAuthorized = false;
+            System.out.println(isAuthorized);
+            System.out.println(ObjectRegistry.getInstance(AuthService.class).getAuthToken());
+        }while (!isAuthorized);
 
     }
     public List<String> getList() throws IOException {
@@ -132,55 +133,7 @@ public class NetFileWarehouseController implements Initializable {
 
 
     }
-    public void showAuthDialog(Stage stage) {
-        Stage dialogAuth = new Stage();
-        dialogAuth.setResizable(false);
-        GridPane pane = new GridPane();
-        pane.setPadding(new Insets(20));
-        pane.setHgap(100);
-        pane.setVgap(25);
-        //pane.setAlignment(Pos.CENTER);
-        Scene dialogScene = new Scene(pane,400,400);
-        dialogAuth.setScene(dialogScene);
-        dialogAuth.setTitle("Authorization");
-        dialogAuth.initOwner(stage);
-        dialogAuth.initModality(Modality.APPLICATION_MODAL);
 
-        Label label = new Label("Авторизуйтесь:");
-        GridPane.setHalignment(label, HPos.CENTER);
-        pane.add(label,1,0);
-
-        TextField loginArea = new TextField("Введите логин");
-        //loginArea.setPromptText("Введите логин");
-        pane.add(loginArea,1,2);
-
-        PasswordField passwordArea = new PasswordField();
-        passwordArea.setPromptText("Введите пароль");
-        pane.add(passwordArea,1,3);
-
-        Button okButton = new Button("OK");
-        okButton.setPrefSize(60,20);
-        okButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                System.out.println(loginArea.getText());
-                System.out.println(passwordArea.getText());
-                userName = loginArea.getText();
-                userPassword = ObjectRegistry.getInstance(CryptService.class).getCryptString(passwordArea.getText());
-                ObjectRegistry.getInstance(CryptService.class).generateToken(loginArea.getText(),passwordArea.getText());
-                System.out.println("Сгенерирован токен пользователя: " + ObjectRegistry.getInstance(CryptService.class).getUserToken());
-                userToken=ObjectRegistry.getInstance(CryptService.class).getUserToken();
-
-                ObjectRegistry.getInstance(AuthService.class).sendAuthRequest(userName,userPassword);
-
-                dialogAuth.close();
-            }
-        });
-        GridPane.setHalignment(okButton, HPos.CENTER);
-        pane.add(okButton,1,4);
-
-        dialogAuth.showAndWait();
-    }
 
 
 

@@ -3,15 +3,13 @@ package ru.gb.cloudmessages;
 public class DownloadFileResponse extends BasicResponse {
 
     private final String fileName;
-    private final String errorMessage;
 
     private final byte[] filePartData;
 
     public DownloadFileResponse(String errorMessage, String token, String fileName, byte[] filePartData) {
-        super(token);
+        super(errorMessage,token);
         this.fileName = fileName;
         this.filePartData = filePartData;
-        this.errorMessage=errorMessage;
         //this.isLast = isLast;
     }
 

@@ -18,6 +18,7 @@ public class HandlerRegistry {
         handlerMap.put(DownloadFileRequest.class, new DownloadFileHandler());
         handlerMap.put(AuthRequest.class, new AuthHandler());
 
+
         HANDLERS_MAP = Collections.unmodifiableMap(handlerMap);
     }
 
