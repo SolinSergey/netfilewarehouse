@@ -5,20 +5,13 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import ru.gb.cloudmessages.*;
 import ru.gb.handler.HandlerRegistry;
 import ru.gb.handler.RequestHandler;
-import ru.gb.netfilewarehouse.ObjectRegistry;
-import ru.gb.service.AuthService;
 import ru.gb.cloudmessages.BasicRequest;
-import ru.gb.handler.HandlerRegistry;
-import ru.gb.handler.RequestHandler;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.sql.*;
-import java.sql.SQLException;
 
 
 public class ServerHandler extends ChannelInboundHandlerAdapter {
@@ -33,13 +26,6 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext channelHandlerContext, Object msg) throws IOException {
         BasicRequest request = (BasicRequest) msg;
-        //AuthService authService = ObjectRegistry.getInstance(AuthService.class);
-        //String authToken;
-        //System.out.println(authService.auth("123"));
-        //if (!authService.auth(authToken)) {
-        //    BasicResponse authErrorResponse = new BasicResponse("Not authenticated!");
-        //    channelHandlerContext.writeAndFlush(authErrorResponse);
-        //}
         if (request instanceof AuthRequest){
             System.out.println("Пришел запрос на авторизацию: "+ ((AuthRequest) request).getUsername() + " " + ((AuthRequest) request).getPassword());
             RequestHandler handler = HandlerRegistry.getHandler(request.getClass());

@@ -3,9 +3,6 @@ package ru.gb.handler;
 import io.netty.channel.ChannelHandlerContext;
 import ru.gb.cloudmessages.GetFilesListRequest;
 import ru.gb.cloudmessages.GetFilesListResponse;
-import ru.gb.cloudmessages.GetFilesListRequest;
-import ru.gb.cloudmessages.GetFilesListResponse;
-
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;

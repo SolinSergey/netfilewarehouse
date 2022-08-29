@@ -1,6 +1,5 @@
 package ru.gb.handler;
 
-
 import io.netty.channel.ChannelHandlerContext;
 import ru.gb.cloudmessages.AuthRequest;
 import ru.gb.cloudmessages.AuthResponse;

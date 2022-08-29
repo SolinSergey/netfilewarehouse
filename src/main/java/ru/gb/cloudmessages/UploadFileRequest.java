@@ -9,12 +9,7 @@ public class UploadFileRequest extends BasicRequest {
         super(token);
         this.fileName = fileName;
         this.filePartData = filePartData;
-        //this.isLast = isLast;
     }
-
-   /* public boolean isLast() {
-        return isLast;
-    }*/
 
     public String getFileName() {
         return fileName;

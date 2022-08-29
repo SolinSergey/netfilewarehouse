@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
+
 
 
 public class DownloadFileService {
@@ -27,7 +27,6 @@ public class DownloadFileService {
         try {
             Path filePath = Paths.get(System.getProperty("user.dir")+"//test//"+response.getFileName());
             System.out.println("Путь сохранения: "+filePath.toString());
-            System.out.println(Arrays.toString(response.getFilePartData()));
             Files.write(filePath, response.getFilePartData());
         } catch (IOException e) {
             System.out.println("Невозможно сохранить файл");

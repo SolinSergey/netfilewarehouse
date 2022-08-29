@@ -16,18 +16,11 @@ import ru.gb.cloudmessages.AuthRequest;
 import ru.gb.netfilewarehouse.NetworkNetty;
 import ru.gb.netfilewarehouse.ObjectRegistry;
 
-import java.sql.*;
-
 public class AuthService {
     private String authToken;
-
     private boolean isGetAuthResponse;
-
     private String userName="";
-
     private String userPassword="";
-
-
     public void sendAuthRequest(String userName, String userPassword){
         isGetAuthResponse = false;
         AuthRequest authRequest = new AuthRequest(userName,userPassword);

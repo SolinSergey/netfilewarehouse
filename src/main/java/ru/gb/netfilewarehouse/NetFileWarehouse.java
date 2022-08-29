@@ -4,10 +4,8 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import ru.gb.service.AuthService;
 
 import java.io.IOException;
-
 public class NetFileWarehouse extends Application {
 
     @Override

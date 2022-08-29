@@ -1,14 +1,8 @@
 package ru.gb.handler;
 
 import io.netty.channel.ChannelHandlerContext;
-import ru.gb.cloudmessages.GetFilesListResponse;
 import ru.gb.cloudmessages.UploadFileRequest;
 import ru.gb.cloudmessages.UploadFileResponse;
-import ru.gb.netfilewarehouse.NetFileWarehouseController;
-import ru.gb.netfilewarehouse.ObjectRegistry;
-import ru.gb.service.UploadFileService;
-
-import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.file.Files;
@@ -29,15 +23,10 @@ public class UploadFileHandler implements RequestHandler<UploadFileRequest, Uplo
         String fileName = request.getFileName();
         byte[] filePartData = request.getFilePartData();
         try {
-            Path write = Files.write(Paths.get(SERVER_PATH + "//test2//" + fileName), filePartData);//+fileName),filePartData);
+            Path write = Files.write(Paths.get(SERVER_PATH + "//test2//" + fileName), filePartData);
         } catch (IOException ex) {
             return new UploadFileResponse("Не удалось сохранить файл на сервере");
         }
-
-        //List<String> list = getList();
-        //NetFileWarehouseController netFileWarehouseController;
-        //netFileWarehouseController = ObjectRegistry.getInstance(NetFileWarehouseController.class);
-        //netFileWarehouseController.updateServerList(list);
         return new UploadFileResponse("OK");
     }
 

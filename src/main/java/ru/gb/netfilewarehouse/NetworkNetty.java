@@ -14,13 +14,6 @@ import io.netty.handler.codec.serialization.ObjectEncoder;
 import ru.gb.cloudmessages.AuthRequest;
 import ru.gb.cloudmessages.DownloadFileRequest;
 import ru.gb.cloudmessages.UploadFileRequest;
-import ru.gb.service.CryptService;
-import ru.gb.service.UploadFileService;
-
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
 
 public class NetworkNetty {
 

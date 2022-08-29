@@ -1,35 +1,16 @@
 package ru.gb.netfilewarehouse;
 
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.HPos;
-import javafx.geometry.Insets;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import ru.gb.cloudmessages.GetFilesListRequest;
-import ru.gb.cloudmessages.UploadFileRequest;
-import ru.gb.hlam.FileInfo;
-import ru.gb.hlam.ListFiles;
 import ru.gb.service.AuthService;
-import ru.gb.service.CryptService;
 import ru.gb.service.DownloadFileService;
 import ru.gb.service.UploadFileService;
-
 import java.io.IOException;
-import java.math.BigInteger;
 import java.net.URL;
 import java.nio.file.*;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.sql.*;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -46,8 +27,6 @@ public class NetFileWarehouseController implements Initializable {
     public Channel channel;
     public ListView <String> localListView;
     public ListView <String> serverListView;
-
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ObjectRegistry.reg(this.getClass(),this);

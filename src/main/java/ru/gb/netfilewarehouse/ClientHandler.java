@@ -4,10 +4,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import javafx.application.Platform;
 import ru.gb.cloudmessages.*;
-import ru.gb.netfilewarehouse.ObjectRegistry;
-import ru.gb.netfilewarehouse.NetFileWarehouseController;
 import ru.gb.service.AuthService;
-import ru.gb.service.CryptService;
 import ru.gb.service.DownloadFileService;
 
 import java.io.IOException;
@@ -26,7 +23,6 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
-        //userToken = ObjectRegistry.getInstance(CryptService.class).getUserToken();
         BasicResponse response = (BasicResponse) msg;
         NetFileWarehouseController netFileWarehouseController = ObjectRegistry.getInstance(NetFileWarehouseController.class);
 
