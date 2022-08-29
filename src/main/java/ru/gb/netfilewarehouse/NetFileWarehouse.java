@@ -15,7 +15,7 @@ public class NetFileWarehouse extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(NetFileWarehouse.class.getResource("nfw_simple.fxml"));
 
         Scene scene = new Scene(fxmlLoader.load(), 1280, 960);
-        stage.setTitle("Hello!");
+        stage.setTitle("Моё облако");
         stage.setScene(scene);
         NetFileWarehouseController.mainStage=stage;
         stage.show();

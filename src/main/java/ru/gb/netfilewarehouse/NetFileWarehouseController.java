@@ -37,34 +37,22 @@ import java.util.stream.Collectors;
 
 public class NetFileWarehouseController implements Initializable {
 
+    public Label topLabel;
 
-    private static final int MAX_SIZE_OBJECT = 1_000_000_000;
     private String userToken;
     public static Stage mainStage;
-    public ComboBox disksBox;
-    public TextField pathField;
     public Button btnLocalToCloudCopy;
+
     public Channel channel;
     public ListView <String> localListView;
     public ListView <String> serverListView;
-
-    ByteBuf buffer;
-
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ObjectRegistry.reg(this.getClass(),this);
-        boolean isAuthentic=false;
-
 
         System.out.println("in Init");
-
-        try {
-            updateLocalList(getList());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
 
         boolean isAuthorized=false;
         boolean isGetAuthResponse=false;
@@ -87,7 +75,21 @@ public class NetFileWarehouseController implements Initializable {
             System.out.println(ObjectRegistry.getInstance(AuthService.class).getAuthToken());
         }while (!isAuthorized);
 
+        try {
+            updateLocalList(getList());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        setTextToTopLabel();
+
     }
+
+    public void setTextToTopLabel(){
+        String textForLabel="Вы авторизованы как пользователь: "+ ObjectRegistry.getInstance(AuthService.class).getUserName();
+        topLabel.setText(textForLabel);
+    }
+
     public List<String> getList() throws IOException {
         List<String> files = null;
         try{
@@ -100,25 +102,16 @@ public class NetFileWarehouseController implements Initializable {
             e.printStackTrace();
         }
         return files;
-        //System.out.println(files);
+
 
     }
 
-    public void initLocalPanel() throws IOException {
-        List<String> files;
-        files = getList();
-        //Path path=Paths.get(System.getProperty("user.dir")+"//test");
-        //files = Files.list(path)
-         //       .map(p -> p.getFileName().toString())
-         //       .collect(Collectors.toList());
-        //updateLocalList(files);
-
-    }
     public void updateServerList(List <String> listFiles){
         serverListView.getItems().clear();
         System.out.println(listFiles.toString());
         serverListView.getItems().addAll(listFiles);
-        //serverListView.getItems().sorted();
+        serverListView.getItems().sorted();
+        serverListView.getSelectionModel().selectIndices(0);
     }
 
 
@@ -126,37 +119,13 @@ public class NetFileWarehouseController implements Initializable {
         localListView.getItems().clear();
         localListView.getItems().addAll(files);
         localListView.getItems().sorted();
+        localListView.getSelectionModel().selectIndices(0);
 
         //Alert alert = new Alert(Alert.AlertType.WARNING,"Не удалось обновить список файлов",ButtonType.OK);
         //alert.showAndWait();
 
 
     }
-
-
-
-
-    public void btnPathUpAction(ActionEvent actionEvent) {
-       Path upperPath =Paths.get(pathField.getText()).getParent();
-       if (upperPath!=null){
-           //updateList(upperPath);
-       }
-    }
-
-    public void selectDiskAction(ActionEvent actionEvent) {
-        ComboBox <String> element = (ComboBox<String>) actionEvent.getSource();
-        //updateList(Paths.get(element.getSelectionModel().getSelectedItem()));
-    }
-
-    public void onMouseClicked(MouseEvent mouseEvent) {
-
-    }
-
-
-    public String getCurrentPath(){
-        return pathField.getText();
-    }
-
 
     public void clickbtnLocalToCloudCopy(MouseEvent mouseEvent) {
         System.out.println("Копировать в облако");
@@ -166,8 +135,7 @@ public class NetFileWarehouseController implements Initializable {
         UploadFileService uploadFileService;
         uploadFileService = ObjectRegistry.getInstance(UploadFileService.class);
         uploadFileService.uploadFile(selectFile);
-        //GetFilesListRequest getFilesListRequest = new GetFilesListRequest(TOKEN,"");
-        //channel.writeAndFlush(getFilesListRequest);
+
 
     }
 

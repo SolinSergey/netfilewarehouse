@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="960.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.gb.netfilewarehouse.NetFileWarehouseController">
    <children>
-      <Label prefHeight="25.0" prefWidth="1280.0" text="Label" />
+      <Label fx:id="topLabel" alignment="CENTER" prefHeight="25.0" prefWidth="1280.0" text="TopLabel" textAlignment="CENTER">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
       <Separator layoutY="26.0" prefHeight="5.0" prefWidth="1280.0" />
       <Label layoutY="935.0" prefHeight="25.0" prefWidth="1280.0" text="Label" />
       <Separator layoutY="930.0" prefHeight="5.0" prefWidth="1280.0" />
@@ -20,15 +21,12 @@
             <Font size="18.0" />
          </font>
       </Button>
-      <ComboBox fx:id="disksBox" layoutX="101.0" layoutY="48.0" onAction="#selectDiskAction" prefHeight="25.0" prefWidth="430.0" />
-      <TextField fx:id="pathField" layoutX="101.0" layoutY="860.0" prefHeight="25.0" prefWidth="430.0" />
-      <Button layoutX="531.0" layoutY="860.0" mnemonicParsing="false" onAction="#btnPathUpAction" prefHeight="25.0" prefWidth="94.0" text="Вверх" />
       <Button fx:id="btnLocalToCloudCopy" alignment="CENTER" contentDisplay="CENTER" focusTraversable="false" layoutX="558.0" layoutY="252.0" mnemonicParsing="false" onMouseClicked="#clickbtnLocalToCloudCopy" prefHeight="94.0" prefWidth="171.0" text="Скопировать в облако" textOverrun="CLIP">
          <font>
             <Font size="14.0" />
          </font>
       </Button>
-      <Button onMouseClicked="#clickbtnCloudToLocalCopy" contentDisplay="CENTER" focusTraversable="false" layoutX="558.0" layoutY="359.0" mnemonicParsing="false" prefHeight="94.0" prefWidth="171.0" text="Скопировать из облака" textOverrun="CLIP">
+      <Button contentDisplay="CENTER" focusTraversable="false" layoutX="558.0" layoutY="359.0" mnemonicParsing="false" onMouseClicked="#clickbtnCloudToLocalCopy" prefHeight="94.0" prefWidth="171.0" text="Скопировать из облака" textOverrun="CLIP">
          <font>
             <Font size="14.0" />
          </font>
