@@ -19,13 +19,16 @@ import ru.gb.netfilewarehouse.ObjectRegistry;
 public class AuthService {
     private String authToken;
     private boolean isGetAuthResponse;
+
+    private boolean isGetUserRights;
+
     private String userName="";
     private String userPassword="";
-
     private String userDir="";
 
     private String userRights;
-    public void sendAuthRequest(String userName, String userPassword){
+
+    public void sendAuthRequest(){
         isGetAuthResponse = false;
         AuthRequest authRequest = new AuthRequest(userName,userPassword);
         ObjectRegistry.getInstance(NetworkNetty.class).sendAuthRequest(authRequest);
@@ -34,7 +37,6 @@ public class AuthService {
 
         return ObjectRegistry.getInstance(CryptService.class).getUserToken().equals(token);
     }
-
     public String getAuthToken (){
         return this.authToken;
     }
@@ -42,6 +44,7 @@ public class AuthService {
     public void setAuthToken(String authToken) {
         this.authToken = authToken;
         System.out.println("Сохраненный токен: "+this.authToken);
+        isGetAuthResponse=true;
     }
 
     public void showAuthDialog(Stage stage) {
@@ -72,6 +75,8 @@ public class AuthService {
 
         Button okButton = new Button("OK");
         okButton.setPrefSize(60,20);
+        GridPane.setHalignment(okButton, HPos.CENTER);
+        pane.add(okButton,1,4);
         okButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
@@ -82,9 +87,6 @@ public class AuthService {
                 dialogAuth.close();
             }
         });
-        GridPane.setHalignment(okButton, HPos.CENTER);
-        pane.add(okButton,1,4);
-
         dialogAuth.showAndWait();
     }
 
@@ -107,7 +109,7 @@ public class AuthService {
     public void setUserRights(String userRights) {
         this.userRights = userRights;
         System.out.println("THIS AUTH SERVICE!!   "+ this.userRights);
-        isGetAuthResponse=true;
+        isGetUserRights=true;
     }
 
     public String getUserDir() {
@@ -120,6 +122,10 @@ public class AuthService {
 
     public void setGetAuthResponse(boolean getAuthResponse) {
         isGetAuthResponse = getAuthResponse;
+    }
+
+    public boolean isGetUserRights() {
+        return isGetUserRights;
     }
 
 

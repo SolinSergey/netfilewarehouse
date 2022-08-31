@@ -8,6 +8,7 @@ public class BasicResponse implements Serializable {
 
     private final String authToken;
 
+
     public String getErrorMessage() {
         return errorMessage;
     }
@@ -20,4 +21,5 @@ public class BasicResponse implements Serializable {
     public String getAuthToken() {
         return authToken;
     }
+
 }

@@ -27,6 +27,9 @@ public class NetFileWarehouseController implements Initializable {
     public Channel channel;
     public ListView <String> localListView;
     public ListView <String> serverListView;
+    private String token;
+
+    private String userRights;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ObjectRegistry.reg(this.getClass(),this);
@@ -35,35 +38,37 @@ public class NetFileWarehouseController implements Initializable {
 
         boolean isAuthorized=false;
         boolean isGetAuthResponse=false;
+        boolean isGetUserRights=false;
         do {
             ObjectRegistry.getInstance(AuthService.class).showAuthDialog(mainStage);
-            String userName=ObjectRegistry.getInstance(AuthService.class).getUserName();
-            String userPassword = ObjectRegistry.getInstance(AuthService.class).getUserPassword();
-            ObjectRegistry.getInstance(AuthService.class).sendAuthRequest(userName,userPassword);
+            //String userName=ObjectRegistry.getInstance(AuthService.class).getUserName();
+            //String userPassword = ObjectRegistry.getInstance(AuthService.class).getUserPassword();
+            ObjectRegistry.getInstance(AuthService.class).sendAuthRequest();
             do{
                 isGetAuthResponse=ObjectRegistry.getInstance(AuthService.class).isGetAuthResponse();
-            }while (!isGetAuthResponse);
+                isGetUserRights=ObjectRegistry.getInstance(AuthService.class).isGetUserRights();
+            }while (!isGetAuthResponse );//& !isGetUserRights
 
-            String token = ObjectRegistry.getInstance(AuthService.class).getAuthToken();
+
+            token = ObjectRegistry.getInstance(AuthService.class).getAuthToken();
             System.out.println("Token****** " + token);
-            String userRights = ObjectRegistry.getInstance(AuthService.class).getUserRights();
+            userRights = ObjectRegistry.getInstance(AuthService.class).getUserRights();
             System.out.println("userRights в контроллере "+ userRights);
 
-
-
-            if (!token.equals("NotAutorized") && !userRights.equals("block") ) {
-                isAuthorized = true;
+            if (token.equals("NotAutorized")) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Неправильные логин или пароль.\nПопробуйте авторизоваться повторно!", ButtonType.OK);
+                alert.showAndWait();
             }
             else{
-                if (token.equals("NotAutorized")){
-                    Alert alert = new Alert(Alert.AlertType.ERROR,"Неправильные логин или пароль.\nПопробуйте авторизоваться повторно!",ButtonType.OK);
-                    alert.showAndWait();
-                }
                 if (userRights.equals("block")){
                     Alert alert = new Alert(Alert.AlertType.ERROR,"Ваша учетная запись заблокирована! Доступ запрещен!",ButtonType.OK);
                     alert.showAndWait();
                 }
+                else{
+                    isAuthorized = true;
+                }
             }
+
             System.out.println(isAuthorized);
             System.out.println(ObjectRegistry.getInstance(AuthService.class).getAuthToken());
         }while (!isAuthorized);
@@ -75,6 +80,11 @@ public class NetFileWarehouseController implements Initializable {
         }
 
         setTextToTopLabel();
+
+        if (userRights.equals("ro")){
+            Alert alert = new Alert(Alert.AlertType.WARNING,"Внимание! Ваша учетная запись имеет права только на чтение файлов из облака!\n",ButtonType.OK);
+            alert.showAndWait();
+        }
 
     }
 
