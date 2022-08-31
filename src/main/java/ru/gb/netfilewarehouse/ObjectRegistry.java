@@ -24,8 +24,8 @@ public class ObjectRegistry {
         AuthService authService = new AuthService();
         reg(AuthService.class, authService);
 
-        CryptService cryptService = new CryptService();
-        reg(CryptService.class,cryptService);
+        //CryptService cryptService = new CryptService();
+        //reg(CryptService.class,cryptService);
     }
 
     public static void reg(Class<?> clazz,Object instance){

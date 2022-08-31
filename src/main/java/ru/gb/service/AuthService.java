@@ -76,7 +76,7 @@ public class AuthService {
                 System.out.println(loginArea.getText());
                 System.out.println(passwordArea.getText());
                 userName = loginArea.getText();
-                userPassword = ObjectRegistry.getInstance(CryptService.class).getCryptString(passwordArea.getText());
+                userPassword = passwordArea.getText();
                 dialogAuth.close();
             }
         });
