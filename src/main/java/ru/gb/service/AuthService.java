@@ -21,12 +21,15 @@ public class AuthService {
     private boolean isGetAuthResponse;
     private String userName="";
     private String userPassword="";
+
+    private String userDir="";
+
+    private String userRights;
     public void sendAuthRequest(String userName, String userPassword){
         isGetAuthResponse = false;
         AuthRequest authRequest = new AuthRequest(userName,userPassword);
         ObjectRegistry.getInstance(NetworkNetty.class).sendAuthRequest(authRequest);
     }
-
     public boolean auth(String token) {
 
         return ObjectRegistry.getInstance(CryptService.class).getUserToken().equals(token);
@@ -39,7 +42,6 @@ public class AuthService {
     public void setAuthToken(String authToken) {
         this.authToken = authToken;
         System.out.println("Сохраненный токен: "+this.authToken);
-        isGetAuthResponse=true;
     }
 
     public void showAuthDialog(Stage stage) {
@@ -96,6 +98,24 @@ public class AuthService {
 
     public boolean isGetAuthResponse() {
         return isGetAuthResponse;
+    }
+
+    public void setUserDir(String userDir) {
+        this.userDir = userDir;
+    }
+
+    public void setUserRights(String userRights) {
+        this.userRights = userRights;
+        System.out.println("THIS AUTH SERVICE!!   "+ this.userRights);
+        isGetAuthResponse=true;
+    }
+
+    public String getUserDir() {
+        return userDir;
+    }
+
+    public String getUserRights() {
+        return userRights;
     }
 
     public void setGetAuthResponse(boolean getAuthResponse) {

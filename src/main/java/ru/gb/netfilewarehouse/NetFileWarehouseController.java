@@ -46,9 +46,23 @@ public class NetFileWarehouseController implements Initializable {
 
             String token = ObjectRegistry.getInstance(AuthService.class).getAuthToken();
             System.out.println("Token****** " + token);
+            String userRights = ObjectRegistry.getInstance(AuthService.class).getUserRights();
+            System.out.println("userRights в контроллере "+ userRights);
 
-            if (!token.equals("NotAutorized")) {
+
+
+            if (!token.equals("NotAutorized") && !userRights.equals("block") ) {
                 isAuthorized = true;
+            }
+            else{
+                if (token.equals("NotAutorized")){
+                    Alert alert = new Alert(Alert.AlertType.ERROR,"Неправильные логин или пароль.\nПопробуйте авторизоваться повторно!",ButtonType.OK);
+                    alert.showAndWait();
+                }
+                if (userRights.equals("block")){
+                    Alert alert = new Alert(Alert.AlertType.ERROR,"Ваша учетная запись заблокирована! Доступ запрещен!",ButtonType.OK);
+                    alert.showAndWait();
+                }
             }
             System.out.println(isAuthorized);
             System.out.println(ObjectRegistry.getInstance(AuthService.class).getAuthToken());
