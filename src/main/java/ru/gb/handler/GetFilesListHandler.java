@@ -12,7 +12,8 @@ public class GetFilesListHandler implements RequestHandler<GetFilesListRequest, 
     private static final String SERVER_PATH = System.getProperty("user.dir");
     @Override
     public GetFilesListResponse handle(GetFilesListRequest request, ChannelHandlerContext context) {
-        String getFilesListRequestPath = SERVER_PATH+"//test2//";//request.getPath();
+        String getFilesListRequestPath = SERVER_PATH+"//"+request.getPath()+"//";//request.getPath();
+        System.out.println(getFilesListRequestPath);
         Path path = Paths.get(getFilesListRequestPath);
         String[] list = path.toFile().list();
         return new GetFilesListResponse("OK", list != null ? List.of(list) : Collections.emptyList());

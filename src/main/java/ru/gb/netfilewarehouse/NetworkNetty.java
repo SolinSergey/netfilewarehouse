@@ -13,6 +13,7 @@ import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
 import ru.gb.cloudmessages.AuthRequest;
 import ru.gb.cloudmessages.DownloadFileRequest;
+import ru.gb.cloudmessages.GetFilesListRequest;
 import ru.gb.cloudmessages.UploadFileRequest;
 
 public class NetworkNetty {
@@ -58,5 +59,10 @@ public class NetworkNetty {
     public void sendAuthRequest(AuthRequest authRequest){
         System.out.println("NettyNetwork.sendAuthRequest    " + authRequest.getUsername() + " " + authRequest.getPassword());
         clientChannel.writeAndFlush(authRequest);
+    }
+
+    public void sendGetFileListRequest(GetFilesListRequest getFilesListRequest){
+        System.out.println("NettyNetwork.sendAuthRequest    " );
+        clientChannel.writeAndFlush(getFilesListRequest);
     }
 }

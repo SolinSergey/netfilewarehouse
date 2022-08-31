@@ -19,8 +19,8 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws IOException {
         System.out.println(ctx.channel().remoteAddress());
-        GetFilesListResponse getFilesListResponse = new GetFilesListResponse("",getList());
-        ctx.writeAndFlush(getFilesListResponse);
+        //GetFilesListResponse getFilesListResponse = new GetFilesListResponse("",getList());
+        //ctx.writeAndFlush(getFilesListResponse);
     }
 
     @Override

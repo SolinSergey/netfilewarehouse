@@ -5,6 +5,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import ru.gb.cloudmessages.GetFilesListRequest;
 import ru.gb.service.AuthService;
 import ru.gb.service.DownloadFileService;
 import ru.gb.service.UploadFileService;
@@ -85,7 +86,9 @@ public class NetFileWarehouseController implements Initializable {
             Alert alert = new Alert(Alert.AlertType.WARNING,"Внимание! Ваша учетная запись имеет права только на чтение файлов из облака!\n",ButtonType.OK);
             alert.showAndWait();
         }
-
+        String userDir = ObjectRegistry.getInstance(AuthService.class).getUserDir();
+        GetFilesListRequest getFilesListRequest=new GetFilesListRequest(token,userDir);
+        ObjectRegistry.getInstance(NetworkNetty.class).sendGetFileListRequest(getFilesListRequest);
     }
 
     public void setTextToTopLabel(){
@@ -131,15 +134,20 @@ public class NetFileWarehouseController implements Initializable {
     }
 
     public void clickbtnLocalToCloudCopy(MouseEvent mouseEvent) {
-        System.out.println("Копировать в облако");
-        String selectFile;
-        selectFile = localListView.getSelectionModel().getSelectedItem().toString();
-        System.out.println(selectFile);
-        UploadFileService uploadFileService;
-        uploadFileService = ObjectRegistry.getInstance(UploadFileService.class);
-        uploadFileService.uploadFile(selectFile);
-
-
+        if (!userRights.equals("ro")){
+            System.out.println(userRights);
+            System.out.println("Копировать в облако");
+            String selectFile;
+            selectFile = localListView.getSelectionModel().getSelectedItem().toString();
+            System.out.println(selectFile);
+            UploadFileService uploadFileService;
+            uploadFileService = ObjectRegistry.getInstance(UploadFileService.class);
+            uploadFileService.uploadFile(selectFile);
+        }
+        else{
+            Alert alert = new Alert(Alert.AlertType.WARNING,"У вас нет прав на загрузку файлов на сервер!!!\n Для изменения прав обратитесь к администратору!",ButtonType.OK);
+            alert.showAndWait();
+        }
     }
 
     public void clickbtnCloudToLocalCopy(MouseEvent mouseEvent) {
