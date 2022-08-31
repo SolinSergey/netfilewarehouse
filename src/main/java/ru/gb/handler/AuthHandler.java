@@ -16,9 +16,11 @@ public class AuthHandler implements RequestHandler<AuthRequest, AuthResponse> {
         AuthResponse authResponse;
         if (getCryptString(request.getPassword()).equals(dao.getUserPasswordFromDB(request.getUsername()))) {
             String token = request.getUsername() + ":" + getCryptString(request.getPassword());
-            authResponse = new AuthResponse("", token);
+            String userDir=dao.getUserWorkDirFromDB(request.getPassword());
+            String userRights= dao.getUserRightsFromDB(request.getPassword());
+            authResponse = new AuthResponse("", token,userDir,userRights);
         } else {
-            authResponse = new AuthResponse("Пользователь не найден!!!", "NotAutorized");
+            authResponse = new AuthResponse("Пользователь не найден!!!", "NotAutorized","NotAutorized","NotAutorized");
         }
         System.out.println("AuthResponse подготовлен: " + authResponse.getErrorMessage() + authResponse.getAuthToken());
         return authResponse;

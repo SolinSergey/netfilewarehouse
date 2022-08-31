@@ -31,6 +31,8 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 
             if (!response.getAuthToken().equals("NotAutorized")){
                 System.out.println("authToken="+response.getAuthToken());
+                System.out.println("userDir="+((AuthResponse) response).getUserDir());
+                System.out.println("userRights="+((AuthResponse) response).getUserRights());
                 ObjectRegistry.getInstance(AuthService.class).setAuthToken(response.getAuthToken());
             }
             else{
