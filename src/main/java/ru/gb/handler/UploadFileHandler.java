@@ -17,27 +17,29 @@ public class UploadFileHandler implements RequestHandler<UploadFileRequest, Uplo
 
     private static final String SERVER_PATH = System.getProperty("user.dir");
     private static final Map<ChannelHandlerContext, RandomAccessFile> FILE_DESCRIPTOR_MAP = new ConcurrentHashMap<>();
+    private String userDir;
 
     @Override
     public UploadFileResponse handle(UploadFileRequest request, ChannelHandlerContext context) throws IOException {
         String fileName = request.getFileName();
+        userDir = request.getUserDir();
         byte[] filePartData = request.getFilePartData();
         try {
-            Path write = Files.write(Paths.get(SERVER_PATH + "//test2//" + fileName), filePartData);
+            Path write = Files.write(Paths.get(SERVER_PATH + "//"+userDir+"//" + fileName), filePartData);
         } catch (IOException ex) {
-            return new UploadFileResponse("Не удалось сохранить файл на сервере");
+            return new UploadFileResponse("Не удалось сохранить файл на сервере", request.getAuthToken());
         }
-        return new UploadFileResponse("OK");
+        return new UploadFileResponse("OK",request.getAuthToken());
     }
 
-    public List<String> getList() throws IOException {
-        Path path = Paths.get(SERVER_PATH + "//test2//");
-        List<String> files;
-        files = Files.list(path)
-                .map(p -> p.getFileName().toString())
-                .collect(Collectors.toList());
-        System.out.println(files);
-        return files;
-    }
+    //public List<String> getList() throws IOException {
+    //    Path path = Paths.get(SERVER_PATH + "//"+userDir+"//");
+    //    List<String> files;
+    ////    files = Files.list(path)
+     //           .map(p -> p.getFileName().toString())
+    //            .collect(Collectors.toList());
+    //    System.out.println(files);
+    //    return files;
+    //}
 }
 

@@ -14,7 +14,7 @@ import java.io.IOException;
 public class ClientHandler extends ChannelInboundHandlerAdapter {
 
     private String userToken;
-
+    private String userDir;
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -44,18 +44,26 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
             }
         }
 
+        userToken=ObjectRegistry.getInstance(AuthService.class).getAuthToken();
+        userDir=ObjectRegistry.getInstance(AuthService.class).getUserDir();
+        //System.out.println("ClientHandler userToken!!! ====== " +userToken);
+        //userDir=ObjectRegistry.getInstance(AuthService.class).getUserDir();
+        //String responseUserToken=;
+       //System.out.println("ClientHandler responseUserToken!!! ====== " +responseUserToken);
 
-        if (response instanceof GetFilesListResponse getFilesListResponse) {
+        if ((response instanceof GetFilesListResponse) && (response.getAuthToken().equals(userToken))) {
             Platform.runLater(()->{
-                netFileWarehouseController.updateServerList(getFilesListResponse.getList());
+                netFileWarehouseController.updateServerList(((GetFilesListResponse) response).getList());
             });
 
         }
-        if (response instanceof UploadFileResponse) {
+        if (response instanceof UploadFileResponse && response.getAuthToken().equals(userToken)) {
             String message = response.getErrorMessage();
             System.out.println(message);
+
+
             if (message.equals("OK")) {
-                GetFilesListRequest getFilesListRequest = new GetFilesListRequest(userToken, "");
+                GetFilesListRequest getFilesListRequest = new GetFilesListRequest(userToken,userDir);
                 ctx.writeAndFlush(getFilesListRequest);
             }
             else {
@@ -63,7 +71,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
             }
         }
 
-        if (response instanceof DownloadFileResponse){
+        if (response instanceof DownloadFileResponse && response.getAuthToken().equals(userToken)){
             System.out.println("Пришел DownloadFileResponse");
             System.out.println("Поступил объект с файлом: " + ((DownloadFileResponse) response).getFileName());
             DownloadFileService downloadFileService;

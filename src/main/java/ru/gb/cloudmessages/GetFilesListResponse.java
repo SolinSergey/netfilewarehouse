@@ -11,8 +11,8 @@ public class GetFilesListResponse extends BasicResponse {
         return list;
     }
 
-    public GetFilesListResponse(String errorMessage, List<String> list) {
-        super(errorMessage,null);
+    public GetFilesListResponse(String errorMessage, String authToken, List<String> list) {
+        super(errorMessage,authToken);
         this.list = list;
     }
 

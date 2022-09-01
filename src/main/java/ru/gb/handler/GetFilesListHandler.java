@@ -16,7 +16,7 @@ public class GetFilesListHandler implements RequestHandler<GetFilesListRequest, 
         System.out.println(getFilesListRequestPath);
         Path path = Paths.get(getFilesListRequestPath);
         String[] list = path.toFile().list();
-        return new GetFilesListResponse("OK", list != null ? List.of(list) : Collections.emptyList());
+        return new GetFilesListResponse("OK", request.getAuthToken(),list != null ? List.of(list) : Collections.emptyList());
     }
 
 }
