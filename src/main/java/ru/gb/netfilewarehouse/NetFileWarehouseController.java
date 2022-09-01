@@ -140,7 +140,7 @@ public class NetFileWarehouseController implements Initializable {
 
 
     public void updateLocalList (List files){
-        System.out.println(files.size());
+        //System.out.println(files.size());
         if (files.size()==0){
             btnDelete.setDisable(true);
             System.out.println(btnDelete);
