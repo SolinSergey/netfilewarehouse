@@ -3,10 +3,12 @@ package ru.gb.netfilewarehouse;
 import io.netty.channel.Channel;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import ru.gb.cloudmessages.GetFilesListRequest;
 import ru.gb.service.AuthService;
+import ru.gb.service.DeleteFileService;
 import ru.gb.service.DownloadFileService;
 import ru.gb.service.UploadFileService;
 import java.io.IOException;
@@ -20,6 +22,7 @@ import java.util.stream.Collectors;
 public class NetFileWarehouseController implements Initializable {
 
     public Label topLabel;
+    public Button btnDelete;
 
     private String userToken;
     public static Stage mainStage;
@@ -31,6 +34,11 @@ public class NetFileWarehouseController implements Initializable {
     private String token;
 
     private String userRights;
+    private String userDir;
+    private List <String>serverList;
+    private List localList;
+
+    boolean isClientInit=false;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ObjectRegistry.reg(this.getClass(),this);
@@ -54,6 +62,7 @@ public class NetFileWarehouseController implements Initializable {
             token = ObjectRegistry.getInstance(AuthService.class).getAuthToken();
             //System.out.println("Token****** " + token);
             userRights = ObjectRegistry.getInstance(AuthService.class).getUserRights();
+            userDir = ObjectRegistry.getInstance(AuthService.class).getUserDir();
             //System.out.println("userRights в контроллере "+ userRights);
 
             if (token.equals("NotAutorized")) {
@@ -89,6 +98,7 @@ public class NetFileWarehouseController implements Initializable {
         String userDir = ObjectRegistry.getInstance(AuthService.class).getUserDir();
         GetFilesListRequest getFilesListRequest=new GetFilesListRequest(token,userDir);
         ObjectRegistry.getInstance(NetworkNetty.class).sendGetFileListRequest(getFilesListRequest);
+        isClientInit=true;
     }
 
     public void setTextToTopLabel(){
@@ -118,14 +128,32 @@ public class NetFileWarehouseController implements Initializable {
         serverListView.getItems().addAll(listFiles);
         serverListView.getItems().sorted();
         serverListView.getSelectionModel().selectIndices(0);
+        serverList=listFiles;
+        //if (listFiles.size()==0 && isClientInit){
+        //    btnDelete.setDisable(true);
+        //    System.out.println(btnDelete);
+        ///}
+        //else{
+        //    btnDelete.setDisable(false);
+        //}
     }
 
 
     public void updateLocalList (List files){
+        System.out.println(files.size());
+        if (files.size()==0){
+            btnDelete.setDisable(true);
+            System.out.println(btnDelete);
+        }
+        else{
+            btnDelete.setDisable(false);
+        }
         localListView.getItems().clear();
         localListView.getItems().addAll(files);
         localListView.getItems().sorted();
         localListView.getSelectionModel().selectIndices(0);
+        localList=files;
+
 
         //Alert alert = new Alert(Alert.AlertType.WARNING,"Не удалось обновить список файлов",ButtonType.OK);
         //alert.showAndWait();
@@ -158,5 +186,63 @@ public class NetFileWarehouseController implements Initializable {
         DownloadFileService downloadFileService;
         downloadFileService = ObjectRegistry.getInstance(DownloadFileService.class);
         downloadFileService.sendRequest(selectFile);
+    }
+
+    public void clickbtnDeleteFile(MouseEvent mouseEvent) {
+        String fileForDelete;
+        if (localListView.isFocused()){
+            fileForDelete = localListView.getSelectionModel().getSelectedItem().toString();
+            ObjectRegistry.getInstance(DeleteFileService.class).deleteFileFromLocalDir(fileForDelete,userRights);
+            try {
+                updateLocalList(getList());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        if (serverListView.isFocused()){
+            fileForDelete = serverListView.getSelectionModel().getSelectedItem().toString();
+            ObjectRegistry.getInstance(DeleteFileService.class).deleteFileFromCloud(fileForDelete,userDir,userRights,token);
+        }
+    }
+
+    public void clkMouseLocalListView(MouseEvent mouseEvent) {
+        if (localListView.isFocused()){
+            if (localListView.getSelectionModel().getSelectedItem()==null){
+                btnDelete.setDisable(true);
+            }
+            else btnDelete.setDisable(false);
+        }
+    }
+
+    public void keyPressedLocalListView(KeyEvent keyEvent) {
+        System.out.println("активен serverList");
+        if (serverListView.isFocused()){
+            if (serverList.size()==0){
+                btnDelete.setDisable(true);
+
+            }
+            else btnDelete.setDisable(false);
+        }
+    }
+
+    public void keyPressedServerListView(KeyEvent keyEvent) {
+        System.out.println("Активен localList");
+        if (localListView.isFocused()){
+            if (localList.size()==0){
+                btnDelete.setDisable(true);
+            }
+            else btnDelete.setDisable(false);
+        }
+
+    }
+
+    public void clkMouseServerListView(MouseEvent mouseEvent) {
+        if (serverListView.isFocused()){
+            if (serverListView.getSelectionModel().getSelectedItem()==null){
+                btnDelete.setDisable(true);
+            }
+            else btnDelete.setDisable(false);
+        }
+        System.out.println("Активен ");
     }
 }

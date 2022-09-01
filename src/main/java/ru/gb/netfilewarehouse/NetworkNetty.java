@@ -11,10 +11,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
-import ru.gb.cloudmessages.AuthRequest;
-import ru.gb.cloudmessages.DownloadFileRequest;
-import ru.gb.cloudmessages.GetFilesListRequest;
-import ru.gb.cloudmessages.UploadFileRequest;
+import ru.gb.cloudmessages.*;
 
 public class NetworkNetty {
 
@@ -64,5 +61,9 @@ public class NetworkNetty {
     public void sendGetFileListRequest(GetFilesListRequest getFilesListRequest){
         //System.out.println("NettyNetwork.sendAuthRequest    " );
         clientChannel.writeAndFlush(getFilesListRequest);
+    }
+
+    public void sendDeleteFileRequest(DeleteFileRequest deleteFileRequest){
+        clientChannel.writeAndFlush(deleteFileRequest);
     }
 }

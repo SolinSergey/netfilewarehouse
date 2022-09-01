@@ -85,6 +85,16 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
                 }
             });
         }
+
+        if (response instanceof DeleteFileResponse && response.getAuthToken().equals((userToken))){
+            if (response.getErrorMessage().equals("OK")){
+                GetFilesListRequest getFilesListRequest = new GetFilesListRequest(userToken,userDir);
+                ctx.writeAndFlush(getFilesListRequest);
+            }
+            else {
+                System.out.println("Ошибка удаления файла на сервере");
+            }
+        }
     }
 }
 

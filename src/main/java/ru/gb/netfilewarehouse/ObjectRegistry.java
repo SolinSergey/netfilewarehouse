@@ -1,9 +1,6 @@
 package ru.gb.netfilewarehouse;
 
-import ru.gb.service.AuthService;
-import ru.gb.service.CryptService;
-import ru.gb.service.DownloadFileService;
-import ru.gb.service.UploadFileService;
+import ru.gb.service.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,6 +20,9 @@ public class ObjectRegistry {
 
         AuthService authService = new AuthService();
         reg(AuthService.class, authService);
+
+        DeleteFileService deleteFileService = new DeleteFileService();
+        reg(DeleteFileService.class, deleteFileService);
 
         //CryptService cryptService = new CryptService();
         //reg(CryptService.class,cryptService);
