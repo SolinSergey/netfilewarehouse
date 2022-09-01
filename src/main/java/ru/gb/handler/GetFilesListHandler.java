@@ -13,7 +13,7 @@ public class GetFilesListHandler implements RequestHandler<GetFilesListRequest, 
     @Override
     public GetFilesListResponse handle(GetFilesListRequest request, ChannelHandlerContext context) {
         String getFilesListRequestPath = SERVER_PATH+"//"+request.getPath()+"//";//request.getPath();
-        System.out.println(getFilesListRequestPath);
+        //System.out.println(getFilesListRequestPath);
         Path path = Paths.get(getFilesListRequestPath);
         String[] list = path.toFile().list();
         return new GetFilesListResponse("OK", request.getAuthToken(),list != null ? List.of(list) : Collections.emptyList());

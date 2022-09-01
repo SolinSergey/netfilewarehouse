@@ -52,17 +52,17 @@ public class NetworkNetty {
     }
 
     public void sendDownloadRequest(DownloadFileRequest downloadFileRequest) {
-        System.out.println("NettyNetwork.sendDownloadRequest    " + downloadFileRequest.getFileName());
+        //System.out.println("NettyNetwork.sendDownloadRequest    " + downloadFileRequest.getFileName());
         clientChannel.writeAndFlush(downloadFileRequest);
     }
 
     public void sendAuthRequest(AuthRequest authRequest){
-        System.out.println("NettyNetwork.sendAuthRequest    " + authRequest.getUsername() + " " + authRequest.getPassword());
+        //System.out.println("NettyNetwork.sendAuthRequest    " + authRequest.getUsername() + " " + authRequest.getPassword());
         clientChannel.writeAndFlush(authRequest);
     }
 
     public void sendGetFileListRequest(GetFilesListRequest getFilesListRequest){
-        System.out.println("NettyNetwork.sendAuthRequest    " );
+        //System.out.println("NettyNetwork.sendAuthRequest    " );
         clientChannel.writeAndFlush(getFilesListRequest);
     }
 }

@@ -27,19 +27,19 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
         NetFileWarehouseController netFileWarehouseController = ObjectRegistry.getInstance(NetFileWarehouseController.class);
 
         if (response instanceof AuthResponse){
-            System.out.println("AuthResponse получен");
+            //System.out.println("AuthResponse получен");
             if (!response.getAuthToken().equals("NotAutorized")){
-                System.out.println("authToken="+response.getAuthToken());
-                System.out.println("userDir="+((AuthResponse) response).getUserDir());
-                System.out.println("userRights="+((AuthResponse) response).getUserRights());
+                //System.out.println("authToken="+response.getAuthToken());
+               // System.out.println("userDir="+((AuthResponse) response).getUserDir());
+               // System.out.println("userRights="+((AuthResponse) response).getUserRights());
                 ObjectRegistry.getInstance(AuthService.class).setAuthToken(response.getAuthToken());
                 ObjectRegistry.getInstance(AuthService.class).setUserDir(((AuthResponse) response).getUserDir());
-                System.out.println(ObjectRegistry.getInstance((AuthService.class)).getUserDir()+"****************");
+               // System.out.println(ObjectRegistry.getInstance((AuthService.class)).getUserDir()+"****************");
                 ObjectRegistry.getInstance(AuthService.class).setUserRights(((AuthResponse) response).getUserRights());
-                System.out.println(ObjectRegistry.getInstance((AuthService.class)).getUserRights()+"****************");
+               // System.out.println(ObjectRegistry.getInstance((AuthService.class)).getUserRights()+"****************");
             }
             else{
-                System.out.println("Авторизация не выполнена");
+                //System.out.println("Авторизация не выполнена");
                 ObjectRegistry.getInstance(AuthService.class).setAuthToken(response.getAuthToken());
             }
         }
@@ -72,8 +72,8 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
         }
 
         if (response instanceof DownloadFileResponse && response.getAuthToken().equals(userToken)){
-            System.out.println("Пришел DownloadFileResponse");
-            System.out.println("Поступил объект с файлом: " + ((DownloadFileResponse) response).getFileName());
+            //System.out.println("Пришел DownloadFileResponse");
+            //System.out.println("Поступил объект с файлом: " + ((DownloadFileResponse) response).getFileName());
             DownloadFileService downloadFileService;
             downloadFileService = ObjectRegistry.getInstance(DownloadFileService.class);
             downloadFileService.saveDownloadFile((DownloadFileResponse) response);

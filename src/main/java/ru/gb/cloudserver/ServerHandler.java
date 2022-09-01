@@ -30,10 +30,10 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext channelHandlerContext, Object msg) throws IOException {
         BasicRequest request = (BasicRequest) msg;
         if (request instanceof AuthRequest){
-            System.out.println("Пришел запрос на авторизацию: "+ ((AuthRequest) request).getUsername() + " " + ((AuthRequest) request).getPassword());
+            //System.out.println("Пришел запрос на авторизацию: "+ ((AuthRequest) request).getUsername() + " " + ((AuthRequest) request).getPassword());
             RequestHandler handler = HandlerRegistry.getHandler(request.getClass());
             BasicResponse response = handler.handle(request, channelHandlerContext);
-            System.out.println("AuthResponse отправлен: " + response.getErrorMessage() + response.getAuthToken());
+            //System.out.println("AuthResponse отправлен: " + response.getErrorMessage() + response.getAuthToken());
             if (!response.getAuthToken().equals("NotAutorized")) token=response.getAuthToken();
             channelHandlerContext.writeAndFlush(response);
         }
@@ -52,19 +52,19 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
         cause.printStackTrace();
     }
 
-    public List<String> getList() throws IOException {
-        Path path= Paths.get(SERVER_PATH+"//test2//");
-        List<String> files;
-        files = Files.list(path)
-                .map(p -> p.getFileName().toString())
-                .collect(Collectors.toList());
-        System.out.println(files);
-        return files;
-    }
+    //public List<String> getList() throws IOException {
+     //   Path path= Paths.get(SERVER_PATH+"//test2//");
+    //    List<String> files;
+    //    files = Files.list(path)
+     //           .map(p -> p.getFileName().toString())
+     //           .collect(Collectors.toList());
+      //  System.out.println(files);
+     //   return files;
+   // }
 
-    public String getToken() {
-        return token;
-    }
+   // public String getToken() {
+     //   return token;
+   // }
 
 }
 

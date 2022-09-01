@@ -26,7 +26,7 @@ public class AuthHandler implements RequestHandler<AuthRequest, AuthResponse> {
         } else {
             authResponse = new AuthResponse("Пользователь не найден!!!", "NotAutorized","NotAutorized","NotAutorized");
         }
-        System.out.println("AuthResponse подготовлен: " + authResponse.getErrorMessage() + authResponse.getAuthToken());
+        //System.out.println("AuthResponse подготовлен: " + authResponse.getErrorMessage() + authResponse.getAuthToken());
         return authResponse;
     }
     public String getCryptString(String stringToCrypt){

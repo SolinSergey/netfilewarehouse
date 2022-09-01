@@ -35,7 +35,7 @@ public class NetFileWarehouseController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ObjectRegistry.reg(this.getClass(),this);
 
-        System.out.println("in Init");
+        //System.out.println("in Init");
 
         boolean isAuthorized=false;
         boolean isGetAuthResponse=false;
@@ -52,9 +52,9 @@ public class NetFileWarehouseController implements Initializable {
 
 
             token = ObjectRegistry.getInstance(AuthService.class).getAuthToken();
-            System.out.println("Token****** " + token);
+            //System.out.println("Token****** " + token);
             userRights = ObjectRegistry.getInstance(AuthService.class).getUserRights();
-            System.out.println("userRights в контроллере "+ userRights);
+            //System.out.println("userRights в контроллере "+ userRights);
 
             if (token.equals("NotAutorized")) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Неправильные логин или пароль.\nПопробуйте авторизоваться повторно!", ButtonType.OK);
@@ -70,8 +70,8 @@ public class NetFileWarehouseController implements Initializable {
                 }
             }
 
-            System.out.println(isAuthorized);
-            System.out.println(ObjectRegistry.getInstance(AuthService.class).getAuthToken());
+            //System.out.println(isAuthorized);
+            //System.out.println(ObjectRegistry.getInstance(AuthService.class).getAuthToken());
         }while (!isAuthorized);
 
         try {
@@ -135,11 +135,11 @@ public class NetFileWarehouseController implements Initializable {
 
     public void clickbtnLocalToCloudCopy(MouseEvent mouseEvent) {
         if (!userRights.equals("ro")){
-            System.out.println(userRights);
-            System.out.println("Копировать в облако");
+            //System.out.println(userRights);
+            //System.out.println("Копировать в облако");
             String selectFile;
             selectFile = localListView.getSelectionModel().getSelectedItem().toString();
-            System.out.println(selectFile);
+            //System.out.println(selectFile);
             UploadFileService uploadFileService;
             uploadFileService = ObjectRegistry.getInstance(UploadFileService.class);
             uploadFileService.uploadFile(selectFile);
@@ -151,10 +151,10 @@ public class NetFileWarehouseController implements Initializable {
     }
 
     public void clickbtnCloudToLocalCopy(MouseEvent mouseEvent) {
-        System.out.println("Копировать из облака на локальный компьютер");
+        //System.out.println("Копировать из облака на локальный компьютер");
         String selectFile;
         selectFile = serverListView.getSelectionModel().getSelectedItem().toString();
-        System.out.println(selectFile);
+        //System.out.println(selectFile);
         DownloadFileService downloadFileService;
         downloadFileService = ObjectRegistry.getInstance(DownloadFileService.class);
         downloadFileService.sendRequest(selectFile);

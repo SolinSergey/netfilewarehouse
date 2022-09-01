@@ -18,18 +18,18 @@ public class DownloadFileService {
     public void sendRequest(String filename){
         userToken = ObjectRegistry.getInstance(AuthService.class).getAuthToken();
         userDir=ObjectRegistry.getInstance(AuthService.class).getUserDir();
-        System.out.println("DownloadFileService.sendRequest    " + filename);
+        //System.out.println("DownloadFileService.sendRequest    " + filename);
         DownloadFileRequest downloadFileRequest=new DownloadFileRequest(userToken,filename,userDir);
         NetworkNetty networkNetty= ObjectRegistry.getInstance(NetworkNetty.class);
         networkNetty.sendDownloadRequest(downloadFileRequest);
     }
 
     public void saveDownloadFile(DownloadFileResponse response){
-        System.out.println("На сохранение поступил файл: " + response.getFileName());
+        //System.out.println("На сохранение поступил файл: " + response.getFileName());
         try {
             Path filePath = Paths.get(System.getProperty("user.dir")+"//local//"+response.getFileName());
-            System.out.println(Arrays.toString(response.getFilePartData()));
-            System.out.println("Путь сохранения: "+filePath.toString());
+            //System.out.println(Arrays.toString(response.getFilePartData()));
+            //System.out.println("Путь сохранения: "+filePath.toString());
             Files.write(filePath, response.getFilePartData());
         } catch (IOException e) {
             e.printStackTrace();

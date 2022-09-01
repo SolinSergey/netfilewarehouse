@@ -18,11 +18,11 @@ public class DAO {
         try {
             Statement stmt = connection.createStatement();
             String s = "SELECT password FROM user WHERE login = \'"+userName+"\';";
-            System.out.println(s);
+            //System.out.println(s);
             resultSet=stmt.executeQuery(s);
             if (!resultSet.isClosed()){
                 userPassword=resultSet.getString(1);
-                System.out.println(userPassword);
+                //System.out.println(userPassword);
             }else System.out.println("Пользователь не найден");
             //System.out.println("Права пользователя: "+getUserRightsFromDB(userName));
             //System.out.println("Папка пользователя: "+getUserWorkDirFromDB(userName));
@@ -38,7 +38,7 @@ public class DAO {
         try{
             Statement stmt = connection.createStatement();
             s = "select user_rights from user_access_rights where id_right=(Select id_user from user where login=\'"+userName+"\');";
-            System.out.println(s);
+            //System.out.println(s);
             resultSet=stmt.executeQuery(s);
             if (!resultSet.isClosed()){
                 s=resultSet.getString(1);
@@ -55,7 +55,7 @@ public class DAO {
         try{
             Statement stmt = connection.createStatement();
             s = "select work_dir from user_dir where id_dir=(Select id_user from user where login=\'"+userName+"\');";
-            System.out.println(s);
+            //System.out.println(s);
             resultSet=stmt.executeQuery(s);
             if (!resultSet.isClosed()){
                 s=resultSet.getString(1);

@@ -21,16 +21,16 @@ public class DownloadFileHandler implements RequestHandler<DownloadFileRequest, 
 
     @Override
     public DownloadFileResponse handle(DownloadFileRequest request, ChannelHandlerContext channelHandlerContext) {
-        System.out.println("*********************************");
+        //System.out.println("*********************************");
         String fileName = request.getFileName();
-        System.out.println("Файл для отправки на локаль: "+ fileName);
+        //System.out.println("Файл для отправки на локаль: "+ fileName);
         Path path = Paths.get(SERVER_PATH+ "//"+request.getUserDir()+"//"+fileName.toString());
-        System.out.println("Путь отправки на локаль:" + path.toString());
+        //System.out.println("Путь отправки на локаль:" + path.toString());
         byte[] filePartData;
         try {
             filePartData = Files.readAllBytes(path);
             DownloadFileResponse downloadFileResponse = new DownloadFileResponse("",request.getAuthToken(),fileName,filePartData);
-            System.out.println("DownloadFileResponse Отправлен: " + downloadFileResponse.toString());
+            //System.out.println("DownloadFileResponse Отправлен: " + downloadFileResponse.toString());
             return downloadFileResponse;
         } catch (IOException e) {
             return new DownloadFileResponse("Не удалось передать файл", request.getAuthToken(), request.getFileName(), null);
@@ -38,15 +38,15 @@ public class DownloadFileHandler implements RequestHandler<DownloadFileRequest, 
     }
 
 
-    public List<String> getList() throws IOException {
-        Path path = Paths.get(SERVER_PATH + "//test2//");
-        List<String> files;
-        files = Files.list(path)
-                .map(p -> p.getFileName().toString())
-                .collect(Collectors.toList());
-        System.out.println(files);
-        return files;
-    }
+    //public List<String> getList() throws IOException {
+    //    Path path = Paths.get(SERVER_PATH + "//test2//");
+    //    List<String> files;
+    //    files = Files.list(path)
+     //           .map(p -> p.getFileName().toString())
+     //           .collect(Collectors.toList());
+     //   System.out.println(files);
+     //   return files;
+   //}
 
 }
 

@@ -43,7 +43,7 @@ public class AuthService {
 
     public void setAuthToken(String authToken) {
         this.authToken = authToken;
-        System.out.println("Сохраненный токен: "+this.authToken);
+        //System.out.println("Сохраненный токен: "+this.authToken);
         isGetAuthResponse=true;
     }
 
@@ -80,8 +80,8 @@ public class AuthService {
         okButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                System.out.println(loginArea.getText());
-                System.out.println(passwordArea.getText());
+                //System.out.println(loginArea.getText());
+                //System.out.println(passwordArea.getText());
                 userName = loginArea.getText();
                 userPassword = passwordArea.getText();
                 dialogAuth.close();
@@ -108,7 +108,7 @@ public class AuthService {
 
     public void setUserRights(String userRights) {
         this.userRights = userRights;
-        System.out.println("THIS AUTH SERVICE!!   "+ this.userRights);
+        //System.out.println("THIS AUTH SERVICE!!   "+ this.userRights);
         isGetUserRights=true;
     }
 
