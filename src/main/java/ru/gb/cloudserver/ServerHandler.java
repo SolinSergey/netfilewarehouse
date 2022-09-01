@@ -15,14 +15,17 @@ import java.util.stream.Collectors;
 
 
 public class ServerHandler extends ChannelInboundHandlerAdapter {
+
+    private String token;
+
     private static final String SERVER_PATH = System.getProperty("user.dir");
+
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws IOException {
         System.out.println(ctx.channel().remoteAddress());
         //GetFilesListResponse getFilesListResponse = new GetFilesListResponse("",getList());
         //ctx.writeAndFlush(getFilesListResponse);
     }
-
     @Override
     public void channelRead(ChannelHandlerContext channelHandlerContext, Object msg) throws IOException {
         BasicRequest request = (BasicRequest) msg;
@@ -31,12 +34,16 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
             RequestHandler handler = HandlerRegistry.getHandler(request.getClass());
             BasicResponse response = handler.handle(request, channelHandlerContext);
             System.out.println("AuthResponse отправлен: " + response.getErrorMessage() + response.getAuthToken());
+            if (!response.getAuthToken().equals("NotAutorized")) token=response.getAuthToken();
             channelHandlerContext.writeAndFlush(response);
         }
         else{
-            RequestHandler handler = HandlerRegistry.getHandler(request.getClass());
-            BasicResponse response = handler.handle(request, channelHandlerContext);
-            channelHandlerContext.writeAndFlush(response);
+            if (token.equals(request.getAuthToken())){
+                RequestHandler handler = HandlerRegistry.getHandler(request.getClass());
+                BasicResponse response = handler.handle(request, channelHandlerContext);
+                channelHandlerContext.writeAndFlush(response);
+            }
+
         }
     }
 
@@ -53,6 +60,10 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
                 .collect(Collectors.toList());
         System.out.println(files);
         return files;
+    }
+
+    public String getToken() {
+        return token;
     }
 
 }

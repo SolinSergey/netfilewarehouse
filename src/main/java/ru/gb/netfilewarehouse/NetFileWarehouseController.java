@@ -99,7 +99,7 @@ public class NetFileWarehouseController implements Initializable {
     public List<String> getList() throws IOException {
         List<String> files = null;
         try{
-            Path path=Paths.get(System.getProperty("user.dir")+"//test");
+            Path path=Paths.get(System.getProperty("user.dir")+"//local");
             files = Files.list(path)
                     .map(p -> p.getFileName().toString())
                     .collect(Collectors.toList());

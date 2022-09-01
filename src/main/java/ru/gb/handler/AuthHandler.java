@@ -10,14 +10,18 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 
 public class AuthHandler implements RequestHandler<AuthRequest, AuthResponse> {
+    private String token;
+
+    String userDir;
+    String userRights;
     @Override
     public AuthResponse handle(AuthRequest request, ChannelHandlerContext channelHandlerContext) throws IOException {
         DAO dao = new DAO();
         AuthResponse authResponse;
         if (getCryptString(request.getPassword()).equals(dao.getUserPasswordFromDB(request.getUsername()))) {
-            String token = request.getUsername() + ":" + getCryptString(request.getPassword());
-            String userDir=dao.getUserWorkDirFromDB(request.getPassword());
-            String userRights= dao.getUserRightsFromDB(request.getPassword());
+            token = request.getUsername() + ":" + getCryptString(request.getPassword());
+            userDir=dao.getUserWorkDirFromDB(request.getPassword());
+            userRights= dao.getUserRightsFromDB(request.getPassword());
             authResponse = new AuthResponse("", token,userDir,userRights);
         } else {
             authResponse = new AuthResponse("Пользователь не найден!!!", "NotAutorized","NotAutorized","NotAutorized");

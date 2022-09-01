@@ -24,7 +24,7 @@ public class DownloadFileHandler implements RequestHandler<DownloadFileRequest, 
         System.out.println("*********************************");
         String fileName = request.getFileName();
         System.out.println("Файл для отправки на локаль: "+ fileName);
-        Path path = Paths.get(SERVER_PATH+"//test2//"+ fileName.toString());
+        Path path = Paths.get(SERVER_PATH+ "//"+request.getUserDir()+"//"+fileName.toString());
         System.out.println("Путь отправки на локаль:" + path.toString());
         byte[] filePartData;
         try {
