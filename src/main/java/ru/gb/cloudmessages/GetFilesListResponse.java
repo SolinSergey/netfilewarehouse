@@ -1,17 +1,19 @@
 package ru.gb.cloudmessages;
 
+import ru.gb.netfilewarehouse.FileData;
+
 import java.nio.file.Path;
 import java.util.List;
 
 public class GetFilesListResponse extends BasicResponse {
 
-    private final List list;
+    private final List<FileData> list;
 
-    public List<String> getList() {
+    public List<FileData> getList() {
         return list;
     }
 
-    public GetFilesListResponse(String errorMessage, String authToken, List<String> list) {
+    public GetFilesListResponse(String errorMessage, String authToken, List<FileData> list) {
         super(errorMessage,authToken);
         this.list = list;
     }

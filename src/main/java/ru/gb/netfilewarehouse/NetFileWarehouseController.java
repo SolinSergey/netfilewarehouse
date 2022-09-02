@@ -1,6 +1,8 @@
 package ru.gb.netfilewarehouse;
 
 import io.netty.channel.Channel;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
@@ -11,6 +13,7 @@ import ru.gb.service.AuthService;
 import ru.gb.service.DeleteFileService;
 import ru.gb.service.DownloadFileService;
 import ru.gb.service.UploadFileService;
+
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.*;
@@ -23,6 +26,16 @@ public class NetFileWarehouseController implements Initializable {
 
     public Label topLabel;
     public Button btnDelete;
+    public TableView <FileData> localFileTable;
+    public TableColumn<FileData,String> localFileTypeColumn;
+    public TableColumn<FileData,String> localFileNameColumn;
+    public TableColumn<FileData,Long> localFileSizeColumn;
+    public TextField localPathField;
+    public TextField serverPathField1;
+    public TableView <FileData> serverFileTable;
+    public TableColumn <FileData,String> serverFileTypeColumn;
+    public TableColumn <FileData, String> serverFileNameColumn;
+    public TableColumn <FileData, Long> serverFileSizeColumn;
 
     private String userToken;
     public static Stage mainStage;
@@ -37,6 +50,7 @@ public class NetFileWarehouseController implements Initializable {
     private String userDir;
     private List <String>serverList;
     private List localList;
+    String currentServerPath;
 
     boolean isClientInit=false;
     @Override
@@ -82,12 +96,18 @@ public class NetFileWarehouseController implements Initializable {
             //System.out.println(isAuthorized);
             //System.out.println(ObjectRegistry.getInstance(AuthService.class).getAuthToken());
         }while (!isAuthorized);
-
+        /*
         try {
             updateLocalList(getList());
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }
+        }*/
+        //Создаем локальную таблицу
+        createLocalFilesTable();
+        createServerFilesTable();
+
+        //localFileSizeColumn.setCellValueFactory(param -> new SimpleLongProperty(param.getValue().fileSize));
+        Path path=Paths.get(".","local");
 
         setTextToTopLabel();
 
@@ -96,9 +116,115 @@ public class NetFileWarehouseController implements Initializable {
             alert.showAndWait();
         }
         String userDir = ObjectRegistry.getInstance(AuthService.class).getUserDir();
+        System.out.println(userDir);
         GetFilesListRequest getFilesListRequest=new GetFilesListRequest(token,userDir);
         ObjectRegistry.getInstance(NetworkNetty.class).sendGetFileListRequest(getFilesListRequest);
+        updateLocalTable(path);
         isClientInit=true;
+        currentServerPath=userDir+"";
+
+    }
+    public void createServerFilesTable(){
+        serverFileTypeColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getFileType()));
+        serverFileTypeColumn.setResizable(false);
+        serverFileNameColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getFileName()));
+        serverFileTable.getSortOrder().add(localFileTypeColumn);
+        serverFileSizeColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getFileSize()));
+        serverFileSizeColumn.setCellFactory(column->{
+            return new TableCell<FileData,Long>(){
+                @Override
+                protected void updateItem(Long item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (item==null || empty){
+                        setText(null);
+                        setStyle("");
+                    }
+                    else{
+                        String text=String.format("%,d bytes",item);
+                        if (item == -1L){
+                            text="";
+                        }
+                        setText(text);
+                    }
+                }
+            };
+        });
+    }
+
+    public void createLocalFilesTable(){
+        localFileTypeColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getFileType()));
+        localFileTypeColumn.setResizable(false);
+        localFileNameColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getFileName()));
+        localFileTable.getSortOrder().add(localFileTypeColumn);
+        localFileSizeColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getFileSize()));
+        localFileSizeColumn.setCellFactory(column->{
+            return new TableCell<FileData,Long>(){
+                @Override
+                protected void updateItem(Long item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (item==null || empty){
+                        setText(null);
+                        setStyle("");
+                    }
+                    else{
+                        String text=String.format("%,d bytes",item);
+                        if (item == -1L){
+                            text="";
+                        }
+                        setText(text);
+                    }
+                }
+            };
+        });
+    }
+
+    public void updateServerTable(List<FileData> list){
+        serverFileTable.getItems().clear();
+        //for (int i=0;i< list.size();i++){
+        //    System.out.println(list.get(i).getFileType()+" "+list.get(i).getFileName()+" "+list.get(i).getFileSize());
+        //}
+        serverFileTable.getItems().addAll(list);
+        serverFileTable.sort();
+
+    }
+
+    public void updateLocalTable(Path path){
+        localFileTable.getItems().clear();
+        try {
+            localPathField.setText(path.normalize().toAbsolutePath().toString());
+            //Path upperPath = Paths.get(localPathField.getText()).getParent();
+            //System.out.println(.getParent().toString());
+            //System.out.println(upperPath.toAbsolutePath().toString().endsWith(":\\"));
+            // if (upperPath!=null){
+            //    if (!upperPath.toAbsolutePath().toString().endsWith("://")){
+            //         FileData p=new FileData(upperPath);
+            //         p.setFileType("DIR");
+            //         p.setFileName("<<Upper Directory>>");
+            //         p.setFileSize(-1L);
+            //        localFileTable.getItems().add(p);
+            //    }
+            localFileTable.getItems().addAll(Files.list(path).map(FileData::new).collect(Collectors.toList()));
+            localFileTable.sort();
+        //}
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void btnUpLocalDirectory(MouseEvent mouseEvent) {
+        Path upperPath = Paths.get(localPathField.getText()).getParent();
+            if (upperPath!=null){
+                System.out.println(upperPath.toAbsolutePath());
+                updateLocalTable(upperPath);
+                return;
+            }
+    }
+    public void clckLocalFileTable(MouseEvent mouseEvent) {
+        if (mouseEvent.getClickCount()==2){
+            Path path = Paths.get(localPathField.getText()).resolve(localFileTable.getSelectionModel().getSelectedItem().getFileName());
+            if (Files.isDirectory(path)){
+                updateLocalTable(path);
+            }
+        }
     }
 
     public void setTextToTopLabel(){
@@ -106,23 +232,7 @@ public class NetFileWarehouseController implements Initializable {
         topLabel.setText(textForLabel);
     }
 
-    public List<String> getList() throws IOException {
-        List<String> files = null;
-        try{
-            Path path=Paths.get(System.getProperty("user.dir")+"//local");
-            files = Files.list(path)
-                    .map(p -> p.getFileName().toString())
-                    .collect(Collectors.toList());
-
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-        return files;
-
-
-    }
-
-    public void updateServerList(List <String> listFiles){
+   /* public void updateServerTable(List <String> listFiles){
         serverListView.getItems().clear();
         System.out.println(listFiles.toString());
         serverListView.getItems().addAll(listFiles);
@@ -137,7 +247,124 @@ public class NetFileWarehouseController implements Initializable {
         //    btnDelete.setDisable(false);
         //}
     }
+*/
 
+  /*  public void clickbtnLocalToCloudCopy(MouseEvent mouseEvent) {
+        if (!userRights.equals("ro")){
+            //System.out.println(userRights);
+            //System.out.println("Копировать в облако");
+            String selectFile;
+            selectFile = localListView.getSelectionModel().getSelectedItem().toString();
+            //System.out.println(selectFile);
+            UploadFileService uploadFileService;
+            uploadFileService = ObjectRegistry.getInstance(UploadFileService.class);
+            uploadFileService.uploadFile(selectFile);
+        }
+        else{
+            Alert alert = new Alert(Alert.AlertType.WARNING,"У вас нет прав на загрузку файлов на сервер!!!\n Для изменения прав обратитесь к администратору!",ButtonType.OK);
+            alert.showAndWait();
+        }
+    }
+*/
+    public void clickbtnCloudToLocalCopy(MouseEvent mouseEvent) {
+        //System.out.println("Копировать из облака на локальный компьютер");
+        String selectFile;
+        selectFile = serverListView.getSelectionModel().getSelectedItem().toString();
+        //System.out.println(selectFile);
+        DownloadFileService downloadFileService;
+        downloadFileService = ObjectRegistry.getInstance(DownloadFileService.class);
+        downloadFileService.sendRequest(selectFile);
+    }
+
+   public void clickbtnDeleteFile(MouseEvent mouseEvent) {
+        String fileForDelete;
+        if (localListView.isFocused()){
+            fileForDelete = localListView.getSelectionModel().getSelectedItem().toString();
+            ObjectRegistry.getInstance(DeleteFileService.class).deleteFileFromLocalDir(fileForDelete,userRights);
+            //try {
+                //updateLocalList(getList());
+           // } catch (IOException e) {
+              //  e.printStackTrace();
+           // }
+        }
+        if (serverListView.isFocused()){
+            fileForDelete = serverListView.getSelectionModel().getSelectedItem().toString();
+            ObjectRegistry.getInstance(DeleteFileService.class).deleteFileFromCloud(fileForDelete,userDir,userRights,token);
+        }
+    }
+
+    public void clckServerFileTable(MouseEvent mouseEvent) {
+        if (mouseEvent.getClickCount()==2){
+            if (serverFileTable.getSelectionModel().getSelectedItem().getFileType().equals("DIR")){
+                currentServerPath=currentServerPath+ "//"+ serverFileTable.getSelectionModel().getSelectedItem().getFileName();
+                System.out.println(serverFileTable.getSelectionModel().getSelectedItem().getFileType());
+                System.out.println(currentServerPath);
+                GetFilesListRequest getFilesListRequest=new GetFilesListRequest(token,currentServerPath);
+                ObjectRegistry.getInstance(NetworkNetty.class).sendGetFileListRequest(getFilesListRequest);
+            }
+
+            //Path path = Paths.get(localPathField.getText()).resolve(localFileTable.getSelectionModel().getSelectedItem().getFileName());
+           // if (Files.isDirectory(path)){
+           //     updateLocalTable(path);
+           // }
+        }
+    }
+
+    public void btnUpServerDirectory(MouseEvent mouseEvent) {
+        if (!currentServerPath.equals(userDir)){
+            int ii = currentServerPath.lastIndexOf("//");
+            currentServerPath=currentServerPath.substring(0,ii);
+            System.out.println(currentServerPath);
+            GetFilesListRequest getFilesListRequest=new GetFilesListRequest(token,currentServerPath);
+            ObjectRegistry.getInstance(NetworkNetty.class).sendGetFileListRequest(getFilesListRequest);
+        }
+    }
+
+
+   /* public void keyPressedServerListView(KeyEvent keyEvent) {
+        System.out.println("Активен localList");
+        if (localListView.isFocused()){
+            if (localList.size()==0){
+                btnDelete.setDisable(true);
+            }
+            else btnDelete.setDisable(false);
+        }
+
+    }
+
+    public void clkMouseServerListView(MouseEvent mouseEvent) {
+        if (serverListView.isFocused()){
+            if (serverListView.getSelectionModel().getSelectedItem()==null){
+                btnDelete.setDisable(true);
+            }
+            else btnDelete.setDisable(false);
+        }
+        System.out.println("Активен ");
+    }
+
+    public void btnUpServerDirectory(MouseEvent mouseEvent) {
+    }
+
+/*
+    public void clkMouseLocalListView(MouseEvent mouseEvent) {
+        if (localListView.isFocused()){
+            if (localListView.getSelectionModel().getSelectedItem()==null){
+                btnDelete.setDisable(true);
+            }
+            else btnDelete.setDisable(false);
+        }
+    }
+
+    public void keyPressedLocalListView(KeyEvent keyEvent) {
+        System.out.println("активен serverList");
+        if (serverListView.isFocused()){
+            if (serverList.size()==0){
+                btnDelete.setDisable(true);
+
+            }
+            else btnDelete.setDisable(false);
+        }
+    }
 
     public void updateLocalList (List files){
         //System.out.println(files.size());
@@ -161,88 +388,22 @@ public class NetFileWarehouseController implements Initializable {
 
     }
 
-    public void clickbtnLocalToCloudCopy(MouseEvent mouseEvent) {
-        if (!userRights.equals("ro")){
-            //System.out.println(userRights);
-            //System.out.println("Копировать в облако");
-            String selectFile;
-            selectFile = localListView.getSelectionModel().getSelectedItem().toString();
-            //System.out.println(selectFile);
-            UploadFileService uploadFileService;
-            uploadFileService = ObjectRegistry.getInstance(UploadFileService.class);
-            uploadFileService.uploadFile(selectFile);
-        }
-        else{
-            Alert alert = new Alert(Alert.AlertType.WARNING,"У вас нет прав на загрузку файлов на сервер!!!\n Для изменения прав обратитесь к администратору!",ButtonType.OK);
-            alert.showAndWait();
-        }
-    }
+    public List<String> getList() throws IOException {
+        List<String> files = null;
+        try{
+            Path path=Paths.get(System.getProperty("user.dir")+"//local");
 
-    public void clickbtnCloudToLocalCopy(MouseEvent mouseEvent) {
-        //System.out.println("Копировать из облака на локальный компьютер");
-        String selectFile;
-        selectFile = serverListView.getSelectionModel().getSelectedItem().toString();
-        //System.out.println(selectFile);
-        DownloadFileService downloadFileService;
-        downloadFileService = ObjectRegistry.getInstance(DownloadFileService.class);
-        downloadFileService.sendRequest(selectFile);
-    }
+            files = Files.list(path)
+                    .map(p -> p.getFileName().toString())
+                    .collect(Collectors.toList());
 
-    public void clickbtnDeleteFile(MouseEvent mouseEvent) {
-        String fileForDelete;
-        if (localListView.isFocused()){
-            fileForDelete = localListView.getSelectionModel().getSelectedItem().toString();
-            ObjectRegistry.getInstance(DeleteFileService.class).deleteFileFromLocalDir(fileForDelete,userRights);
-            try {
-                updateLocalList(getList());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        }catch (IOException e){
+            e.printStackTrace();
         }
-        if (serverListView.isFocused()){
-            fileForDelete = serverListView.getSelectionModel().getSelectedItem().toString();
-            ObjectRegistry.getInstance(DeleteFileService.class).deleteFileFromCloud(fileForDelete,userDir,userRights,token);
-        }
-    }
+        return files;
 
-    public void clkMouseLocalListView(MouseEvent mouseEvent) {
-        if (localListView.isFocused()){
-            if (localListView.getSelectionModel().getSelectedItem()==null){
-                btnDelete.setDisable(true);
-            }
-            else btnDelete.setDisable(false);
-        }
-    }
-
-    public void keyPressedLocalListView(KeyEvent keyEvent) {
-        System.out.println("активен serverList");
-        if (serverListView.isFocused()){
-            if (serverList.size()==0){
-                btnDelete.setDisable(true);
-
-            }
-            else btnDelete.setDisable(false);
-        }
-    }
-
-    public void keyPressedServerListView(KeyEvent keyEvent) {
-        System.out.println("Активен localList");
-        if (localListView.isFocused()){
-            if (localList.size()==0){
-                btnDelete.setDisable(true);
-            }
-            else btnDelete.setDisable(false);
-        }
 
     }
 
-    public void clkMouseServerListView(MouseEvent mouseEvent) {
-        if (serverListView.isFocused()){
-            if (serverListView.getSelectionModel().getSelectedItem()==null){
-                btnDelete.setDisable(true);
-            }
-            else btnDelete.setDisable(false);
-        }
-        System.out.println("Активен ");
-    }
+ */
 }

@@ -13,6 +13,10 @@ import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
 import ru.gb.cloudmessages.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
 public class NetworkNetty {
 
     public static final int MAX_OBJECT_SIZE = 300 * 1_000_000;
@@ -59,8 +63,9 @@ public class NetworkNetty {
     }
 
     public void sendGetFileListRequest(GetFilesListRequest getFilesListRequest){
-        //System.out.println("NettyNetwork.sendAuthRequest    " );
+        System.out.println("NettyNetwork. "+getFilesListRequest.getClass().toString()+ " "+ LocalTime.now().toString());
         clientChannel.writeAndFlush(getFilesListRequest);
+        System.out.println("Ушел из NetworkNetty");
     }
 
     public void sendDeleteFileRequest(DeleteFileRequest deleteFileRequest){

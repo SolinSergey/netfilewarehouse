@@ -2,8 +2,10 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
@@ -16,12 +18,12 @@
       <Separator layoutY="26.0" prefHeight="5.0" prefWidth="1280.0" />
       <Label layoutY="935.0" prefHeight="25.0" prefWidth="1280.0" text="Label" />
       <Separator layoutY="930.0" prefHeight="5.0" prefWidth="1280.0" />
-      <Button onMouseClicked="#clickbtnDeleteFile" fx:id="btnDelete" contentDisplay="CENTER" focusTraversable="false" layoutX="558.0" layoutY="467.0" mnemonicParsing="false" prefHeight="94.0" prefWidth="171.0" text="Удалить">
+      <Button fx:id="btnDelete" contentDisplay="CENTER" focusTraversable="false" layoutX="558.0" layoutY="467.0" mnemonicParsing="false" prefHeight="94.0" prefWidth="171.0" text="Удалить">
          <font>
             <Font size="18.0" />
          </font>
       </Button>
-      <Button fx:id="btnLocalToCloudCopy" alignment="CENTER" contentDisplay="CENTER" focusTraversable="false" layoutX="558.0" layoutY="252.0" mnemonicParsing="false" onMouseClicked="#clickbtnLocalToCloudCopy" prefHeight="94.0" prefWidth="171.0" text="Скопировать в облако" textOverrun="CLIP">
+      <Button fx:id="btnLocalToCloudCopy" alignment="CENTER" contentDisplay="CENTER" focusTraversable="false" layoutX="558.0" layoutY="252.0" mnemonicParsing="false" prefHeight="94.0" prefWidth="171.0" text="Скопировать в облако" textOverrun="CLIP">
          <font>
             <Font size="14.0" />
          </font>
@@ -31,7 +33,23 @@
             <Font size="14.0" />
          </font>
       </Button>
-      <ListView fx:id="localListView" onKeyPressed="#keyPressedLocalListView" onMouseClicked="#clkMouseLocalListView" layoutX="101.0" layoutY="72.0" prefHeight="789.0" prefWidth="430.0" />
-      <ListView fx:id="serverListView" onKeyPressed="#keyPressedServerListView" onMouseClicked="#clkMouseServerListView" layoutX="760.0" layoutY="72.0" prefHeight="789.0" prefWidth="430.0" />
+      <TableView fx:id="localFileTable" layoutX="35.0" layoutY="110.0" onMouseClicked="#clckLocalFileTable" prefHeight="738.0" prefWidth="449.0">
+        <columns>
+          <TableColumn fx:id="localFileTypeColumn" prefWidth="40.0" />
+          <TableColumn fx:id="localFileNameColumn" prefWidth="300.0" text="Имя" />
+            <TableColumn fx:id="localFileSizeColumn" minWidth="0.0" prefWidth="114.0" text="Размер" />
+        </columns>
+      </TableView>
+      <TextField fx:id="localPathField" editable="false" layoutX="35.0" layoutY="847.0" prefHeight="25.0" prefWidth="449.0" />
+      <Button layoutX="35.0" layoutY="65.0" mnemonicParsing="false" onMouseClicked="#btnUpLocalDirectory" prefHeight="45.0" prefWidth="449.0" text="Поднятся на дирректорию вверх" />
+      <TableView fx:id="serverFileTable" layoutX="787.0" layoutY="110.0" onMouseClicked="#clckServerFileTable" prefHeight="738.0" prefWidth="449.0">
+         <columns>
+            <TableColumn fx:id="serverFileTypeColumn" prefWidth="40.0" />
+            <TableColumn fx:id="serverFileNameColumn" prefWidth="300.0" text="Имя" />
+            <TableColumn fx:id="serverFileSizeColumn" minWidth="0.0" prefWidth="114.0" text="Размер" />
+         </columns>
+      </TableView>
+      <Button layoutX="787.0" layoutY="65.0" onMouseClicked="#btnUpServerDirectory" mnemonicParsing="false" prefHeight="45.0" prefWidth="449.0" text="Поднятся на дирректорию вверх" />
+      <TextField fx:id="serverPathField1" editable="false" layoutX="787.0" layoutY="847.0" prefHeight="25.0" prefWidth="449.0" />
    </children>
 </Pane>

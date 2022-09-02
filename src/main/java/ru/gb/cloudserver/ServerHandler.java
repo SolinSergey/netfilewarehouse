@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,9 +40,12 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
         }
         else{
             if (token.equals(request.getAuthToken())){
+                System.out.println(token);
                 RequestHandler handler = HandlerRegistry.getHandler(request.getClass());
                 BasicResponse response = handler.handle(request, channelHandlerContext);
+                System.out.println("ОТПРАВЛЕН!!!" +  response.getClass().toString()+ " " + LocalTime.now().toString());
                 channelHandlerContext.writeAndFlush(response);
+                System.out.println("ОТПРАВЛЕН АГА!!!" +  response.getClass().toString()+ " " + LocalTime.now().toString());
             }
 
         }
