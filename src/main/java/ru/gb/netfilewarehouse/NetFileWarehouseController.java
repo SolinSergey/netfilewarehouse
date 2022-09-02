@@ -271,18 +271,20 @@ public class NetFileWarehouseController implements Initializable {
 
     public void clickbtnDeleteFile(MouseEvent mouseEvent) {
         String fileForDelete;
-        if (localListView.isFocused()) {
-            fileForDelete = localListView.getSelectionModel().getSelectedItem().toString();
+        if (localFileTable.isFocused()) {
+            fileForDelete = localFileTable.getSelectionModel().getSelectedItem().getFileName();
             ObjectRegistry.getInstance(DeleteFileService.class).deleteFileFromLocalDir(fileForDelete, userRights);
+            updateLocalTable(Paths.get(localPathField.getText()));
             //try {
             //updateLocalList(getList());
             // } catch (IOException e) {
             //  e.printStackTrace();
             // }
         }
-        if (serverListView.isFocused()) {
-            fileForDelete = serverListView.getSelectionModel().getSelectedItem().toString();
-            ObjectRegistry.getInstance(DeleteFileService.class).deleteFileFromCloud(fileForDelete, userDir, userRights, token);
+        if (serverFileTable.isFocused()) {
+            fileForDelete = serverFileTable.getSelectionModel().getSelectedItem().getFileName();
+            ObjectRegistry.getInstance(DeleteFileService.class).deleteFileFromCloud(fileForDelete, currentServerPath, userRights, token);
+
         }
     }
 
