@@ -8,6 +8,7 @@ import ru.gb.service.AuthService;
 import ru.gb.service.DownloadFileService;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.time.LocalTime;
 
 
@@ -57,7 +58,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 
 
             if (message.equals("OK")) {
-                GetFilesListRequest getFilesListRequest = new GetFilesListRequest(userToken,userDir);
+                GetFilesListRequest getFilesListRequest = new GetFilesListRequest(userToken,ObjectRegistry.getInstance(NetFileWarehouseController.class).currentServerPath);
                 ctx.writeAndFlush(getFilesListRequest);
             }
             else {
@@ -65,21 +66,18 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
             }
         }
 
- /*       if (response instanceof DownloadFileResponse && response.getAuthToken().equals(userToken)){
+        if (response instanceof DownloadFileResponse && response.getAuthToken().equals(userToken)){
             //System.out.println("Пришел DownloadFileResponse");
             //System.out.println("Поступил объект с файлом: " + ((DownloadFileResponse) response).getFileName());
             DownloadFileService downloadFileService;
             downloadFileService = ObjectRegistry.getInstance(DownloadFileService.class);
             downloadFileService.saveDownloadFile((DownloadFileResponse) response);
             Platform.runLater(()->{
-                try {
-                    netFileWarehouseController.updateLocalList(netFileWarehouseController.getList());
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+                netFileWarehouseController.updateLocalTable(Paths.get(netFileWarehouseController.localPathField.getText()));
+
             });
         }
-*/
+
         if (response instanceof DeleteFileResponse && response.getAuthToken().equals((userToken))){
             if (response.getErrorMessage().equals("OK")){
                 GetFilesListRequest getFilesListRequest = new GetFilesListRequest(userToken,userDir);

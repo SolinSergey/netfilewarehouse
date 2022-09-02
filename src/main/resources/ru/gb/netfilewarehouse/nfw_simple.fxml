@@ -23,7 +23,7 @@
             <Font size="18.0" />
          </font>
       </Button>
-      <Button fx:id="btnLocalToCloudCopy" alignment="CENTER" contentDisplay="CENTER" focusTraversable="false" layoutX="558.0" layoutY="252.0" mnemonicParsing="false" prefHeight="94.0" prefWidth="171.0" text="Скопировать в облако" textOverrun="CLIP">
+      <Button fx:id="btnLocalToCloudCopy" onMouseClicked="#clickbtnLocalToCloudCopy" alignment="CENTER" contentDisplay="CENTER" focusTraversable="false" layoutX="558.0" layoutY="252.0" mnemonicParsing="false" prefHeight="94.0" prefWidth="171.0" text="Скопировать в облако" textOverrun="CLIP">
          <font>
             <Font size="14.0" />
          </font>
@@ -50,6 +50,6 @@
          </columns>
       </TableView>
       <Button layoutX="787.0" layoutY="65.0" onMouseClicked="#btnUpServerDirectory" mnemonicParsing="false" prefHeight="45.0" prefWidth="449.0" text="Поднятся на дирректорию вверх" />
-      <TextField fx:id="serverPathField1" editable="false" layoutX="787.0" layoutY="847.0" prefHeight="25.0" prefWidth="449.0" />
+      <TextField fx:id="serverPathField" editable="false" layoutX="787.0" layoutY="847.0" prefHeight="25.0" prefWidth="449.0" />
    </children>
 </Pane>

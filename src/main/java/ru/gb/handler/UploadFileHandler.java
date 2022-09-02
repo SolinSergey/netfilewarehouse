@@ -3,6 +3,7 @@ package ru.gb.handler;
 import io.netty.channel.ChannelHandlerContext;
 import ru.gb.cloudmessages.UploadFileRequest;
 import ru.gb.cloudmessages.UploadFileResponse;
+
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.file.Files;
@@ -22,21 +23,25 @@ public class UploadFileHandler implements RequestHandler<UploadFileRequest, Uplo
     @Override
     public UploadFileResponse handle(UploadFileRequest request, ChannelHandlerContext context) throws IOException {
         String fileName = request.getFileName();
+        System.out.println("UploadFileResponse = "+fileName);
         userDir = request.getUserDir();
+        System.out.println("UploadFileResponse = "+userDir);
         byte[] filePartData = request.getFilePartData();
+        //System.out.println(request.getUserDir() + "//" + fileName);
         try {
-            Path write = Files.write(Paths.get(SERVER_PATH + "//"+userDir+"//" + fileName), filePartData);
+            Path write = Files.write(Paths.get(SERVER_PATH+"//"+request.getUserDir() + "//" + fileName).normalize().toAbsolutePath(), filePartData);
         } catch (IOException ex) {
+            ex.printStackTrace();
             return new UploadFileResponse("Не удалось сохранить файл на сервере", request.getAuthToken());
         }
-        return new UploadFileResponse("OK",request.getAuthToken());
+        return new UploadFileResponse("OK", request.getAuthToken());
     }
 
     //public List<String> getList() throws IOException {
     //    Path path = Paths.get(SERVER_PATH + "//"+userDir+"//");
     //    List<String> files;
     ////    files = Files.list(path)
-     //           .map(p -> p.getFileName().toString())
+    //           .map(p -> p.getFileName().toString())
     //            .collect(Collectors.toList());
     //    System.out.println(files);
     //    return files;
