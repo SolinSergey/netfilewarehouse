@@ -26,6 +26,8 @@ public class AuthService {
     private String userPassword="";
     private String userDir="";
 
+    private long userQuote=0;
+
     private String userRights;
 
     public void sendAuthRequest(){
@@ -33,6 +35,7 @@ public class AuthService {
         AuthRequest authRequest = new AuthRequest(userName,userPassword);
         ObjectRegistry.getInstance(NetworkNetty.class).sendAuthRequest(authRequest);
     }
+
     public boolean auth(String token) {
 
         return ObjectRegistry.getInstance(CryptService.class).getUserToken().equals(token);
@@ -40,7 +43,6 @@ public class AuthService {
     public String getAuthToken (){
         return this.authToken;
     }
-
     public void setAuthToken(String authToken) {
         this.authToken = authToken;
         //System.out.println("Сохраненный токен: "+this.authToken);
@@ -126,6 +128,14 @@ public class AuthService {
 
     public boolean isGetUserRights() {
         return isGetUserRights;
+    }
+
+    public long getUserQuote() {
+        return userQuote;
+    }
+
+    public void setUserQuote(long userQuote) {
+        this.userQuote = userQuote;
     }
 
 

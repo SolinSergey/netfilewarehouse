@@ -5,9 +5,9 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import ru.gb.cloudmessages.CheckUsedSpaceRequest;
 import ru.gb.cloudmessages.GetFilesListRequest;
 import ru.gb.service.AuthService;
 import ru.gb.service.DeleteFileService;
@@ -36,6 +36,8 @@ public class NetFileWarehouseController implements Initializable {
     public TableColumn<FileData, String> serverFileTypeColumn;
     public TableColumn<FileData, String> serverFileNameColumn;
     public TableColumn<FileData, Long> serverFileSizeColumn;
+    public ProgressBar serverQwoteProgress;
+    public Label freeSpaceProgressLabel;
 
     private String userToken;
     public static Stage mainStage;
@@ -48,6 +50,7 @@ public class NetFileWarehouseController implements Initializable {
 
     private String userRights;
     private String userDir;
+    private long freeSpaceUserDir;
     private List<String> serverList;
     private List localList;
     String currentServerPath;
@@ -118,6 +121,9 @@ public class NetFileWarehouseController implements Initializable {
         System.out.println(userDir);
         GetFilesListRequest getFilesListRequest = new GetFilesListRequest(token, userDir);
         ObjectRegistry.getInstance(NetworkNetty.class).sendGetFileListRequest(getFilesListRequest);
+        CheckUsedSpaceRequest checkUsedSpaceRequest =new CheckUsedSpaceRequest(token,userDir);
+        ObjectRegistry.getInstance(NetworkNetty.class).sendCheckFreeSpaceRequest(checkUsedSpaceRequest);
+
         updateLocalTable(path);
         isClientInit = true;
         currentServerPath = userDir + "";
@@ -183,7 +189,10 @@ public class NetFileWarehouseController implements Initializable {
         serverFileTable.getItems().addAll(list);
         serverFileTable.sort();
         serverFileTable.getSelectionModel().select(0);
+        CheckUsedSpaceRequest checkUsedSpaceRequest =new CheckUsedSpaceRequest(token,userDir);
+        ObjectRegistry.getInstance(NetworkNetty.class).sendCheckFreeSpaceRequest(checkUsedSpaceRequest);
 
+        //serverQwoteProgress.setProgress(0.99);
     }
 
     public void updateLocalTable(Path path) {
@@ -239,14 +248,29 @@ public class NetFileWarehouseController implements Initializable {
 */
 
     public void clickbtnLocalToCloudCopy(MouseEvent mouseEvent) {
-
+        long fileSize;
         if (!userRights.equals("ro") && localFileTable.getSelectionModel().getSelectedItem().getFileType().equals("FILE")) {
             //System.out.println(userRights);
             //System.out.println("Копировать в облако");
             String selectFile = localFileTable.getSelectionModel().getSelectedItem().getFileName();
+            Path path=Paths.get(localPathField.getText()+"//"+selectFile).normalize().toAbsolutePath();
+            try {
+                System.out.println(path);;
+                fileSize=Files.size(path);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            System.out.println("Сободное место: " + freeSpaceUserDir);
+            System.out.println("Размер файла" + fileSize);
+            if (fileSize<freeSpaceUserDir){
+                UploadFileService uploadFileService = ObjectRegistry.getInstance(UploadFileService.class);
+                uploadFileService.uploadFile(selectFile);
+            }
+            else{
+                Alert alert = new Alert(Alert.AlertType.WARNING, "В удаленном хранилище недостаточно свободного места!\nНевозможно скопировать файл!", ButtonType.OK);
+                alert.showAndWait();
+            }
             //System.out.println(selectFile);
-            UploadFileService uploadFileService = ObjectRegistry.getInstance(UploadFileService.class);
-            uploadFileService.uploadFile(selectFile);
         } else {
             Alert alert = new Alert(Alert.AlertType.WARNING, "У вас нет прав на загрузку файлов на сервер!!!\n Для изменения прав обратитесь к администратору!", ButtonType.OK);
             alert.showAndWait();
@@ -317,6 +341,18 @@ public class NetFileWarehouseController implements Initializable {
             Path path = Paths.get(currentServerPath).normalize();
             serverPathField.setText("\\" + path);
         }
+    }
+
+    public void updateUsedSpaceProgressBar(long userQuote, long usedSpace){
+        final int BYTES_PER_MEGABYTE = 1024 * 1024;
+        freeSpaceUserDir=userQuote*BYTES_PER_MEGABYTE-usedSpace;
+        double progressUsed=usedSpace*1.0/(userQuote*BYTES_PER_MEGABYTE);
+        System.out.println("BYTES_PER_MEGABYTE: "+BYTES_PER_MEGABYTE);
+        System.out.println("Квота: " + userQuote);
+        System.out.println("ProgressUsed "+progressUsed);
+        serverQwoteProgress.setProgress(progressUsed);
+        String labelText = "Использовано "+ Math.round(progressUsed*100)+"% ("+Math.round(usedSpace/BYTES_PER_MEGABYTE)+"Mб/"+userQuote+"Мб)";
+        freeSpaceProgressLabel.setText(labelText);
     }
 
 

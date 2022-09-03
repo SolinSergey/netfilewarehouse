@@ -7,7 +7,6 @@ import ru.gb.cloudmessages.*;
 import ru.gb.service.AuthService;
 import ru.gb.service.DownloadFileService;
 
-import java.io.IOException;
 import java.nio.file.Paths;
 import java.time.LocalTime;
 
@@ -16,6 +15,9 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 
     private String userToken;
     private String userDir;
+    private long userQuote;
+
+
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -34,6 +36,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
                 ObjectRegistry.getInstance(AuthService.class).setAuthToken(response.getAuthToken());
                 ObjectRegistry.getInstance(AuthService.class).setUserDir(((AuthResponse) response).getUserDir());
                 ObjectRegistry.getInstance(AuthService.class).setUserRights(((AuthResponse) response).getUserRights());
+                ObjectRegistry.getInstance((AuthService.class)).setUserQuote(((AuthResponse) response).getUserQuote());
             }
             else{
                 System.out.println("Авторизация не выполнена");
@@ -43,6 +46,9 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 
         userToken=ObjectRegistry.getInstance(AuthService.class).getAuthToken();
         userDir=ObjectRegistry.getInstance(AuthService.class).getUserDir();
+        userQuote=ObjectRegistry.getInstance(AuthService.class).getUserQuote();
+        System.out.println("Квота в ClientHandler"+ userQuote);
+
         if ((response instanceof GetFilesListResponse) && (response.getAuthToken().equals(userToken))) {
             System.out.println("response пришел "+((GetFilesListResponse) response).getList());
             Platform.runLater(()->{
@@ -87,6 +93,21 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
             else {
                 System.out.println("Ошибка удаления файла на сервере");
             }
+        }
+
+        if (response instanceof CheckUsedSpaceResponse && response.getAuthToken().equals(userToken)){
+            long usedSpace = ((CheckUsedSpaceResponse) response).getUsedSpaceInUserPath();
+            //System.out.println("Использовано "+usedSpace);
+            //double progressUsed=usedSpace*1.0/(userQuote*BYTES_PER_MEGABYTE);
+            //System.out.println("BYTES_PER_MEGABYTE: "+BYTES_PER_MEGABYTE);
+            //System.out.println("Квота: " + userQuote);
+            //System.out.println("ProgressUsed "+progressUsed);
+            //ObjectRegistry.getInstance(NetFileWarehouseController.class).serverQwoteProgress.setProgress(progressUsed);
+            //String labelText = "Использовано "+ Math.round(progressUsed*100)+"% ("+Math.round(usedSpace/BYTES_PER_MEGABYTE)+"Mб/"+userQuote+"Мб)";
+            //ObjectRegistry.getInstance(NetFileWarehouseController.class).freeSpaceProgressLabel.setText(labelText);
+            Platform.runLater(()->{
+                netFileWarehouseController.updateUsedSpaceProgressBar(userQuote,usedSpace);
+            });
         }
     }
 

@@ -13,8 +13,6 @@ import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
 import ru.gb.cloudmessages.*;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class NetworkNetty {
@@ -71,4 +69,9 @@ public class NetworkNetty {
     public void sendDeleteFileRequest(DeleteFileRequest deleteFileRequest){
         clientChannel.writeAndFlush(deleteFileRequest);
     }
+
+    public void sendCheckFreeSpaceRequest(CheckUsedSpaceRequest checkUsedSpaceRequest){
+        clientChannel.writeAndFlush(checkUsedSpaceRequest);
+    }
+
 }

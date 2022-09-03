@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -18,12 +19,12 @@
       <Separator layoutY="26.0" prefHeight="5.0" prefWidth="1280.0" />
       <Label layoutY="935.0" prefHeight="25.0" prefWidth="1280.0" text="Label" />
       <Separator layoutY="930.0" prefHeight="5.0" prefWidth="1280.0" />
-      <Button fx:id="btnDelete" onMouseClicked="#clickbtnDeleteFile" contentDisplay="CENTER" focusTraversable="false" layoutX="558.0" layoutY="467.0" mnemonicParsing="false" prefHeight="94.0" prefWidth="171.0" text="Удалить">
+      <Button fx:id="btnDelete" contentDisplay="CENTER" focusTraversable="false" layoutX="558.0" layoutY="467.0" mnemonicParsing="false" onMouseClicked="#clickbtnDeleteFile" prefHeight="94.0" prefWidth="171.0" text="Удалить">
          <font>
             <Font size="18.0" />
          </font>
       </Button>
-      <Button fx:id="btnLocalToCloudCopy" onMouseClicked="#clickbtnLocalToCloudCopy" alignment="CENTER" contentDisplay="CENTER" focusTraversable="false" layoutX="558.0" layoutY="252.0" mnemonicParsing="false" prefHeight="94.0" prefWidth="171.0" text="Скопировать в облако" textOverrun="CLIP">
+      <Button fx:id="btnLocalToCloudCopy" alignment="CENTER" contentDisplay="CENTER" focusTraversable="false" layoutX="558.0" layoutY="252.0" mnemonicParsing="false" onMouseClicked="#clickbtnLocalToCloudCopy" prefHeight="94.0" prefWidth="171.0" text="Скопировать в облако" textOverrun="CLIP">
          <font>
             <Font size="14.0" />
          </font>
@@ -41,7 +42,7 @@
         </columns>
       </TableView>
       <TextField fx:id="localPathField" editable="false" layoutX="35.0" layoutY="847.0" prefHeight="25.0" prefWidth="449.0" />
-      <Button layoutX="35.0" layoutY="65.0" mnemonicParsing="false" onMouseClicked="#btnUpLocalDirectory" prefHeight="45.0" prefWidth="449.0" text="Поднятся на дирректорию вверх" />
+      <Button layoutX="35.0" layoutY="66.0" mnemonicParsing="false" onMouseClicked="#btnUpLocalDirectory" prefHeight="45.0" prefWidth="449.0" text="Поднятся на дирректорию вверх" />
       <TableView fx:id="serverFileTable" layoutX="787.0" layoutY="110.0" onMouseClicked="#clckServerFileTable" prefHeight="738.0" prefWidth="449.0">
          <columns>
             <TableColumn fx:id="serverFileTypeColumn" prefWidth="40.0" />
@@ -49,7 +50,9 @@
             <TableColumn fx:id="serverFileSizeColumn" minWidth="0.0" prefWidth="114.0" text="Размер" />
          </columns>
       </TableView>
-      <Button layoutX="787.0" layoutY="65.0" onMouseClicked="#btnUpServerDirectory" mnemonicParsing="false" prefHeight="45.0" prefWidth="449.0" text="Поднятся на дирректорию вверх" />
+      <Button layoutX="787.0" layoutY="66.0" mnemonicParsing="false" onMouseClicked="#btnUpServerDirectory" prefHeight="45.0" prefWidth="449.0" text="Поднятся на дирректорию вверх" />
       <TextField fx:id="serverPathField" editable="false" layoutX="787.0" layoutY="847.0" prefHeight="25.0" prefWidth="449.0" />
+      <ProgressBar fx:id="serverQwoteProgress" layoutX="787.0" layoutY="871.0" prefHeight="25.0" prefWidth="449.0" progress="0.0" />
+      <Label fx:id="freeSpaceProgressLabel" alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="901.0" layoutY="875.0" prefHeight="17.0" prefWidth="222.0" text="Свободно 100%" />
    </children>
 </Pane>

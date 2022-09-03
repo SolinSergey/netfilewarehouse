@@ -65,4 +65,22 @@ public class DAO {
         }
         return s;
     }
+    public long getUserQuoteFromDB(String userName){
+        ResultSet resultSet;
+        long q=0;
+        String s;
+        try{
+            Statement stmt = connection.createStatement();
+            s = "SELECT user_quote FROM user WHERE login = \'"+userName+"\';";
+            System.out.println(q);
+            resultSet=stmt.executeQuery(s);
+            if (!resultSet.isClosed()){
+                q=(long)resultSet.getLong(1);
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return q;
+    }
+
 }

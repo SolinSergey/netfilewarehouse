@@ -14,22 +14,27 @@ public class AuthHandler implements RequestHandler<AuthRequest, AuthResponse> {
 
     String userDir;
     String userRights;
+    long userQuote;
+
     @Override
     public AuthResponse handle(AuthRequest request, ChannelHandlerContext channelHandlerContext) throws IOException {
         DAO dao = new DAO();
         AuthResponse authResponse;
         if (getCryptString(request.getPassword()).equals(dao.getUserPasswordFromDB(request.getUsername()))) {
             token = request.getUsername() + ":" + getCryptString(request.getPassword());
-            userDir=dao.getUserWorkDirFromDB(request.getPassword());
-            userRights= dao.getUserRightsFromDB(request.getPassword());
-            authResponse = new AuthResponse("", token,userDir,userRights);
+            userDir = dao.getUserWorkDirFromDB(request.getPassword());
+            userRights = dao.getUserRightsFromDB(request.getPassword());
+            userQuote = dao.getUserQuoteFromDB(request.getUsername());
+            System.out.println("Квота в handle = " + userQuote);
+            authResponse = new AuthResponse("", token, userDir, userRights, userQuote);
         } else {
-            authResponse = new AuthResponse("Пользователь не найден!!!", "NotAutorized","NotAutorized","NotAutorized");
+            authResponse = new AuthResponse("Пользователь не найден!!!", "NotAutorized", "NotAutorized", "NotAutorized", 0);
         }
         //System.out.println("AuthResponse подготовлен: " + authResponse.getErrorMessage() + authResponse.getAuthToken());
         return authResponse;
     }
-    public String getCryptString(String stringToCrypt){
+
+    public String getCryptString(String stringToCrypt) {
         String toReturn = null;
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");

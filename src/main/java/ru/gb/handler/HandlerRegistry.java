@@ -18,7 +18,7 @@ public class HandlerRegistry {
         handlerMap.put(DownloadFileRequest.class, new DownloadFileHandler());
         handlerMap.put(AuthRequest.class, new AuthHandler());
         handlerMap.put(DeleteFileRequest.class, new DeleteFileHandler());
-        handlerMap.put(ChangeDirRequest.class, new ChangeDirHandler());
+        handlerMap.put(CheckUsedSpaceRequest.class, new CheckFreeSpaceHandler());
 
 
         HANDLERS_MAP = Collections.unmodifiableMap(handlerMap);
