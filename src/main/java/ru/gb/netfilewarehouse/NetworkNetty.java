@@ -17,7 +17,7 @@ import java.time.LocalTime;
 
 public class NetworkNetty {
 
-    public static final int MAX_OBJECT_SIZE = 300 * 1_000_000;
+    public static final int MAX_OBJECT_SIZE = 20_000_000;
 
     private final Channel clientChannel;
 
@@ -47,7 +47,12 @@ public class NetworkNetty {
     }
 
     public void uploadFile(UploadFileRequest uploadFileRequest) {
-        clientChannel.writeAndFlush(uploadFileRequest);
+        try {
+            clientChannel.writeAndFlush(uploadFileRequest).sync();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException(e);
+        }
     }
 
     public void sendDownloadRequest(DownloadFileRequest downloadFileRequest) {
@@ -71,7 +76,7 @@ public class NetworkNetty {
     }
 
     public void sendCheckFreeSpaceRequest(CheckUsedSpaceRequest checkUsedSpaceRequest){
-        clientChannel.writeAndFlush(checkUsedSpaceRequest);
+            clientChannel.writeAndFlush(checkUsedSpaceRequest);
     }
 
 }

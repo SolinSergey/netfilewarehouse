@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 
 
@@ -31,7 +32,7 @@ public class DownloadFileService {
             Path filePath = Paths.get(ObjectRegistry.getInstance(NetFileWarehouseController.class).localPathField.getText()+"//"+response.getFileName());
             //System.out.println(Arrays.toString(response.getFilePartData()));
             System.out.println("Путь сохранения: "+filePath.toString());
-            Files.write(filePath, response.getFilePartData());
+            Files.write(filePath, response.getFilePartData(),StandardOpenOption.CREATE,StandardOpenOption.APPEND);
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("Невозможно сохранить файл");

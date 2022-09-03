@@ -14,7 +14,7 @@ import io.netty.handler.codec.serialization.ObjectEncoder;
 
 public class CloudServer {
 
-    public static final int MAX_OBJECT_SIZE = 300 * 1_000_000;
+    public static final int MAX_OBJECT_SIZE = 20_000_000;
 
     public static void main(String[] args) throws InterruptedException {
         EventLoopGroup bossGroup = new NioEventLoopGroup();

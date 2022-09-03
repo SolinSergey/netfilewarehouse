@@ -15,7 +15,7 @@ public class HandlerRegistry {
         handlerMap.put(GetFilesListRequest.class, new GetFilesListHandler());
         handlerMap.put(RegisterUserRequest.class, new RegisterUserHandler());
         handlerMap.put(UploadFileRequest.class, new UploadFileHandler());
-        handlerMap.put(DownloadFileRequest.class, new DownloadFileHandler());
+        //handlerMap.put(DownloadFileRequest.class, new DownloadFileHandler());
         handlerMap.put(AuthRequest.class, new AuthHandler());
         handlerMap.put(DeleteFileRequest.class, new DeleteFileHandler());
         handlerMap.put(CheckUsedSpaceRequest.class, new CheckFreeSpaceHandler());

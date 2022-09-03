@@ -3,6 +3,7 @@ package ru.gb.cloudserver;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import ru.gb.cloudmessages.*;
+import ru.gb.handler.DownLoadFileHandler1;
 import ru.gb.handler.HandlerRegistry;
 import ru.gb.handler.RequestHandler;
 import ru.gb.cloudmessages.BasicRequest;
@@ -39,6 +40,11 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
             channelHandlerContext.writeAndFlush(response);
         }
         else{
+            if (token.equals(request.getAuthToken()) && request instanceof DownloadFileRequest){
+                DownLoadFileHandler1 downLoadFileHandler1=new DownLoadFileHandler1();
+                downLoadFileHandler1.downloadFile(token,((DownloadFileRequest) request).getFileName(),((DownloadFileRequest) request).getUserDir(),channelHandlerContext);
+            }
+
             if (token.equals(request.getAuthToken())){
                 System.out.println(token);
                 RequestHandler handler = HandlerRegistry.getHandler(request.getClass());

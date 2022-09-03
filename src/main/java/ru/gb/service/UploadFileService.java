@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.function.Consumer;
 
 public class UploadFileService {
 
@@ -18,17 +19,27 @@ public class UploadFileService {
         Path filePath = Paths.get(ObjectRegistry.getInstance(NetFileWarehouseController.class).localPathField.getText()+"//"+fileName);
         userToken = ObjectRegistry.getInstance(AuthService.class).getAuthToken();
         currentServerDir = ObjectRegistry.getInstance(NetFileWarehouseController.class).serverPathField.getText();
-       try{
+        NetworkNetty networkNetty=ObjectRegistry.getInstance(NetworkNetty.class);
+        Consumer<byte[]> filePartConsumer=filePartBytes ->{
+            UploadFileRequest uploadFileRequest = new UploadFileRequest(userToken,fileName,currentServerDir,filePartBytes);
+            networkNetty.uploadFile(uploadFileRequest);
+        };
+        FileSaw fileSaw=new FileSaw();
+        fileSaw.saw(filePath,filePartConsumer);
+
+
+
+        //try{
             //System.out.println(filePath);
-            byte[] allFileBytes = Files.readAllBytes(filePath);
+      //      byte[] allFileBytes = Files.readAllBytes(filePath);
             //System.out.println(filePath);
             //System.out.println(Arrays.toString(allFileBytes));
-            NetworkNetty networkNetty=ObjectRegistry.getInstance(NetworkNetty.class);
+            //NetworkNetty networkNetty=ObjectRegistry.getInstance(NetworkNetty.class);
             //String fileName= filePath.getFileName().toString();
-            UploadFileRequest uploadFileRequest = new UploadFileRequest(userToken,fileName,currentServerDir,allFileBytes);
-            networkNetty.uploadFile(uploadFileRequest);
-        }catch (IOException e) {
-            e.printStackTrace();
-        }
+      //      UploadFileRequest uploadFileRequest = new UploadFileRequest(userToken,fileName,currentServerDir,allFileBytes);
+       //     networkNetty.uploadFile(uploadFileRequest);
+       // }catch (IOException e) {
+       //     e.printStackTrace();
+      //  }
     }
 }

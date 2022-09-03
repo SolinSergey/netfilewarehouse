@@ -9,6 +9,7 @@ import java.io.RandomAccessFile;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -29,7 +30,7 @@ public class UploadFileHandler implements RequestHandler<UploadFileRequest, Uplo
         byte[] filePartData = request.getFilePartData();
         //System.out.println(request.getUserDir() + "//" + fileName);
         try {
-            Path write = Files.write(Paths.get(SERVER_PATH+"//"+request.getUserDir() + "//" + fileName).normalize().toAbsolutePath(), filePartData);
+            Path write = Files.write(Paths.get(SERVER_PATH+"//"+request.getUserDir() + "//" + fileName).normalize().toAbsolutePath(), filePartData, StandardOpenOption.CREATE,StandardOpenOption.APPEND);
         } catch (IOException ex) {
             ex.printStackTrace();
             return new UploadFileResponse("Не удалось сохранить файл на сервере", request.getAuthToken());
