@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -20,6 +21,8 @@ public class NetFileWarehouse extends Application {
         stage.setTitle("Моё облако");
         stage.setScene(scene);
         NetFileWarehouseController.mainStage = stage;
+        Image image = new Image(NetFileWarehouse.class.getResourceAsStream("/icons/cloud.png"));
+        stage.getIcons().add(image);
         stage.show();
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent we) {

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.Separator?>
@@ -54,5 +55,6 @@
       <TextField fx:id="serverPathField" editable="false" layoutX="787.0" layoutY="847.0" prefHeight="25.0" prefWidth="449.0" />
       <ProgressBar fx:id="serverQwoteProgress" layoutX="787.0" layoutY="871.0" prefHeight="25.0" prefWidth="449.0" progress="0.0" />
       <Label fx:id="freeSpaceProgressLabel" alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="901.0" layoutY="875.0" prefHeight="17.0" prefWidth="222.0" text="Свободно 100%" />
+      <ComboBox fx:id="diskBox" layoutX="558.0" layoutY="600.0" prefWidth="150.0" />
    </children>
 </Pane>

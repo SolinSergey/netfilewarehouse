@@ -38,6 +38,7 @@ public class NetFileWarehouseController implements Initializable {
     public TableColumn<FileData, Long> serverFileSizeColumn;
     public ProgressBar serverQwoteProgress;
     public Label freeSpaceProgressLabel;
+    public ComboBox diskBox;
 
     private String userToken;
     public static Stage mainStage;
@@ -132,6 +133,10 @@ public class NetFileWarehouseController implements Initializable {
         path = Path.of(Paths.get(currentServerPath).normalize().toString());
         serverPathField.setText(currentServerPath);
 
+        diskBox.getItems().clear();
+        for (Path p:FileSystems.getDefault().getRootDirectories()){
+            diskBox.getItems().add(p.toString());
+        }
     }
 
     public void createServerFilesTable() {
@@ -184,6 +189,7 @@ public class NetFileWarehouseController implements Initializable {
                 }
             };
         });
+
     }
 
     public void updateServerTable(List<FileData> list) {
@@ -205,6 +211,7 @@ public class NetFileWarehouseController implements Initializable {
             localList = Files.list(path).map(FileData::new).collect(Collectors.toList());
             localFileTable.getItems().addAll(localList);
             localFileTable.sort();
+
         } catch (IOException e) {
             e.printStackTrace();
         }

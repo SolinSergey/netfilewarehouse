@@ -9,10 +9,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import ru.gb.cloudmessages.AuthRequest;
+import ru.gb.netfilewarehouse.NetFileWarehouse;
 import ru.gb.netfilewarehouse.NetworkNetty;
 import ru.gb.netfilewarehouse.ObjectRegistry;
 
@@ -64,7 +66,8 @@ public class AuthService {
         dialogAuth.setTitle("Authorization");
         dialogAuth.initOwner(stage);
         dialogAuth.initModality(Modality.APPLICATION_MODAL);
-
+        Image image = new Image(AuthService.class.getResourceAsStream("/icons/cloud.png"));
+        dialogAuth.getIcons().add(image);
         Label label = new Label("Авторизуйтесь:");
         GridPane.setHalignment(label, HPos.CENTER);
         pane.add(label, 1, 0);
