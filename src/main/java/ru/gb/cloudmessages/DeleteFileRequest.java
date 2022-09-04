@@ -9,9 +9,8 @@ public class DeleteFileRequest extends BasicRequest {
     public DeleteFileRequest(String token, String fileName, String userDir) {
         super(token);
         this.fileName = fileName;
-        this.userDir=userDir;
+        this.userDir = userDir;
     }
-
 
 
     public String getUserDir() {

@@ -8,6 +8,7 @@ import ru.gb.service.DAO;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
+import java.sql.SQLException;
 
 public class AuthHandler implements RequestHandler<AuthRequest, AuthResponse> {
     private String token;
@@ -20,15 +21,19 @@ public class AuthHandler implements RequestHandler<AuthRequest, AuthResponse> {
     public AuthResponse handle(AuthRequest request, ChannelHandlerContext channelHandlerContext) throws IOException {
         DAO dao = new DAO();
         AuthResponse authResponse;
-        if (getCryptString(request.getPassword()).equals(dao.getUserPasswordFromDB(request.getUsername()))) {
-            token = request.getUsername() + ":" + getCryptString(request.getPassword());
-            userDir = dao.getUserWorkDirFromDB(request.getPassword());
-            userRights = dao.getUserRightsFromDB(request.getPassword());
-            userQuote = dao.getUserQuoteFromDB(request.getUsername());
-            System.out.println("Квота в handle = " + userQuote);
-            authResponse = new AuthResponse("", token, userDir, userRights, userQuote);
-        } else {
-            authResponse = new AuthResponse("Пользователь не найден!!!", "NotAutorized", "NotAutorized", "NotAutorized", 0);
+        try {
+            if (getCryptString(request.getPassword()).equals(dao.getUserPasswordFromDB(request.getUsername()))) {
+                token = request.getUsername() + ":" + getCryptString(request.getPassword());
+                userDir = dao.getUserWorkDirFromDB(request.getPassword());
+                userRights = dao.getUserRightsFromDB(request.getPassword());
+                userQuote = dao.getUserQuoteFromDB(request.getUsername());
+                System.out.println("Квота в handle = " + userQuote);
+                authResponse = new AuthResponse("", token, userDir, userRights, userQuote);
+            } else {
+                authResponse = new AuthResponse("Пользователь не найден!!!", "NotAutorized", "NotAutorized", "NotAutorized", 0);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
         //System.out.println("AuthResponse подготовлен: " + authResponse.getErrorMessage() + authResponse.getAuthToken());
         return authResponse;

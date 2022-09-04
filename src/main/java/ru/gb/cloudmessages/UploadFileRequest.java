@@ -12,7 +12,7 @@ public class UploadFileRequest extends BasicRequest {
         super(token);
         this.fileName = fileName;
         this.filePartData = filePartData;
-        this.userDir=userDir;
+        this.userDir = userDir;
     }
 
     public String getUserDir() {

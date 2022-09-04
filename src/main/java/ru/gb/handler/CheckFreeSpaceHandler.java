@@ -15,7 +15,7 @@ public class CheckFreeSpaceHandler implements RequestHandler<CheckUsedSpaceReque
 
     @Override
     public CheckUsedSpaceResponse handle(CheckUsedSpaceRequest request, ChannelHandlerContext channelHandlerContext) throws IOException {
-        String getFilesListRequestPath = SERVER_PATH+"//"+request.getPath()+"//";//request.getPath();
+        String getFilesListRequestPath = SERVER_PATH + "//" + request.getPath() + "//";//request.getPath();
 
         Path path = Paths.get(getFilesListRequestPath).normalize().toAbsolutePath();
         long size = 0;
@@ -36,7 +36,7 @@ public class CheckFreeSpaceHandler implements RequestHandler<CheckUsedSpaceReque
         }
         System.out.println(size);
 
-        CheckUsedSpaceResponse checkUsedSpaceResponse =new CheckUsedSpaceResponse("OK", request.getAuthToken(),size);
+        CheckUsedSpaceResponse checkUsedSpaceResponse = new CheckUsedSpaceResponse("OK", request.getAuthToken(), size);
 
         return checkUsedSpaceResponse;
     }

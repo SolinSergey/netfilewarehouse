@@ -6,7 +6,7 @@ import java.security.MessageDigest;
 public class CryptService {
     private String userToken;
 
-    public String getCryptString(String stringToCrypt){
+    public String getCryptString(String stringToCrypt) {
         String toReturn = null;
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
@@ -20,9 +20,10 @@ public class CryptService {
         return toReturn;
     }
 
-    public void generateToken(String userName, String password){
-        this.userToken=userName + ":" + getCryptString(password);
+    public void generateToken(String userName, String password) {
+        this.userToken = userName + ":" + getCryptString(password);
     }
+
     public String getUserToken() {
         return userToken;
     }

@@ -17,22 +17,23 @@ import java.util.Arrays;
 public class DownloadFileService {
     String userToken;
     String userDir;
-    public void sendRequest(String filename, String currentServerPath){
+
+    public void sendRequest(String filename, String currentServerPath) {
         userToken = ObjectRegistry.getInstance(AuthService.class).getAuthToken();
         //userDir=ObjectRegistry.getInstance(AuthService.class).getUserDir()+currentServerPath;
         //System.out.println("DownloadFileService.sendRequest    " + filename);
-        DownloadFileRequest downloadFileRequest=new DownloadFileRequest(userToken,filename,currentServerPath);
-        NetworkNetty networkNetty= ObjectRegistry.getInstance(NetworkNetty.class);
+        DownloadFileRequest downloadFileRequest = new DownloadFileRequest(userToken, filename, currentServerPath);
+        NetworkNetty networkNetty = ObjectRegistry.getInstance(NetworkNetty.class);
         networkNetty.sendDownloadRequest(downloadFileRequest);
     }
 
-    public void saveDownloadFile(DownloadFileResponse response){
+    public void saveDownloadFile(DownloadFileResponse response) {
         //System.out.println("На сохранение поступил файл: " + response.getFileName());
         try {
-            Path filePath = Paths.get(ObjectRegistry.getInstance(NetFileWarehouseController.class).localPathField.getText()+"//"+response.getFileName());
+            Path filePath = Paths.get(ObjectRegistry.getInstance(NetFileWarehouseController.class).localPathField.getText() + "//" + response.getFileName());
             //System.out.println(Arrays.toString(response.getFilePartData()));
-            System.out.println("Путь сохранения: "+filePath.toString());
-            Files.write(filePath, response.getFilePartData(),StandardOpenOption.CREATE,StandardOpenOption.APPEND);
+            System.out.println("Путь сохранения: " + filePath.toString());
+            Files.write(filePath, response.getFilePartData(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("Невозможно сохранить файл");

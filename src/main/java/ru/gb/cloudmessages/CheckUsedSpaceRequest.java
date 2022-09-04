@@ -10,6 +10,6 @@ public class CheckUsedSpaceRequest extends BasicRequest {
 
     public CheckUsedSpaceRequest(String token, String userPath) {
         super(token);
-        this.userPath= userPath;
+        this.userPath = userPath;
     }
 }

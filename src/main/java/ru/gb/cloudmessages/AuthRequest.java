@@ -1,6 +1,6 @@
 package ru.gb.cloudmessages;
 
-public class AuthRequest extends BasicRequest{
+public class AuthRequest extends BasicRequest {
 
     private final String username;
 
@@ -8,8 +8,8 @@ public class AuthRequest extends BasicRequest{
 
     public AuthRequest(String username, String password) {
         super(null);
-        this.username=username;
-        this.password=password;
+        this.username = username;
+        this.password = password;
     }
 
     public String getUsername() {

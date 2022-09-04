@@ -22,17 +22,17 @@ public class AuthService {
 
     private boolean isGetUserRights;
 
-    private String userName="";
-    private String userPassword="";
-    private String userDir="";
+    private String userName = "";
+    private String userPassword = "";
+    private String userDir = "";
 
-    private long userQuote=0;
+    private long userQuote = 0;
 
     private String userRights;
 
-    public void sendAuthRequest(){
+    public void sendAuthRequest() {
         isGetAuthResponse = false;
-        AuthRequest authRequest = new AuthRequest(userName,userPassword);
+        AuthRequest authRequest = new AuthRequest(userName, userPassword);
         ObjectRegistry.getInstance(NetworkNetty.class).sendAuthRequest(authRequest);
     }
 
@@ -40,13 +40,15 @@ public class AuthService {
 
         return ObjectRegistry.getInstance(CryptService.class).getUserToken().equals(token);
     }
-    public String getAuthToken (){
+
+    public String getAuthToken() {
         return this.authToken;
     }
+
     public void setAuthToken(String authToken) {
         this.authToken = authToken;
         //System.out.println("Сохраненный токен: "+this.authToken);
-        isGetAuthResponse=true;
+        isGetAuthResponse = true;
     }
 
     public void showAuthDialog(Stage stage) {
@@ -57,7 +59,7 @@ public class AuthService {
         pane.setHgap(100);
         pane.setVgap(25);
         //pane.setAlignment(Pos.CENTER);
-        Scene dialogScene = new Scene(pane,400,400);
+        Scene dialogScene = new Scene(pane, 400, 400);
         dialogAuth.setScene(dialogScene);
         dialogAuth.setTitle("Authorization");
         dialogAuth.initOwner(stage);
@@ -65,25 +67,33 @@ public class AuthService {
 
         Label label = new Label("Авторизуйтесь:");
         GridPane.setHalignment(label, HPos.CENTER);
-        pane.add(label,1,0);
+        pane.add(label, 1, 0);
 
         TextField loginArea = new TextField("Введите логин");
         //loginArea.setPromptText("Введите логин");
-        pane.add(loginArea,1,2);
+        pane.add(loginArea, 1, 2);
 
         PasswordField passwordArea = new PasswordField();
         passwordArea.setPromptText("Введите пароль");
-        pane.add(passwordArea,1,3);
+        pane.add(passwordArea, 1, 3);
 
         Button okButton = new Button("OK");
-        okButton.setPrefSize(60,20);
+        okButton.setPrefSize(60, 20);
         GridPane.setHalignment(okButton, HPos.CENTER);
-        pane.add(okButton,1,4);
+        pane.add(okButton, 1, 4);
         okButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 //System.out.println(loginArea.getText());
                 //System.out.println(passwordArea.getText());
+                userName = loginArea.getText();
+                userPassword = passwordArea.getText();
+                dialogAuth.close();
+            }
+        });
+        passwordArea.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
                 userName = loginArea.getText();
                 userPassword = passwordArea.getText();
                 dialogAuth.close();
@@ -111,7 +121,7 @@ public class AuthService {
     public void setUserRights(String userRights) {
         this.userRights = userRights;
         //System.out.println("THIS AUTH SERVICE!!   "+ this.userRights);
-        isGetUserRights=true;
+        isGetUserRights = true;
     }
 
     public String getUserDir() {
@@ -137,7 +147,6 @@ public class AuthService {
     public void setUserQuote(long userQuote) {
         this.userQuote = userQuote;
     }
-
 
 
 }

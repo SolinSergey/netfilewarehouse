@@ -13,9 +13,9 @@ public class BasicResponse implements Serializable {
         return errorMessage;
     }
 
-    public BasicResponse(String errorMessage,String authToken) {
+    public BasicResponse(String errorMessage, String authToken) {
         this.errorMessage = errorMessage;
-        this.authToken=authToken;
+        this.authToken = authToken;
     }
 
     public String getAuthToken() {

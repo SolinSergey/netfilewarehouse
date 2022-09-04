@@ -11,7 +11,6 @@ public class ChangeDirHandler implements RequestHandler<CheckUsedSpaceRequest, G
     public GetFilesListResponse handle(CheckUsedSpaceRequest request, ChannelHandlerContext channelHandlerContext) throws IOException {
 
 
-
         return null;
     }
 }

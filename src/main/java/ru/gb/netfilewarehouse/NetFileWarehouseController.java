@@ -51,11 +51,13 @@ public class NetFileWarehouseController implements Initializable {
     private String userRights;
     private String userDir;
     private long freeSpaceUserDir;
-    private List<String> serverList;
-    private List localList;
+
+    private List<FileData> localList;
+    private List<FileData> serverList;
     String currentServerPath;
 
     boolean isClientInit = false;
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -121,7 +123,7 @@ public class NetFileWarehouseController implements Initializable {
         System.out.println(userDir);
         GetFilesListRequest getFilesListRequest = new GetFilesListRequest(token, userDir);
         ObjectRegistry.getInstance(NetworkNetty.class).sendGetFileListRequest(getFilesListRequest);
-        CheckUsedSpaceRequest checkUsedSpaceRequest =new CheckUsedSpaceRequest(token,userDir);
+        CheckUsedSpaceRequest checkUsedSpaceRequest = new CheckUsedSpaceRequest(token, userDir);
         ObjectRegistry.getInstance(NetworkNetty.class).sendCheckFreeSpaceRequest(checkUsedSpaceRequest);
 
         updateLocalTable(path);
@@ -185,11 +187,12 @@ public class NetFileWarehouseController implements Initializable {
     }
 
     public void updateServerTable(List<FileData> list) {
+        serverList = list;
         serverFileTable.getItems().clear();
         serverFileTable.getItems().addAll(list);
         serverFileTable.sort();
         serverFileTable.getSelectionModel().select(0);
-        CheckUsedSpaceRequest checkUsedSpaceRequest =new CheckUsedSpaceRequest(token,userDir);
+        CheckUsedSpaceRequest checkUsedSpaceRequest = new CheckUsedSpaceRequest(token, userDir);
         ObjectRegistry.getInstance(NetworkNetty.class).sendCheckFreeSpaceRequest(checkUsedSpaceRequest);
 
         //serverQwoteProgress.setProgress(0.99);
@@ -199,7 +202,8 @@ public class NetFileWarehouseController implements Initializable {
         localFileTable.getItems().clear();
         try {
             localPathField.setText(path.normalize().toAbsolutePath().toString());
-            localFileTable.getItems().addAll(Files.list(path).map(FileData::new).collect(Collectors.toList()));
+            localList = Files.list(path).map(FileData::new).collect(Collectors.toList());
+            localFileTable.getItems().addAll(localList);
             localFileTable.sort();
         } catch (IOException e) {
             e.printStackTrace();
@@ -248,29 +252,37 @@ public class NetFileWarehouseController implements Initializable {
 */
 
     public void clickbtnLocalToCloudCopy(MouseEvent mouseEvent) {
-        long fileSize;
-        if (!userRights.equals("ro") && localFileTable.getSelectionModel().getSelectedItem().getFileType().equals("FILE")) {
+        if (!userRights.equals("ro")
+                && localFileTable.getSelectionModel().getSelectedItem().getFileType().equals("FILE")) {
             //System.out.println(userRights);
             //System.out.println("Копировать в облако");
             String selectFile = localFileTable.getSelectionModel().getSelectedItem().getFileName();
-            Path path=Paths.get(localPathField.getText()+"//"+selectFile).normalize().toAbsolutePath();
-            try {
-                System.out.println(path);;
-                fileSize=Files.size(path);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            boolean isSelected = false;
+            for (FileData f : serverList) {
+                if (selectFile.equals(f.getFileName())) {
+                    isSelected = true;
+                }
             }
-            System.out.println("Сободное место: " + freeSpaceUserDir);
-            System.out.println("Размер файла" + fileSize);
-            if (fileSize<freeSpaceUserDir){
-                UploadFileService uploadFileService = ObjectRegistry.getInstance(UploadFileService.class);
-                uploadFileService.uploadFile(selectFile);
+            long fileSize;
+            if (!isSelected) {
+                Path path = Paths.get(localPathField.getText() + "//" + selectFile).normalize().toAbsolutePath();
+                try {
+                    System.out.println(path);
+                    fileSize = Files.size(path);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                System.out.println("Сободное место: " + freeSpaceUserDir);
+                System.out.println("Размер файла" + fileSize);
+                if (fileSize < freeSpaceUserDir) {
+                    UploadFileService uploadFileService = ObjectRegistry.getInstance(UploadFileService.class);
+                    uploadFileService.uploadFile(selectFile);
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.WARNING, "В удаленном хранилище недостаточно свободного места!\nНевозможно скопировать файл!", ButtonType.OK);
+                    alert.showAndWait();
+                }
+                //System.out.println(selectFile);
             }
-            else{
-                Alert alert = new Alert(Alert.AlertType.WARNING, "В удаленном хранилище недостаточно свободного места!\nНевозможно скопировать файл!", ButtonType.OK);
-                alert.showAndWait();
-            }
-            //System.out.println(selectFile);
         } else {
             Alert alert = new Alert(Alert.AlertType.WARNING, "У вас нет прав на загрузку файлов на сервер!!!\n Для изменения прав обратитесь к администратору!", ButtonType.OK);
             alert.showAndWait();
@@ -282,16 +294,23 @@ public class NetFileWarehouseController implements Initializable {
     public void clickbtnCloudToLocalCopy(MouseEvent mouseEvent) {
         //System.out.println("Копировать из облака на локальный компьютер");
         String selectFile;
+        boolean isSelected = false;
         selectFile = serverFileTable.getSelectionModel().getSelectedItem().getFileName();
-        //System.out.println(selectFile);
-
-        //System.out.println(currentServerPath);
-        if (serverFileTable.getSelectionModel().getSelectedItem().getFileType().equals("FILE")) {
-            DownloadFileService downloadFileService;
-            downloadFileService = ObjectRegistry.getInstance(DownloadFileService.class);
-            downloadFileService.sendRequest(selectFile, currentServerPath);
+        for (FileData f : localList) {
+            if (selectFile.equals(f.getFileName())) {
+                isSelected = true;
+            }
         }
-    }
+            //System.out.println(selectFile);
+
+            //System.out.println(currentServerPath);
+            if (!isSelected && serverFileTable.getSelectionModel().getSelectedItem().getFileType().equals("FILE")) {
+                DownloadFileService downloadFileService;
+                downloadFileService = ObjectRegistry.getInstance(DownloadFileService.class);
+                downloadFileService.sendRequest(selectFile, currentServerPath);
+            }
+        }
+
 
     public void clickbtnDeleteFile(MouseEvent mouseEvent) {
         String fileForDelete;
@@ -343,15 +362,15 @@ public class NetFileWarehouseController implements Initializable {
         }
     }
 
-    public void updateUsedSpaceProgressBar(long userQuote, long usedSpace){
+    public void updateUsedSpaceProgressBar(long userQuote, long usedSpace) {
         final int BYTES_PER_MEGABYTE = 1024 * 1024;
-        freeSpaceUserDir=userQuote*BYTES_PER_MEGABYTE-usedSpace;
-        double progressUsed=usedSpace*1.0/(userQuote*BYTES_PER_MEGABYTE);
-        System.out.println("BYTES_PER_MEGABYTE: "+BYTES_PER_MEGABYTE);
+        freeSpaceUserDir = userQuote * BYTES_PER_MEGABYTE - usedSpace;
+        double progressUsed = usedSpace * 1.0 / (userQuote * BYTES_PER_MEGABYTE);
+        System.out.println("BYTES_PER_MEGABYTE: " + BYTES_PER_MEGABYTE);
         System.out.println("Квота: " + userQuote);
-        System.out.println("ProgressUsed "+progressUsed);
+        System.out.println("ProgressUsed " + progressUsed);
         serverQwoteProgress.setProgress(progressUsed);
-        String labelText = "Использовано "+ Math.round(progressUsed*100)+"% ("+Math.round(usedSpace/BYTES_PER_MEGABYTE)+"Mб/"+userQuote+"Мб)";
+        String labelText = "Использовано " + Math.round(progressUsed * 100) + "% (" + Math.round(usedSpace / BYTES_PER_MEGABYTE) + "Mб/" + userQuote + "Мб)";
         freeSpaceProgressLabel.setText(labelText);
     }
 

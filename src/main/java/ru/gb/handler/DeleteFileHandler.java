@@ -10,21 +10,20 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class DeleteFileHandler implements RequestHandler<DeleteFileRequest, DeleteFileResponse>
-{
+public class DeleteFileHandler implements RequestHandler<DeleteFileRequest, DeleteFileResponse> {
     @Override
-    public DeleteFileResponse handle(DeleteFileRequest request, ChannelHandlerContext channelHandlerContext){
+    public DeleteFileResponse handle(DeleteFileRequest request, ChannelHandlerContext channelHandlerContext) {
         String fileName = request.getFileName();
         String userDir = request.getUserDir();
-        Path path = Path.of(System.getProperty("user.dir")+"//"+userDir+"//"+fileName);
+        Path path = Path.of(System.getProperty("user.dir") + "//" + userDir + "//" + fileName);
         System.out.println("DeleteFileResponse - - - " + path.toString());
         try {
             Files.delete(path);
         } catch (IOException e) {
-            DeleteFileResponse deleteFileResponse = new DeleteFileResponse("Error",request.getAuthToken());
+            DeleteFileResponse deleteFileResponse = new DeleteFileResponse("Error", request.getAuthToken());
             e.printStackTrace();
         }
-        DeleteFileResponse deleteFileResponse = new DeleteFileResponse("OK",request.getAuthToken());
+        DeleteFileResponse deleteFileResponse = new DeleteFileResponse("OK", request.getAuthToken());
         return deleteFileResponse;
     }
 }

@@ -1,6 +1,6 @@
 package ru.gb.cloudmessages;
 
-public class AuthResponse extends BasicResponse{
+public class AuthResponse extends BasicResponse {
     private final String userDir;
 
     private final String userRights;
@@ -9,7 +9,7 @@ public class AuthResponse extends BasicResponse{
 
     public AuthResponse(String errorMessage, String authToken, String userDir, String userRights, long userQuote) {
         super(errorMessage, authToken);
-        this.userRights=userRights;
+        this.userRights = userRights;
         this.userDir = userDir;
         this.userQuote = userQuote;
     }

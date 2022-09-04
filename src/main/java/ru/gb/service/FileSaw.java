@@ -16,11 +16,11 @@ public class FileSaw {
         byte[] filePart = new byte[MB_4];
         File toFile = path.toFile();
         long fileLength = toFile.length();
-        long totalBytesRead=0;
+        long totalBytesRead = 0;
         try (FileInputStream fileInputStream = new FileInputStream(path.toFile())) {
             int readBytes;
             while ((readBytes = fileInputStream.read(filePart)) != -1) {
-                totalBytesRead+=readBytes;
+                totalBytesRead += readBytes;
                 if (totalBytesRead == fileLength) {
                     filePart = Arrays.copyOfRange(filePart, 0, readBytes);
                 }

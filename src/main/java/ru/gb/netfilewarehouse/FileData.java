@@ -13,14 +13,15 @@ public class FileData implements Serializable {
 
     private String fileType;
     private long fileSize;
+
     public FileData(Path path) {
         try {
 
             this.fileName = path.getFileName().toString();
             this.fileSize = Files.size(path);
-            this.fileType = Files.isDirectory(path)?DIR:FILE;
-            if (fileType.equals(DIR)){
-                fileSize=-1L;
+            this.fileType = Files.isDirectory(path) ? DIR : FILE;
+            if (fileType.equals(DIR)) {
+                fileSize = -1L;
             }
         } catch (IOException e) {
             e.printStackTrace();

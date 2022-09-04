@@ -8,7 +8,7 @@ public class DownloadFileResponse extends BasicResponse {
 
 
     public DownloadFileResponse(String errorMessage, String token, String fileName, byte[] filePartData) {
-        super(errorMessage,token);
+        super(errorMessage, token);
         this.fileName = fileName;
         this.filePartData = filePartData;
     }
@@ -16,6 +16,7 @@ public class DownloadFileResponse extends BasicResponse {
     public String getFileName() {
         return fileName;
     }
+
     public byte[] getFilePartData() {
         return filePartData;
     }

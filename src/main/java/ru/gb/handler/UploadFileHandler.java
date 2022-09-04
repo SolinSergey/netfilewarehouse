@@ -24,13 +24,13 @@ public class UploadFileHandler implements RequestHandler<UploadFileRequest, Uplo
     @Override
     public UploadFileResponse handle(UploadFileRequest request, ChannelHandlerContext context) throws IOException {
         String fileName = request.getFileName();
-        System.out.println("UploadFileResponse = "+fileName);
+        System.out.println("UploadFileResponse = " + fileName);
         userDir = request.getUserDir();
-        System.out.println("UploadFileResponse = "+userDir);
+        System.out.println("UploadFileResponse = " + userDir);
         byte[] filePartData = request.getFilePartData();
         //System.out.println(request.getUserDir() + "//" + fileName);
         try {
-            Path write = Files.write(Paths.get(SERVER_PATH+"//"+request.getUserDir() + "//" + fileName).normalize().toAbsolutePath(), filePartData, StandardOpenOption.CREATE,StandardOpenOption.APPEND);
+            Path write = Files.write(Paths.get(SERVER_PATH + "//" + request.getUserDir() + "//" + fileName).normalize().toAbsolutePath(), filePartData, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
         } catch (IOException ex) {
             ex.printStackTrace();
             return new UploadFileResponse("Не удалось сохранить файл на сервере", request.getAuthToken());

@@ -60,23 +60,23 @@ public class NetworkNetty {
         clientChannel.writeAndFlush(downloadFileRequest);
     }
 
-    public void sendAuthRequest(AuthRequest authRequest){
+    public void sendAuthRequest(AuthRequest authRequest) {
         //System.out.println("NettyNetwork.sendAuthRequest    " + authRequest.getUsername() + " " + authRequest.getPassword());
         clientChannel.writeAndFlush(authRequest);
     }
 
-    public void sendGetFileListRequest(GetFilesListRequest getFilesListRequest){
-        System.out.println("NettyNetwork. "+getFilesListRequest.getClass().toString()+ " "+ LocalTime.now().toString());
+    public void sendGetFileListRequest(GetFilesListRequest getFilesListRequest) {
+        System.out.println("NettyNetwork. " + getFilesListRequest.getClass().toString() + " " + LocalTime.now().toString());
         clientChannel.writeAndFlush(getFilesListRequest);
         System.out.println("Ушел из NetworkNetty");
     }
 
-    public void sendDeleteFileRequest(DeleteFileRequest deleteFileRequest){
+    public void sendDeleteFileRequest(DeleteFileRequest deleteFileRequest) {
         clientChannel.writeAndFlush(deleteFileRequest);
     }
 
-    public void sendCheckFreeSpaceRequest(CheckUsedSpaceRequest checkUsedSpaceRequest){
-            clientChannel.writeAndFlush(checkUsedSpaceRequest);
+    public void sendCheckFreeSpaceRequest(CheckUsedSpaceRequest checkUsedSpaceRequest) {
+        clientChannel.writeAndFlush(checkUsedSpaceRequest);
     }
 
 }
