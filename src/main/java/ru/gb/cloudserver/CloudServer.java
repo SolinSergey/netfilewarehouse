@@ -13,7 +13,6 @@ import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
 
 public class CloudServer {
-
     public static final int MAX_OBJECT_SIZE = 20_000_000;
 
     public static void main(String[] args) throws InterruptedException {

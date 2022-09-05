@@ -23,7 +23,6 @@ public class CreateDirService {
 
     public void creatLocalDirectory(String currentLocalDir, String name) {
         Path path = Path.of(currentLocalDir + "//" + name).normalize().toAbsolutePath();
-        System.out.println(path);
         try {
             if (Files.notExists(path)) {
                 Files.createDirectory(path);
@@ -37,7 +36,7 @@ public class CreateDirService {
     }
 
     public void createServerDirectory(String userToken, String currentServerDir, String nameNewDir) {
-        CreateDirRequest createDirRequest = new CreateDirRequest(userToken, nameNewDir,currentServerDir);
+        CreateDirRequest createDirRequest = new CreateDirRequest(userToken, nameNewDir, currentServerDir);
         ObjectRegistry.getInstance(NetworkNetty.class).sendCreateDirRequest(createDirRequest);
     }
 
@@ -45,7 +44,6 @@ public class CreateDirService {
         Stage createDirectoryDialog = new Stage();
         createDirectoryDialog.setResizable(false);
         Pane pane = new Pane();
-        //pane.setAlignment(Pos.CENTER);
         Scene dialogScene = new Scene(pane, 400, 200);
         createDirectoryDialog.setScene(dialogScene);
         createDirectoryDialog.setTitle("Ввод имени папки");
@@ -62,14 +60,12 @@ public class CreateDirService {
         label.fontProperty().setValue(new Font("System", 16));
         pane.getChildren().add(label);
 
-
         TextField nameDir = new TextField("Имя папки");
         nameDir.setPrefSize(315, 25);
         nameDir.setLayoutX(43);
         nameDir.setLayoutY(75);
         nameDir.fontProperty().setValue(new Font("System", 16));
         pane.getChildren().add(nameDir);
-
 
         Button okButton = new Button("OK");
         okButton.setPrefSize(85, 38);
@@ -86,7 +82,6 @@ public class CreateDirService {
         cancelButton.textAlignmentProperty().setValue(TextAlignment.CENTER);
         cancelButton.fontProperty().setValue(new Font("System", 16));
         pane.getChildren().add(cancelButton);
-
         okButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
@@ -112,6 +107,4 @@ public class CreateDirService {
         createDirectoryDialog.showAndWait();
         return result;
     }
-
-
 }

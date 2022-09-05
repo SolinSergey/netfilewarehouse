@@ -22,26 +22,16 @@ import ru.gb.netfilewarehouse.ObjectRegistry;
 public class AuthService {
     private String authToken;
     private boolean isGetAuthResponse;
-
     private boolean isGetUserRights;
-
     private String userName = "";
     private String userPassword = "";
     private String userDir = "";
-
     private long userQuote = 0;
-
     private String userRights;
-
     public void sendAuthRequest() {
         isGetAuthResponse = false;
         AuthRequest authRequest = new AuthRequest(userName, userPassword);
         ObjectRegistry.getInstance(NetworkNetty.class).sendAuthRequest(authRequest);
-    }
-
-    public boolean auth(String token) {
-
-        return ObjectRegistry.getInstance(CryptService.class).getUserToken().equals(token);
     }
 
     public String getAuthToken() {
@@ -163,9 +153,6 @@ public class AuthService {
         return userName;
     }
 
-    public String getUserPassword() {
-        return userPassword;
-    }
 
     public boolean isGetAuthResponse() {
         return isGetAuthResponse;
@@ -186,10 +173,6 @@ public class AuthService {
 
     public String getUserRights() {
         return userRights;
-    }
-
-    public void setGetAuthResponse(boolean getAuthResponse) {
-        isGetAuthResponse = getAuthResponse;
     }
 
     public boolean isGetUserRights() {

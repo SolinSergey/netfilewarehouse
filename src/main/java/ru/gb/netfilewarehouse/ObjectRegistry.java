@@ -1,6 +1,5 @@
 package ru.gb.netfilewarehouse;
 
-import ru.gb.cloudmessages.CreateDirResponse;
 import ru.gb.service.*;
 
 import java.util.HashMap;
@@ -31,8 +30,6 @@ public class ObjectRegistry {
         RegistrationService registrationService = new RegistrationService();
         reg(RegistrationService.class, registrationService);
 
-        //CryptService cryptService = new CryptService();
-        //reg(CryptService.class,cryptService);
     }
 
     public static void reg(Class<?> clazz, Object instance) {

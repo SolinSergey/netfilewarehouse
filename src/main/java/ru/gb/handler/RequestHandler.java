@@ -9,7 +9,5 @@ import ru.gb.cloudmessages.UploadFileRequest;
 import java.io.IOException;
 
 public interface RequestHandler<REQUEST extends BasicRequest, RESPONSE extends BasicResponse> {
-
     RESPONSE handle(REQUEST request, ChannelHandlerContext channelHandlerContext) throws IOException;
-
 }

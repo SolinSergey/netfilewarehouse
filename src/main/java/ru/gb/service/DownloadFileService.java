@@ -11,27 +11,20 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.Arrays;
-
 
 public class DownloadFileService {
     String userToken;
-    String userDir;
 
     public void sendRequest(String filename, String currentServerPath) {
         userToken = ObjectRegistry.getInstance(AuthService.class).getAuthToken();
-        //userDir=ObjectRegistry.getInstance(AuthService.class).getUserDir()+currentServerPath;
-        //System.out.println("DownloadFileService.sendRequest    " + filename);
         DownloadFileRequest downloadFileRequest = new DownloadFileRequest(userToken, filename, currentServerPath);
         NetworkNetty networkNetty = ObjectRegistry.getInstance(NetworkNetty.class);
         networkNetty.sendDownloadRequest(downloadFileRequest);
     }
 
     public void saveDownloadFile(DownloadFileResponse response) {
-        //System.out.println("На сохранение поступил файл: " + response.getFileName());
         try {
             Path filePath = Paths.get(ObjectRegistry.getInstance(NetFileWarehouseController.class).localPathField.getText() + "//" + response.getFileName());
-            //System.out.println(Arrays.toString(response.getFilePartData()));
             Files.write(filePath, response.getFilePartData(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
         } catch (IOException e) {
             e.printStackTrace();

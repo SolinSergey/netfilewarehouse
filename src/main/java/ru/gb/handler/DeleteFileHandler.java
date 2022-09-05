@@ -1,6 +1,5 @@
 package ru.gb.handler;
 
-
 import io.netty.channel.ChannelHandlerContext;
 import ru.gb.cloudmessages.DeleteFileRequest;
 import ru.gb.cloudmessages.DeleteFileResponse;
@@ -8,7 +7,6 @@ import ru.gb.cloudmessages.DeleteFileResponse;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class DeleteFileHandler implements RequestHandler<DeleteFileRequest, DeleteFileResponse> {
     @Override

@@ -4,8 +4,6 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 
 public class CryptService {
-    private String userToken;
-
     public String getCryptString(String stringToCrypt) {
         String toReturn = null;
         try {
@@ -16,15 +14,6 @@ public class CryptService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return toReturn;
-    }
-
-    public void generateToken(String userName, String password) {
-        this.userToken = userName + ":" + getCryptString(password);
-    }
-
-    public String getUserToken() {
-        return userToken;
     }
 }

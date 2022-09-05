@@ -12,7 +12,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class DeleteFileService {
-    private String userRights;
 
     public void deleteFileFromLocalDir(String fileName, String userRights) {
         Path path = Path.of(ObjectRegistry.getInstance(NetFileWarehouseController.class).localPathField.getText() + "//" + fileName).normalize();

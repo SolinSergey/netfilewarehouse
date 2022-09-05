@@ -12,7 +12,6 @@ import java.sql.SQLException;
 
 public class AuthHandler implements RequestHandler<AuthRequest, AuthResponse> {
     private String token;
-
     String userDir;
     String userRights;
     long userQuote;
@@ -47,7 +46,6 @@ public class AuthHandler implements RequestHandler<AuthRequest, AuthResponse> {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return toReturn;
     }
 

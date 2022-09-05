@@ -8,15 +8,12 @@ import java.nio.file.Path;
 public class FileData implements Serializable {
     private final String DIR = "DIR";
     private final String FILE = "FILE";
-
     private String fileName;
-
     private String fileType;
     private long fileSize;
 
     public FileData(Path path) {
         try {
-
             this.fileName = path.getFileName().toString();
             this.fileSize = Files.size(path);
             this.fileType = Files.isDirectory(path) ? DIR : FILE;

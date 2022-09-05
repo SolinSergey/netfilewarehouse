@@ -9,9 +9,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalTime;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,7 +18,6 @@ public class GetFilesListHandler implements RequestHandler<GetFilesListRequest, 
     @Override
     public GetFilesListResponse handle(GetFilesListRequest request, ChannelHandlerContext context) {
         String getFilesListRequestPath = SERVER_PATH + "//" + request.getPath() + "//";//request.getPath();
-        //System.out.println(getFilesListRequestPath);
         Path path = Paths.get(getFilesListRequestPath).normalize().toAbsolutePath();
         List<FileData> list = null;
         try {
@@ -30,8 +26,6 @@ public class GetFilesListHandler implements RequestHandler<GetFilesListRequest, 
             throw new RuntimeException(e);
         }
         GetFilesListResponse response = new GetFilesListResponse("OK", request.getAuthToken(), list);
-
         return response;
     }
-
 }

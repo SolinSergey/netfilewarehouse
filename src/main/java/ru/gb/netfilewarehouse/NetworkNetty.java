@@ -12,13 +12,8 @@ import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
 import ru.gb.cloudmessages.*;
-
-import java.time.LocalTime;
-
 public class NetworkNetty {
-
     public static final int MAX_OBJECT_SIZE = 20_000_000;
-
     private final Channel clientChannel;
 
     public NetworkNetty() {
@@ -76,12 +71,11 @@ public class NetworkNetty {
         clientChannel.writeAndFlush(checkUsedSpaceRequest);
     }
 
-    public void sendCreateDirRequest(CreateDirRequest createDirRequest){
+    public void sendCreateDirRequest(CreateDirRequest createDirRequest) {
         clientChannel.writeAndFlush(createDirRequest);
     }
 
-    public void sendRegisterUserRequest(RegisterUserRequest registerUserRequest){
-        System.out.println(registerUserRequest.getClass());
-        System.out.println(clientChannel.writeAndFlush(registerUserRequest));
+    public void sendRegisterUserRequest(RegisterUserRequest registerUserRequest) {
+        clientChannel.writeAndFlush(registerUserRequest);
     }
 }

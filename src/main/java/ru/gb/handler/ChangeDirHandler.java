@@ -9,8 +9,6 @@ import java.io.IOException;
 public class ChangeDirHandler implements RequestHandler<CheckUsedSpaceRequest, GetFilesListResponse> {
     @Override
     public GetFilesListResponse handle(CheckUsedSpaceRequest request, ChannelHandlerContext channelHandlerContext) throws IOException {
-
-
         return null;
     }
 }

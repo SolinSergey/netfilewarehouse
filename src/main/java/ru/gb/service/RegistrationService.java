@@ -17,18 +17,13 @@ import ru.gb.netfilewarehouse.NetworkNetty;
 import ru.gb.netfilewarehouse.ObjectRegistry;
 
 public class RegistrationService {
-
     private String userName;
     private String userPassword;
-
     private String registrationStatus = "bad";
-
     public void sendRegistrationRequest (String userName, String userPassword){
         RegisterUserRequest registerUserRequest = new RegisterUserRequest(userName,userPassword);
-        System.out.println(registerUserRequest.getClass());
         ObjectRegistry.getInstance(NetworkNetty.class).sendRegisterUserRequest(registerUserRequest);
     }
-
     public void showRegistrationDialog(Stage stage) {
         Stage dialogReg = new Stage();
         dialogReg.setResizable(false);
@@ -49,7 +44,6 @@ public class RegistrationService {
         label.setAlignment(Pos.CENTER);
         label.fontProperty().setValue(new Font("System", 15));
         pane.getChildren().add(label);
-
 
         TextField loginArea = new TextField();
         loginArea.setPromptText("Введите логин");
@@ -94,7 +88,6 @@ public class RegistrationService {
         loginArea.setText("");
         passwordArea.setText("");
         passwordConfirmArea.setText("");
-
         okButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
@@ -102,7 +95,6 @@ public class RegistrationService {
                     userName=loginArea.getText();
                     if (!passwordArea.getText().equals("") &&!passwordConfirmArea.getText().equals("") && passwordArea.getText().equals(passwordConfirmArea.getText())){
                         userPassword = passwordArea.getText();
-                        System.out.println(userName+" "+userPassword);
                         sendRegistrationRequest(userName,userPassword);
                         do {
 
@@ -150,18 +142,6 @@ public class RegistrationService {
         });
         dialogReg.showAndWait();
     }
-    public String getUserName() {
-        return userName;
-    }
-
-    public String getUserPassword() {
-        return userPassword;
-    }
-
-    public String getRegistrationStatus() {
-        return this.registrationStatus;
-    }
-
     public void setRegisterSuccess(String registrationStatus) {
         this.registrationStatus = registrationStatus;
     }
