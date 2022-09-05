@@ -123,7 +123,7 @@ public class RegistrationService {
         cancelButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                System.exit(0);
+                dialogReg.close();
             }
         });
 
