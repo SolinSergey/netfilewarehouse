@@ -3,11 +3,8 @@ package ru.gb.cloudmessages;
 import java.io.Serializable;
 
 public class BasicResponse implements Serializable {
-
     private final String errorMessage;
-
     private final String authToken;
-
 
     public String getErrorMessage() {
         return errorMessage;
@@ -21,5 +18,4 @@ public class BasicResponse implements Serializable {
     public String getAuthToken() {
         return authToken;
     }
-
 }

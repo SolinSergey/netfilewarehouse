@@ -2,11 +2,9 @@ package ru.gb.cloudmessages;
 
 import ru.gb.netfilewarehouse.FileData;
 
-import java.nio.file.Path;
 import java.util.List;
 
 public class GetFilesListResponse extends BasicResponse {
-
     private final List<FileData> list;
 
     public List<FileData> getList() {

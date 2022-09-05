@@ -1,9 +1,7 @@
 package ru.gb.cloudmessages;
 
 public class RegisterUserRequest extends BasicRequest {
-
     private final String login;
-
     private final String password;
 
     public RegisterUserRequest(String login, String password) {

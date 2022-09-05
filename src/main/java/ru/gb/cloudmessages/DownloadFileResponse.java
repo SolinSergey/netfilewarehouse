@@ -1,11 +1,8 @@
 package ru.gb.cloudmessages;
 
 public class DownloadFileResponse extends BasicResponse {
-
     private final String fileName;
-
     private final byte[] filePartData;
-
 
     public DownloadFileResponse(String errorMessage, String token, String fileName, byte[] filePartData) {
         super(errorMessage, token);

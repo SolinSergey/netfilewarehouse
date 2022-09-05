@@ -12,7 +12,6 @@ public class CreateDirRequest extends BasicRequest {
         this.currentDir = currentDir;
     }
 
-
     public String getCurrentDir() {
         return currentDir;
     }

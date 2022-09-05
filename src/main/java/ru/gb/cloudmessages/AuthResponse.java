@@ -2,9 +2,7 @@ package ru.gb.cloudmessages;
 
 public class AuthResponse extends BasicResponse {
     private final String userDir;
-
     private final String userRights;
-
     private long userQuote;
 
     public AuthResponse(String errorMessage, String authToken, String userDir, String userRights, long userQuote) {
@@ -26,7 +24,4 @@ public class AuthResponse extends BasicResponse {
         return userQuote;
     }
 
-    public void setUserQuote(long userQuote) {
-        this.userQuote = userQuote;
-    }
 }

@@ -1,7 +1,6 @@
 package ru.gb.cloudmessages;
 
 public class GetFilesListRequest extends BasicRequest {
-
     private final String path;
 
     public String getPath() {

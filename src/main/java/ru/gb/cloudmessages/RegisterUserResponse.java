@@ -1,9 +1,6 @@
 package ru.gb.cloudmessages;
 
-import java.io.Serializable;
-
 public class RegisterUserResponse extends BasicResponse {
-
     private final String errorMessage;
 
     public String getErrorMessage() {
@@ -11,7 +8,7 @@ public class RegisterUserResponse extends BasicResponse {
     }
 
     public RegisterUserResponse(String errorMessage, String authToken) {
-        super(errorMessage,authToken);
+        super(errorMessage, authToken);
         this.errorMessage = errorMessage;
     }
 

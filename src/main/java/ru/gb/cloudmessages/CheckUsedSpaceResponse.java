@@ -1,7 +1,7 @@
 package ru.gb.cloudmessages;
 
 public class CheckUsedSpaceResponse extends BasicResponse {
-    private long usedSpaceInUserPath;
+    private final long usedSpaceInUserPath;
 
     public CheckUsedSpaceResponse(String errorMessage, String authToken, long usedSpaceInUserPath) {
         super(errorMessage, authToken);

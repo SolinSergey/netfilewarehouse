@@ -1,7 +1,6 @@
 package ru.gb.cloudmessages;
 
 public class CheckUsedSpaceRequest extends BasicRequest {
-
     private final String userPath;
 
     public String getPath() {
