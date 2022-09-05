@@ -16,7 +16,6 @@ public class DeleteFileHandler implements RequestHandler<DeleteFileRequest, Dele
         String fileName = request.getFileName();
         String userDir = request.getUserDir();
         Path path = Path.of(System.getProperty("user.dir") + "//" + userDir + "//" + fileName);
-        System.out.println("DeleteFileResponse - - - " + path.toString());
         try {
             Files.delete(path);
         } catch (IOException e) {

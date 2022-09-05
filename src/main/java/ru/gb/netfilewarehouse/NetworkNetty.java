@@ -56,19 +56,16 @@ public class NetworkNetty {
     }
 
     public void sendDownloadRequest(DownloadFileRequest downloadFileRequest) {
-        //System.out.println("NettyNetwork.sendDownloadRequest    " + downloadFileRequest.getFileName());
         clientChannel.writeAndFlush(downloadFileRequest);
     }
 
     public void sendAuthRequest(AuthRequest authRequest) {
-        //System.out.println("NettyNetwork.sendAuthRequest    " + authRequest.getUsername() + " " + authRequest.getPassword());
         clientChannel.writeAndFlush(authRequest);
     }
 
     public void sendGetFileListRequest(GetFilesListRequest getFilesListRequest) {
-        System.out.println("NettyNetwork. " + getFilesListRequest.getClass().toString() + " " + LocalTime.now().toString());
         clientChannel.writeAndFlush(getFilesListRequest);
-        System.out.println("Ушел из NetworkNetty");
+
     }
 
     public void sendDeleteFileRequest(DeleteFileRequest deleteFileRequest) {
@@ -79,4 +76,12 @@ public class NetworkNetty {
         clientChannel.writeAndFlush(checkUsedSpaceRequest);
     }
 
+    public void sendCreateDirRequest(CreateDirRequest createDirRequest){
+        clientChannel.writeAndFlush(createDirRequest);
+    }
+
+    public void sendRegisterUserRequest(RegisterUserRequest registerUserRequest){
+        System.out.println(registerUserRequest.getClass());
+        System.out.println(clientChannel.writeAndFlush(registerUserRequest));
+    }
 }

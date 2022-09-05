@@ -28,11 +28,16 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext channelHandlerContext, Object msg) throws IOException {
         BasicRequest request = (BasicRequest) msg;
-        if (request instanceof AuthRequest) {
-            //System.out.println("Пришел запрос на авторизацию: "+ ((AuthRequest) request).getUsername() + " " + ((AuthRequest) request).getPassword());
-            RequestHandler handler = HandlerRegistry.getHandler(request.getClass());
+        System.out.println("************************"+request.getClass());
+        RequestHandler handler = HandlerRegistry.getHandler(request.getClass());
+        if (request instanceof RegisterUserRequest){
             BasicResponse response = handler.handle(request, channelHandlerContext);
-            //System.out.println("AuthResponse отправлен: " + response.getErrorMessage() + response.getAuthToken());
+            System.out.println("Поступил запрос на регистрацию");
+            channelHandlerContext.writeAndFlush(response);
+        }
+
+        if (request instanceof AuthRequest) {
+            BasicResponse response = handler.handle(request, channelHandlerContext);
             if (!response.getAuthToken().equals("NotAutorized")) token = response.getAuthToken();
             channelHandlerContext.writeAndFlush(response);
         } else {
@@ -40,14 +45,12 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
                 DownLoadFileHandler downLoadFileHandler = new DownLoadFileHandler();
                 downLoadFileHandler.downloadFile(token, ((DownloadFileRequest) request).getFileName(), ((DownloadFileRequest) request).getUserDir(), channelHandlerContext);
             }
-
+            System.out.println(token);
+            System.out.println(request.getAuthToken());
             if (token.equals(request.getAuthToken())) {
-                System.out.println(token);
-                RequestHandler handler = HandlerRegistry.getHandler(request.getClass());
+                //RequestHandler handler = HandlerRegistry.getHandler(request.getClass());
                 BasicResponse response = handler.handle(request, channelHandlerContext);
-                System.out.println("ОТПРАВЛЕН!!!" + response.getClass().toString() + " " + LocalTime.now().toString());
                 channelHandlerContext.writeAndFlush(response);
-                System.out.println("ОТПРАВЛЕН АГА!!!" + response.getClass().toString() + " " + LocalTime.now().toString());
             }
 
         }

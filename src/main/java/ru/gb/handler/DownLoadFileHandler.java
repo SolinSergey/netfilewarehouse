@@ -18,7 +18,7 @@ public class DownLoadFileHandler {
         Consumer<byte[]> filePartConsumer = filePartBytes -> {
             // try {
             DownloadFileResponse downloadFileResponse = new DownloadFileResponse("", userToken, fileName, filePartBytes);
-            System.out.println("ПАКЕТ!!!! " + ctx.writeAndFlush(downloadFileResponse));
+            ctx.writeAndFlush(downloadFileResponse);
 
             // } catch (InterruptedException e) {
             //     Thread.currentThread().interrupt();

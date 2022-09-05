@@ -1,5 +1,6 @@
 package ru.gb.netfilewarehouse;
 
+import ru.gb.cloudmessages.CreateDirResponse;
 import ru.gb.service.*;
 
 import java.util.HashMap;
@@ -23,6 +24,12 @@ public class ObjectRegistry {
 
         DeleteFileService deleteFileService = new DeleteFileService();
         reg(DeleteFileService.class, deleteFileService);
+
+        CreateDirService createDirService = new CreateDirService();
+        reg(CreateDirService.class, createDirService);
+
+        RegistrationService registrationService = new RegistrationService();
+        reg(RegistrationService.class, registrationService);
 
         //CryptService cryptService = new CryptService();
         //reg(CryptService.class,cryptService);

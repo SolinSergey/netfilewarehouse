@@ -24,9 +24,7 @@ public class UploadFileHandler implements RequestHandler<UploadFileRequest, Uplo
     @Override
     public UploadFileResponse handle(UploadFileRequest request, ChannelHandlerContext context) throws IOException {
         String fileName = request.getFileName();
-        System.out.println("UploadFileResponse = " + fileName);
         userDir = request.getUserDir();
-        System.out.println("UploadFileResponse = " + userDir);
         byte[] filePartData = request.getFilePartData();
         //System.out.println(request.getUserDir() + "//" + fileName);
         try {

@@ -2,19 +2,20 @@ package ru.gb.service;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.HPos;
-import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import ru.gb.cloudmessages.AuthRequest;
-import ru.gb.netfilewarehouse.NetFileWarehouse;
 import ru.gb.netfilewarehouse.NetworkNetty;
 import ru.gb.netfilewarehouse.ObjectRegistry;
 
@@ -49,49 +50,89 @@ public class AuthService {
 
     public void setAuthToken(String authToken) {
         this.authToken = authToken;
-        //System.out.println("Сохраненный токен: "+this.authToken);
         isGetAuthResponse = true;
     }
 
     public void showAuthDialog(Stage stage) {
         Stage dialogAuth = new Stage();
         dialogAuth.setResizable(false);
-        GridPane pane = new GridPane();
-        pane.setPadding(new Insets(20));
-        pane.setHgap(100);
-        pane.setVgap(25);
-        //pane.setAlignment(Pos.CENTER);
-        Scene dialogScene = new Scene(pane, 400, 400);
+        Pane pane = new Pane();
+        Scene dialogScene = new Scene(pane, 300, 400);
         dialogAuth.setScene(dialogScene);
-        dialogAuth.setTitle("Authorization");
+        dialogAuth.setTitle("Авторизация");
         dialogAuth.initOwner(stage);
         dialogAuth.initModality(Modality.APPLICATION_MODAL);
         Image image = new Image(AuthService.class.getResourceAsStream("/icons/cloud.png"));
         dialogAuth.getIcons().add(image);
-        Label label = new Label("Авторизуйтесь:");
-        GridPane.setHalignment(label, HPos.CENTER);
-        pane.add(label, 1, 0);
 
-        TextField loginArea = new TextField("Введите логин");
-        //loginArea.setPromptText("Введите логин");
-        pane.add(loginArea, 1, 2);
+        Label label = new Label("Авторизуйтесь:");
+        label.setPrefSize(223, 25);
+        label.setLayoutX(38);
+        label.setLayoutY(48);
+        label.setAlignment(Pos.CENTER);
+        label.fontProperty().setValue(new Font("System", 15));
+        pane.getChildren().add(label);
+
+
+        TextField loginArea = new TextField();
+        loginArea.setPromptText("Введите логин");
+        loginArea.setPrefSize(186, 31);
+        loginArea.setLayoutX(55);
+        loginArea.setLayoutY(103);
+        loginArea.fontProperty().setValue(new Font("System", 15));
+        pane.getChildren().add(loginArea);
 
         PasswordField passwordArea = new PasswordField();
         passwordArea.setPromptText("Введите пароль");
-        pane.add(passwordArea, 1, 3);
+        passwordArea.setPrefSize(186, 31);
+        passwordArea.setLayoutX(55);
+        passwordArea.setLayoutY(169);
+        passwordArea.fontProperty().setValue(new Font("System", 15));
+        pane.getChildren().add(passwordArea);
 
         Button okButton = new Button("OK");
-        okButton.setPrefSize(60, 20);
-        GridPane.setHalignment(okButton, HPos.CENTER);
-        pane.add(okButton, 1, 4);
+        okButton.setPrefSize(75, 35);
+        okButton.setLayoutX(65);
+        okButton.setLayoutY(245);
+        okButton.textAlignmentProperty().setValue(TextAlignment.CENTER);
+        okButton.fontProperty().setValue(new Font("System", 15));
+        pane.getChildren().add(okButton);
+
+        Button cancelButton = new Button("Отмена");
+        cancelButton.setPrefSize(75, 35);
+        cancelButton.setLayoutX(157);
+        cancelButton.setLayoutY(245);
+        cancelButton.textAlignmentProperty().setValue(TextAlignment.CENTER);
+        cancelButton.fontProperty().setValue(new Font("System", 15));
+        pane.getChildren().add(cancelButton);
+
+        Button registrationButton = new Button("Регистрация");
+        registrationButton.setPrefSize(167, 35);
+        registrationButton.setLayoutX(65);
+        registrationButton.setLayoutY(310);
+        registrationButton.textAlignmentProperty().setValue(TextAlignment.CENTER);
+        registrationButton.fontProperty().setValue(new Font("System", 15));
+        pane.getChildren().add(registrationButton);
         okButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                //System.out.println(loginArea.getText());
-                //System.out.println(passwordArea.getText());
                 userName = loginArea.getText();
                 userPassword = passwordArea.getText();
                 dialogAuth.close();
+            }
+        });
+        cancelButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+               System.exit(0);
+            }
+        });
+        registrationButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                System.out.println("регистрация");
+                RegistrationService registrationService=ObjectRegistry.getInstance(RegistrationService.class);
+                registrationService.showRegistrationDialog(dialogAuth);
             }
         });
         passwordArea.setOnAction(new EventHandler<ActionEvent>() {
@@ -100,6 +141,19 @@ public class AuthService {
                 userName = loginArea.getText();
                 userPassword = passwordArea.getText();
                 dialogAuth.close();
+            }
+        });
+        loginArea.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                userName = loginArea.getText();
+                userPassword = passwordArea.getText();
+                dialogAuth.close();
+            }
+        });
+        dialogAuth.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            public void handle(WindowEvent we) {
+              System.exit(0);
             }
         });
         dialogAuth.showAndWait();
@@ -123,7 +177,6 @@ public class AuthService {
 
     public void setUserRights(String userRights) {
         this.userRights = userRights;
-        //System.out.println("THIS AUTH SERVICE!!   "+ this.userRights);
         isGetUserRights = true;
     }
 

@@ -32,7 +32,6 @@ public class DownloadFileService {
         try {
             Path filePath = Paths.get(ObjectRegistry.getInstance(NetFileWarehouseController.class).localPathField.getText() + "//" + response.getFileName());
             //System.out.println(Arrays.toString(response.getFilePartData()));
-            System.out.println("Путь сохранения: " + filePath.toString());
             Files.write(filePath, response.getFilePartData(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
         } catch (IOException e) {
             e.printStackTrace();

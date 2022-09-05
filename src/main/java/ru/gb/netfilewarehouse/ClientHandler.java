@@ -3,9 +3,12 @@ package ru.gb.netfilewarehouse;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import javafx.application.Platform;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import ru.gb.cloudmessages.*;
 import ru.gb.service.AuthService;
 import ru.gb.service.DownloadFileService;
+import ru.gb.service.RegistrationService;
 
 import java.nio.file.Paths;
 import java.time.LocalTime;
@@ -29,6 +32,19 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
         BasicResponse response = (BasicResponse) msg;
         NetFileWarehouseController netFileWarehouseController = ObjectRegistry.getInstance(NetFileWarehouseController.class);
 
+        if (response instanceof RegisterUserResponse){
+            if (response.getErrorMessage().equals("OK")){
+                ObjectRegistry.getInstance(RegistrationService.class).setRegisterSuccess("successfull");
+                Platform.runLater(()->{
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "Регистрация успешно выполнена!", ButtonType.OK);
+                    alert.showAndWait();
+                });
+            }
+            else{
+                ObjectRegistry.getInstance(RegistrationService.class).setRegisterSuccess("error");
+            }
+        }
+
         if (response instanceof AuthResponse) {
             //System.out.println("AuthResponse получен");
             if (!response.getAuthToken().equals("NotAutorized")) {
@@ -45,10 +61,8 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
         userToken = ObjectRegistry.getInstance(AuthService.class).getAuthToken();
         userDir = ObjectRegistry.getInstance(AuthService.class).getUserDir();
         userQuote = ObjectRegistry.getInstance(AuthService.class).getUserQuote();
-        System.out.println("Квота в ClientHandler" + userQuote);
 
         if ((response instanceof GetFilesListResponse) && (response.getAuthToken().equals(userToken))) {
-            System.out.println("response пришел " + ((GetFilesListResponse) response).getList());
             Platform.runLater(() -> {
                 netFileWarehouseController.updateServerTable(((GetFilesListResponse) response).getList());
 
@@ -105,6 +119,20 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
                 netFileWarehouseController.updateUsedSpaceProgressBar(userQuote, usedSpace);
             });
         }
+
+        if (response instanceof CreateDirResponse &&response.getAuthToken().equals(userToken)){
+            if (response.getErrorMessage().equals("OK")){
+                GetFilesListRequest getFilesListRequest = new GetFilesListRequest(userToken, netFileWarehouseController.currentServerPath);
+                ctx.writeAndFlush(getFilesListRequest);
+            }
+            else if (response.getErrorMessage().equals("EXIST")){
+                Platform.runLater(()->{
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "Невозможно создать уже существующую папку!", ButtonType.OK);
+                    alert.showAndWait();
+                });
+            }
+        }
+
     }
 
     @Override

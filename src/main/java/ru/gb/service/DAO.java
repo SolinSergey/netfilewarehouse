@@ -51,8 +51,9 @@ public class DAO {
         String s = "";
         try (Statement stmt = connection.createStatement()){
 
-            s = "select work_dir from user_dir where id_dir=(Select id_user from user where login=\'" + userName + "\');";
-            //System.out.println(s);
+            s = "select work_dir from user_dir where id_dir=(Select user_dir from user where login=\'" + userName + "\');";
+            System.out.println(s);
+            System.out.println("UserName: "+userName);
             resultSet = stmt.executeQuery(s);
             if (!resultSet.isClosed()) {
                 s = resultSet.getString(1);
@@ -73,7 +74,6 @@ public class DAO {
         try (Statement stmt = connection.createStatement()) {
 
             s = "SELECT user_quote FROM user WHERE login = \'" + userName + "\';";
-            System.out.println(q);
             resultSet = stmt.executeQuery(s);
             if (!resultSet.isClosed()) {
                 q = (long) resultSet.getLong(1);
@@ -83,6 +83,35 @@ public class DAO {
         }
         connection.close();
         return q;
+    }
+    public boolean registerUserInDB(String userName,String password) throws SQLException {
+        System.out.println("Поступил запрос на внесение данных в базу данных");
+        connection = DriverManager.getConnection("jdbc:sqlite:user_db/user_db.db");
+        connection.setAutoCommit(false);
+        ResultSet resultSet;
+        long q = 0;
+        String s;
+        try (Statement stmt = connection.createStatement()) {
+            s="INSERT INTO user_dir (work_dir) VALUES (\'"+userName+"\');";
+            System.out.println(s);
+            stmt.executeUpdate(s);
+            CryptService cryptService=new CryptService();
+            password= cryptService.getCryptString(password);
+            s="INSERT INTO user (login,password,user_rights,user_dir,user_quote)" +
+                    " VALUES (\'"+userName+"\',\'"+password+"\',(select id_right from user_access_rights where user_rights='full')," +
+                    "(select id_dir from user_dir where work_dir=\'"+userName+"\'),200);";
+            System.out.println(s);
+            stmt.executeUpdate(s);
+
+            connection.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            connection.rollback();
+            connection.close();
+            return false;
+        }
+        connection.close();
+        return true;
     }
 
 }
