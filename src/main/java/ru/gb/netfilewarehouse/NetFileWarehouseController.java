@@ -4,6 +4,7 @@ import io.netty.channel.Channel;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
@@ -22,22 +23,38 @@ import java.util.stream.Collectors;
 
 
 public class NetFileWarehouseController implements Initializable {
+    @FXML
     public Label topLabel;
+    @FXML
     public Button btnDelete;
+    @FXML
     public TableView<FileData> localFileTable;
+    @FXML
     public TableColumn<FileData, String> localFileTypeColumn;
+    @FXML
     public TableColumn<FileData, String> localFileNameColumn;
+    @FXML
     public TableColumn<FileData, Long> localFileSizeColumn;
+    @FXML
     public TextField localPathField;
+    @FXML
     public TextField serverPathField;
+    @FXML
     public TableView<FileData> serverFileTable;
+    @FXML
     public TableColumn<FileData, String> serverFileTypeColumn;
+    @FXML
     public TableColumn<FileData, String> serverFileNameColumn;
+    @FXML
     public TableColumn<FileData, Long> serverFileSizeColumn;
+    @FXML
     public ProgressBar serverQwoteProgress;
+    @FXML
     public Label freeSpaceProgressLabel;
+    @FXML
     public ComboBox diskBox;
     public static Stage mainStage;
+    @FXML
     public Button btnLocalToCloudCopy;
 
     public Channel channel;
@@ -179,6 +196,7 @@ public class NetFileWarehouseController implements Initializable {
         localFileTable.requestFocus();
     }
 
+    @FXML
     public void btnUpLocalDirectory(MouseEvent mouseEvent) {
         Path upperPath = Paths.get(localPathField.getText()).getParent();
         if (upperPath != null) {
@@ -187,6 +205,7 @@ public class NetFileWarehouseController implements Initializable {
         }
     }
 
+    @FXML
     public void clckLocalFileTable(MouseEvent mouseEvent) {
         if (mouseEvent.getClickCount() == 2) {
             Path path = Paths.get(localPathField.getText()).resolve(localFileTable.getSelectionModel().getSelectedItem().getFileName());
@@ -201,6 +220,7 @@ public class NetFileWarehouseController implements Initializable {
         topLabel.setText(textForLabel);
     }
 
+    @FXML
     public void clickbtnLocalToCloudCopy(MouseEvent mouseEvent) {
         if (localFileTable.isFocused()) {
             if (!userRights.equals("ro")
@@ -235,6 +255,7 @@ public class NetFileWarehouseController implements Initializable {
         }
     }
 
+    @FXML
     public void clickbtnCloudToLocalCopy(MouseEvent mouseEvent) {
         if (serverFileTable.isFocused()) {
             String selectFile;
@@ -253,6 +274,7 @@ public class NetFileWarehouseController implements Initializable {
         }
     }
 
+    @FXML
     public void clickbtnDeleteFile(MouseEvent mouseEvent) {
         String fileForDelete;
         Alert alert = new Alert(Alert.AlertType.WARNING, "Вы уверены, что хотите удалить?", ButtonType.YES, ButtonType.NO);
@@ -270,6 +292,7 @@ public class NetFileWarehouseController implements Initializable {
         } else System.out.println("Ну нет, так нет...");
     }
 
+    @FXML
     public void clckServerFileTable(MouseEvent mouseEvent) {
         if (mouseEvent.getClickCount() == 2) {
             if (serverFileTable.getSelectionModel().getSelectedItem().getFileType().equals("DIR")) {
@@ -282,6 +305,7 @@ public class NetFileWarehouseController implements Initializable {
         }
     }
 
+    @FXML
     public void btnUpServerDirectory(MouseEvent mouseEvent) {
         if (!currentServerPath.equals(userDir)) {
             int ii = currentServerPath.lastIndexOf("//");
@@ -302,11 +326,13 @@ public class NetFileWarehouseController implements Initializable {
         freeSpaceProgressLabel.setText(labelText);
     }
 
+    @FXML
     public void selectLocalDisk(ActionEvent actionEvent) {
         ComboBox<String> comboBox = (ComboBox<String>) actionEvent.getSource();
         updateLocalTable(Paths.get(comboBox.getSelectionModel().getSelectedItem()));
     }
 
+    @FXML
     public void clickbtnCreateDirectory(MouseEvent mouseEvent) {
         CreateDirService createDirService = ObjectRegistry.getInstance(CreateDirService.class);
         String result = createDirService.createDirectoryDialog(mainStage);
