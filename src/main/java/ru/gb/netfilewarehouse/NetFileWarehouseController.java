@@ -241,15 +241,20 @@ public class NetFileWarehouseController implements Initializable {
 
     public void clickbtnDeleteFile(MouseEvent mouseEvent) {
         String fileForDelete;
-        if (localFileTable.isFocused()) {
-            fileForDelete = localFileTable.getSelectionModel().getSelectedItem().getFileName();
-            ObjectRegistry.getInstance(DeleteFileService.class).deleteFileFromLocalDir(fileForDelete, userRights);
-            updateLocalTable(Paths.get(localPathField.getText()));
+        Alert alert = new Alert(Alert.AlertType.WARNING, "Вы уверена, что хотите удалить файл???", ButtonType.YES, ButtonType.NO);
+        alert.showAndWait();
+        if (alert.getResult()==ButtonType.YES){
+            if (localFileTable.isFocused()) {
+                fileForDelete = localFileTable.getSelectionModel().getSelectedItem().getFileName();
+                ObjectRegistry.getInstance(DeleteFileService.class).deleteFileFromLocalDir(fileForDelete, userRights);
+                updateLocalTable(Paths.get(localPathField.getText()));
+            }
+            if (serverFileTable.isFocused()) {
+                fileForDelete = serverFileTable.getSelectionModel().getSelectedItem().getFileName();
+                ObjectRegistry.getInstance(DeleteFileService.class).deleteFileFromCloud(fileForDelete, currentServerPath, userRights, token);
+            }
         }
-        if (serverFileTable.isFocused()) {
-            fileForDelete = serverFileTable.getSelectionModel().getSelectedItem().getFileName();
-            ObjectRegistry.getInstance(DeleteFileService.class).deleteFileFromCloud(fileForDelete, currentServerPath, userRights, token);
-        }
+        else System.out.println("Ну нет, так нет...");
     }
     public void clckServerFileTable(MouseEvent mouseEvent) {
         if (mouseEvent.getClickCount() == 2) {
