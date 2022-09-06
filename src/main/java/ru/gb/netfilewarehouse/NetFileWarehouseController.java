@@ -49,6 +49,7 @@ public class NetFileWarehouseController implements Initializable {
     private List<FileData> serverList;
     String currentServerPath;
     boolean isClientInit = false;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ObjectRegistry.reg(this.getClass(), this);
@@ -95,11 +96,12 @@ public class NetFileWarehouseController implements Initializable {
         currentServerPath = userDir + "";
         serverPathField.setText(currentServerPath);
         diskBox.getItems().clear();
-        for (Path p:FileSystems.getDefault().getRootDirectories()){
+        for (Path p : FileSystems.getDefault().getRootDirectories()) {
             diskBox.getItems().add(p.toString());
         }
         diskBox.getSelectionModel().select(0);
     }
+
     public void createServerFilesTable() {
         serverFileTypeColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getFileType()));
         serverFileTypeColumn.setResizable(false);
@@ -125,6 +127,7 @@ public class NetFileWarehouseController implements Initializable {
             };
         });
     }
+
     public void createLocalFilesTable() {
         localFileTypeColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getFileType()));
         localFileTypeColumn.setResizable(false);
@@ -150,6 +153,7 @@ public class NetFileWarehouseController implements Initializable {
             };
         });
     }
+
     public void updateServerTable(List<FileData> list) {
         serverList = list;
         serverFileTable.getItems().clear();
@@ -160,6 +164,7 @@ public class NetFileWarehouseController implements Initializable {
         ObjectRegistry.getInstance(NetworkNetty.class).sendCheckFreeSpaceRequest(checkUsedSpaceRequest);
         serverFileTable.requestFocus();
     }
+
     public void updateLocalTable(Path path) {
         localFileTable.getItems().clear();
         try {
@@ -181,6 +186,7 @@ public class NetFileWarehouseController implements Initializable {
             return;
         }
     }
+
     public void clckLocalFileTable(MouseEvent mouseEvent) {
         if (mouseEvent.getClickCount() == 2) {
             Path path = Paths.get(localPathField.getText()).resolve(localFileTable.getSelectionModel().getSelectedItem().getFileName());
@@ -189,62 +195,69 @@ public class NetFileWarehouseController implements Initializable {
             }
         }
     }
+
     public void setTextToTopLabel() {
         String textForLabel = "Вы авторизованы как пользователь: " + ObjectRegistry.getInstance(AuthService.class).getUserName();
         topLabel.setText(textForLabel);
     }
+
     public void clickbtnLocalToCloudCopy(MouseEvent mouseEvent) {
-        if (!userRights.equals("ro")
-                && localFileTable.getSelectionModel().getSelectedItem().getFileType().equals("FILE")) {
-            String selectFile = localFileTable.getSelectionModel().getSelectedItem().getFileName();
+        if (localFileTable.isFocused()) {
+            if (!userRights.equals("ro")
+                    && localFileTable.getSelectionModel().getSelectedItem().getFileType().equals("FILE")) {
+                String selectFile = localFileTable.getSelectionModel().getSelectedItem().getFileName();
+                boolean isSelected = false;
+                for (FileData f : serverList) {
+                    if (selectFile.equals(f.getFileName())) {
+                        isSelected = true;
+                    }
+                }
+                long fileSize;
+                if (!isSelected) {
+                    Path path = Paths.get(localPathField.getText() + "//" + selectFile).normalize().toAbsolutePath();
+                    try {
+                        fileSize = Files.size(path);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    if (fileSize < freeSpaceUserDir) {
+                        UploadFileService uploadFileService = ObjectRegistry.getInstance(UploadFileService.class);
+                        uploadFileService.uploadFile(selectFile);
+                    } else {
+                        Alert alert = new Alert(Alert.AlertType.WARNING, "В удаленном хранилище недостаточно свободного места!\nНевозможно скопировать файл!", ButtonType.OK);
+                        alert.showAndWait();
+                    }
+                }
+            } else {
+                Alert alert = new Alert(Alert.AlertType.WARNING, "У вас нет прав на загрузку файлов на сервер!!!\n Для изменения прав обратитесь к администратору!", ButtonType.OK);
+                alert.showAndWait();
+            }
+        }
+    }
+
+    public void clickbtnCloudToLocalCopy(MouseEvent mouseEvent) {
+        if (serverFileTable.isFocused()) {
+            String selectFile;
             boolean isSelected = false;
-            for (FileData f : serverList) {
+            selectFile = serverFileTable.getSelectionModel().getSelectedItem().getFileName();
+            for (FileData f : localList) {
                 if (selectFile.equals(f.getFileName())) {
                     isSelected = true;
                 }
             }
-            long fileSize;
-            if (!isSelected) {
-                Path path = Paths.get(localPathField.getText() + "//" + selectFile).normalize().toAbsolutePath();
-                try {
-                    fileSize = Files.size(path);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-                if (fileSize < freeSpaceUserDir) {
-                    UploadFileService uploadFileService = ObjectRegistry.getInstance(UploadFileService.class);
-                    uploadFileService.uploadFile(selectFile);
-                } else {
-                    Alert alert = new Alert(Alert.AlertType.WARNING, "В удаленном хранилище недостаточно свободного места!\nНевозможно скопировать файл!", ButtonType.OK);
-                    alert.showAndWait();
-                }
-            }
-        } else {
-            Alert alert = new Alert(Alert.AlertType.WARNING, "У вас нет прав на загрузку файлов на сервер!!!\n Для изменения прав обратитесь к администратору!", ButtonType.OK);
-            alert.showAndWait();
-        }
-    }
-    public void clickbtnCloudToLocalCopy(MouseEvent mouseEvent) {
-        String selectFile;
-        boolean isSelected = false;
-        selectFile = serverFileTable.getSelectionModel().getSelectedItem().getFileName();
-        for (FileData f : localList) {
-            if (selectFile.equals(f.getFileName())) {
-                isSelected = true;
-            }
-        }
             if (!isSelected && serverFileTable.getSelectionModel().getSelectedItem().getFileType().equals("FILE")) {
                 DownloadFileService downloadFileService;
                 downloadFileService = ObjectRegistry.getInstance(DownloadFileService.class);
                 downloadFileService.sendRequest(selectFile, currentServerPath);
             }
         }
+    }
 
     public void clickbtnDeleteFile(MouseEvent mouseEvent) {
         String fileForDelete;
-        Alert alert = new Alert(Alert.AlertType.WARNING, "Вы уверены, что хотите удалить?",  ButtonType.YES, ButtonType.NO);
+        Alert alert = new Alert(Alert.AlertType.WARNING, "Вы уверены, что хотите удалить?", ButtonType.YES, ButtonType.NO);
         alert.showAndWait();
-        if (alert.getResult()==ButtonType.YES){
+        if (alert.getResult() == ButtonType.YES) {
             if (localFileTable.isFocused()) {
                 fileForDelete = localFileTable.getSelectionModel().getSelectedItem().getFileName();
                 ObjectRegistry.getInstance(DeleteFileService.class).deleteFileFromLocalDir(fileForDelete, userRights);
@@ -254,9 +267,9 @@ public class NetFileWarehouseController implements Initializable {
                 fileForDelete = serverFileTable.getSelectionModel().getSelectedItem().getFileName();
                 ObjectRegistry.getInstance(DeleteFileService.class).deleteFileFromCloud(fileForDelete, currentServerPath, userRights, token);
             }
-        }
-        else System.out.println("Ну нет, так нет...");
+        } else System.out.println("Ну нет, так нет...");
     }
+
     public void clckServerFileTable(MouseEvent mouseEvent) {
         if (mouseEvent.getClickCount() == 2) {
             if (serverFileTable.getSelectionModel().getSelectedItem().getFileType().equals("DIR")) {
@@ -268,6 +281,7 @@ public class NetFileWarehouseController implements Initializable {
             }
         }
     }
+
     public void btnUpServerDirectory(MouseEvent mouseEvent) {
         if (!currentServerPath.equals(userDir)) {
             int ii = currentServerPath.lastIndexOf("//");
@@ -289,23 +303,24 @@ public class NetFileWarehouseController implements Initializable {
     }
 
     public void selectLocalDisk(ActionEvent actionEvent) {
-        ComboBox <String> comboBox = (ComboBox<String>) actionEvent.getSource();
+        ComboBox<String> comboBox = (ComboBox<String>) actionEvent.getSource();
         updateLocalTable(Paths.get(comboBox.getSelectionModel().getSelectedItem()));
     }
 
     public void clickbtnCreateDirectory(MouseEvent mouseEvent) {
-        CreateDirService createDirService=ObjectRegistry.getInstance(CreateDirService.class);
-        String result=createDirService.createDirectoryDialog(mainStage);;
-        if (!result.equals("")){
-            if (localFileTable.isFocused()){
-                createDirService.creatLocalDirectory(localPathField.getText(),result);
+        CreateDirService createDirService = ObjectRegistry.getInstance(CreateDirService.class);
+        String result = createDirService.createDirectoryDialog(mainStage);
+        ;
+        if (!result.equals("")) {
+            if (localFileTable.isFocused()) {
+                createDirService.creatLocalDirectory(localPathField.getText(), result);
                 Path path = Path.of(localPathField.getText());
                 updateLocalTable(path);
             }
-            if (serverFileTable.isFocused()){
-                createDirService.createServerDirectory(token,currentServerPath,result);
-                System.out.println("clickbtnCreateDirectory "+token+" "+currentServerPath+" "+result);
-                GetFilesListRequest getFilesListRequest = new GetFilesListRequest(token,currentServerPath);
+            if (serverFileTable.isFocused()) {
+                createDirService.createServerDirectory(token, currentServerPath, result);
+                System.out.println("clickbtnCreateDirectory " + token + " " + currentServerPath + " " + result);
+                GetFilesListRequest getFilesListRequest = new GetFilesListRequest(token, currentServerPath);
                 ObjectRegistry.getInstance(NetworkNetty.class).sendGetFileListRequest(getFilesListRequest);
             }
         }

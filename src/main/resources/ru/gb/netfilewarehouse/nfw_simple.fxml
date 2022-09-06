@@ -14,7 +14,7 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="960.0" prefWidth="1280.0" style="-fx-background-color: #653F81FF;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.gb.netfilewarehouse.NetFileWarehouseController">
    <children>
-      <Label fx:id="topLabel" alignment="CENTER" prefHeight="25.0" prefWidth="1280.0" text="TopLabel" textAlignment="CENTER">
+      <Label fx:id="topLabel" alignment="CENTER" prefHeight="25.0" prefWidth="1280.0" style="-fx-background-color: #FFFFFF;" text="TopLabel" textAlignment="CENTER">
          <font>
             <Font size="18.0" />
          </font></Label>
