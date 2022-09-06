@@ -3,6 +3,7 @@ package ru.gb.handler;
 import io.netty.channel.ChannelHandlerContext;
 import ru.gb.cloudmessages.DeleteFileRequest;
 import ru.gb.cloudmessages.DeleteFileResponse;
+import ru.gb.service.DeleteFileService;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -15,7 +16,11 @@ public class DeleteFileHandler implements RequestHandler<DeleteFileRequest, Dele
         String userDir = request.getUserDir();
         Path path = Path.of(System.getProperty("user.dir") + "//" + userDir + "//" + fileName);
         try {
-            Files.delete(path);
+            if (Files.isDirectory(path)) {
+                DeleteFileService.folderdel(path.toString());
+            }else{
+                Files.delete(path);
+            }
         } catch (IOException e) {
             DeleteFileResponse deleteFileResponse = new DeleteFileResponse("Error", request.getAuthToken());
             e.printStackTrace();

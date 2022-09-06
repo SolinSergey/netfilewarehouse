@@ -7,6 +7,7 @@ import ru.gb.netfilewarehouse.NetFileWarehouseController;
 import ru.gb.netfilewarehouse.NetworkNetty;
 import ru.gb.netfilewarehouse.ObjectRegistry;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -21,6 +22,8 @@ public class DeleteFileService {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }else{
+            folderdel(path.toString());
         }
     }
 
@@ -31,6 +34,30 @@ public class DeleteFileService {
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR, "У вас нет прав на удаление файлов на сервере!!!\n Для изменения прав обратитесь к администратору!", ButtonType.OK);
             alert.showAndWait();
+        }
+    }
+    public static void folderdel(String path){
+        File f= new File(path);
+        if(f.exists()){
+            String[] list= f.list();
+            if(list.length==0){
+                if(f.delete()){
+                    System.out.println("folder deleted");
+                    return;
+                }
+            }
+            else {
+                for(int i=0; i<list.length ;i++){
+                    File f1= new File(path+"\\"+list[i]);
+                    if(f1.isFile()&& f1.exists()){
+                        f1.delete();
+                    }
+                    if(f1.isDirectory()){
+                        folderdel(""+f1);
+                    }
+                }
+                folderdel(path);
+            }
         }
     }
 }

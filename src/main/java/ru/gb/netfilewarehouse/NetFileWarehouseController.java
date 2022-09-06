@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.*;
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
@@ -241,7 +242,7 @@ public class NetFileWarehouseController implements Initializable {
 
     public void clickbtnDeleteFile(MouseEvent mouseEvent) {
         String fileForDelete;
-        Alert alert = new Alert(Alert.AlertType.WARNING, "Вы уверена, что хотите удалить файл???", ButtonType.YES, ButtonType.NO);
+        Alert alert = new Alert(Alert.AlertType.WARNING, "Вы уверены, что хотите удалить?",  ButtonType.YES, ButtonType.NO);
         alert.showAndWait();
         if (alert.getResult()==ButtonType.YES){
             if (localFileTable.isFocused()) {
