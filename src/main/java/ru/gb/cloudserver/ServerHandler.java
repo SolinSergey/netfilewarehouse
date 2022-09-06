@@ -35,11 +35,11 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
             if (!response.getAuthToken().equals("NotAutorized")) token = response.getAuthToken();
             channelHandlerContext.writeAndFlush(response);
         } else {
-            if (token.equals(request.getAuthToken()) && request instanceof DownloadFileRequest) {
+            if (token!=null && token.equals(request.getAuthToken()) && request instanceof DownloadFileRequest) {
                 DownLoadFileHandler downLoadFileHandler = new DownLoadFileHandler();
                 downLoadFileHandler.downloadFile(token, ((DownloadFileRequest) request).getFileName(), ((DownloadFileRequest) request).getUserDir(), channelHandlerContext);
             }
-            if (token.equals(request.getAuthToken())) {
+            if (token!=null && token.equals(request.getAuthToken())) {
                 BasicResponse response = handler.handle(request, channelHandlerContext);
                 channelHandlerContext.writeAndFlush(response);
             }

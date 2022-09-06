@@ -91,23 +91,28 @@ public class RegistrationService {
         okButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                if (!loginArea.getText().equals("")){
+                if (loginArea.getText().matches("[a-zA-z0-9]{1,10}")){
                     userName=loginArea.getText();
-                    if (!passwordArea.getText().equals("") &&!passwordConfirmArea.getText().equals("") && passwordArea.getText().equals(passwordConfirmArea.getText())){
-                        userPassword = passwordArea.getText();
-                        sendRegistrationRequest(userName,userPassword);
-                        do {
+                    if (passwordArea.getText().length()>=3){
+                        if (!passwordArea.getText().equals("") &&!passwordConfirmArea.getText().equals("") && passwordArea.getText().equals(passwordConfirmArea.getText())){
+                            userPassword = passwordArea.getText();
+                            sendRegistrationRequest(userName,userPassword);
+                            do {
 
-                        }while (registrationStatus.equals("success"));
-                        dialogReg.close();
-                    }
-                    else {
-                        Alert alert = new Alert(Alert.AlertType.ERROR, "Пароли не совпадают!\nПовторите ввод", ButtonType.OK);
+                            }while (registrationStatus.equals("success"));
+                            dialogReg.close();
+                        }
+                        else {
+                            Alert alert = new Alert(Alert.AlertType.ERROR, "Пароли не совпадают!\nПовторите ввод", ButtonType.OK);
+                            alert.showAndWait();
+                        }
+                    }else{
+                        Alert alert = new Alert(Alert.AlertType.ERROR, "Заданный пароль имеет длину меньше 3-х символов!\nПовторите ввод", ButtonType.OK);
                         alert.showAndWait();
                     }
                 }
                 else {
-                    Alert alert = new Alert(Alert.AlertType.ERROR, "В поле логин ничего не введено\nПовторите ввод", ButtonType.OK);
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "Некорректно задан логин\nПовторите ввод (Латинские буквы и цыфры (до 10 символов)", ButtonType.OK);
                     alert.showAndWait();
                 }
             }

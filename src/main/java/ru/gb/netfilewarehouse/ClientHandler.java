@@ -36,6 +36,10 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
                     alert.showAndWait();
                 });
             } else {
+                Platform.runLater(()->{
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "При регистрации пользователя произошла ошибка!\nПопробуйте произвести регистрацию повторно!", ButtonType.OK);
+                    alert.showAndWait();
+                });
                 ObjectRegistry.getInstance(RegistrationService.class).setRegisterSuccess("error");
             }
         }

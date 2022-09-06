@@ -8,10 +8,11 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.InnerShadow?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="960.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.gb.netfilewarehouse.NetFileWarehouseController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="960.0" prefWidth="1280.0" style="-fx-background-color: #653F81FF;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.gb.netfilewarehouse.NetFileWarehouseController">
    <children>
       <Label fx:id="topLabel" alignment="CENTER" prefHeight="25.0" prefWidth="1280.0" text="TopLabel" textAlignment="CENTER">
          <font>
@@ -20,17 +21,17 @@
       <Separator layoutY="26.0" prefHeight="5.0" prefWidth="1280.0" />
       <Label layoutY="935.0" prefHeight="25.0" prefWidth="1280.0" text="Label" />
       <Separator layoutY="930.0" prefHeight="5.0" prefWidth="1280.0" />
-      <Button fx:id="btnDelete" contentDisplay="CENTER" focusTraversable="false" layoutX="555.0" layoutY="486.0" mnemonicParsing="false" onMouseClicked="#clickbtnDeleteFile" prefHeight="94.0" prefWidth="171.0" text="Удалить файл">
+      <Button fx:id="btnDelete" contentDisplay="CENTER" focusTraversable="false" layoutX="555.0" layoutY="491.0" mnemonicParsing="false" onMouseClicked="#clickbtnDeleteFile" prefHeight="94.0" prefWidth="171.0" style="-fx-background-color: #E6D6F1FF;" text="Удалить файл">
          <font>
             <Font size="18.0" />
          </font>
       </Button>
-      <Button fx:id="btnLocalToCloudCopy" alignment="CENTER" contentDisplay="CENTER" focusTraversable="false" layoutX="555.0" layoutY="271.0" mnemonicParsing="false" onMouseClicked="#clickbtnLocalToCloudCopy" prefHeight="94.0" prefWidth="171.0" text="Скопировать в облако" textAlignment="CENTER" textOverrun="CLIP" wrapText="true">
+      <Button fx:id="btnLocalToCloudCopy" alignment="CENTER" contentDisplay="CENTER" focusTraversable="false" layoutX="555.0" layoutY="271.0" mnemonicParsing="false" onMouseClicked="#clickbtnLocalToCloudCopy" prefHeight="94.0" prefWidth="171.0" style="-fx-background-color: #E6D6F1FF;" text="Скопировать в облако" textAlignment="CENTER" textOverrun="CLIP" wrapText="true">
          <font>
             <Font size="18.0" />
          </font>
       </Button>
-      <Button contentDisplay="CENTER" focusTraversable="false" layoutX="555.0" layoutY="378.0" mnemonicParsing="false" onMouseClicked="#clickbtnCloudToLocalCopy" prefHeight="94.0" prefWidth="171.0" text="Скопировать из облака" textAlignment="CENTER" textOverrun="CLIP" wrapText="true">
+      <Button contentDisplay="CENTER" focusTraversable="false" layoutX="555.0" layoutY="378.0" mnemonicParsing="false" onMouseClicked="#clickbtnCloudToLocalCopy" prefHeight="94.0" prefWidth="171.0" style="-fx-background-color: #E6D6F1FF;" text="Скопировать из облака" textAlignment="CENTER" textOverrun="CLIP" wrapText="true">
          <font>
             <Font size="18.0" />
          </font>
@@ -43,10 +44,13 @@
         </columns>
       </TableView>
       <TextField fx:id="localPathField" editable="false" layoutX="35.0" layoutY="847.0" prefHeight="25.0" prefWidth="449.0" />
-      <Button layoutX="98.0" layoutY="66.0" mnemonicParsing="false" onMouseClicked="#btnUpLocalDirectory" prefHeight="45.0" prefWidth="386.0" text="Поднятся на папку вверх" textAlignment="CENTER">
+      <Button layoutX="98.0" layoutY="66.0" mnemonicParsing="false" onMouseClicked="#btnUpLocalDirectory" prefHeight="45.0" prefWidth="386.0" style="-fx-background-color: #E6D6F1FF;" text="Поднятся на папку вверх" textAlignment="CENTER">
          <font>
             <Font size="18.0" />
-         </font></Button>
+         </font>
+         <effect>
+            <InnerShadow />
+         </effect></Button>
       <TableView fx:id="serverFileTable" layoutX="787.0" layoutY="110.0" onMouseClicked="#clckServerFileTable" prefHeight="738.0" prefWidth="449.0">
          <columns>
             <TableColumn fx:id="serverFileTypeColumn" prefWidth="40.0" />
@@ -54,15 +58,15 @@
             <TableColumn fx:id="serverFileSizeColumn" minWidth="0.0" prefWidth="114.0" text="Размер" />
          </columns>
       </TableView>
-      <Button layoutX="787.0" layoutY="66.0" mnemonicParsing="false" onMouseClicked="#btnUpServerDirectory" prefHeight="45.0" prefWidth="449.0" text="Поднятся на папку вверх">
+      <Button layoutX="787.0" layoutY="66.0" mnemonicParsing="false" onMouseClicked="#btnUpServerDirectory" prefHeight="45.0" prefWidth="449.0" style="-fx-background-color: #E6D6F1FF;" text="Поднятся на папку вверх">
          <font>
             <Font size="18.0" />
          </font></Button>
       <TextField fx:id="serverPathField" editable="false" layoutX="787.0" layoutY="847.0" prefHeight="25.0" prefWidth="449.0" />
       <ProgressBar fx:id="serverQwoteProgress" layoutX="787.0" layoutY="871.0" prefHeight="25.0" prefWidth="449.0" progress="0.0" />
       <Label fx:id="freeSpaceProgressLabel" alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="901.0" layoutY="875.0" prefHeight="17.0" prefWidth="222.0" text="Свободно 100%" />
-      <ComboBox fx:id="diskBox" layoutX="35.0" layoutY="66.0" onAction="#selectLocalDisk" prefHeight="45.0" prefWidth="64.0" style="-fx-background-size: 18;" />
-      <Button fx:id="btnCreateDirectory" contentDisplay="CENTER" focusTraversable="false" layoutX="555.0" layoutY="594.0" mnemonicParsing="false" onMouseClicked="#clickbtnCreateDirectory" prefHeight="94.0" prefWidth="171.0" text="Создать папку">
+      <ComboBox fx:id="diskBox" layoutX="35.0" layoutY="66.0" onAction="#selectLocalDisk" prefHeight="45.0" prefWidth="64.0" style="-fx-background-size: 18; -fx-background-color: #E6D6F1FF;" />
+      <Button fx:id="btnCreateDirectory" contentDisplay="CENTER" focusTraversable="false" layoutX="555.0" layoutY="594.0" mnemonicParsing="false" onMouseClicked="#clickbtnCreateDirectory" prefHeight="94.0" prefWidth="171.0" style="-fx-background-color: #E6D6F1FF;" text="Создать папку">
          <font>
             <Font size="18.0" />
          </font>
