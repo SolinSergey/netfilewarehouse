@@ -45,6 +45,7 @@ public class RegistrationService {
         label.setLayoutY(48);
         label.setAlignment(Pos.CENTER);
         label.fontProperty().setValue(new Font("System", 15));
+        label.setTextFill(Color.color(1, 1, 1));
         pane.getChildren().add(label);
 
         TextField loginArea = new TextField();
@@ -77,6 +78,7 @@ public class RegistrationService {
         okButton.setLayoutY(290);
         okButton.textAlignmentProperty().setValue(TextAlignment.CENTER);
         okButton.fontProperty().setValue(new Font("System", 15));
+        okButton.setStyle("-fx-background-color:  #E6D6F1FF");
         pane.getChildren().add(okButton);
 
         Button cancelButton = new Button("Отмена");
@@ -85,7 +87,7 @@ public class RegistrationService {
         cancelButton.setLayoutY(290);
         cancelButton.textAlignmentProperty().setValue(TextAlignment.CENTER);
         cancelButton.fontProperty().setValue(new Font("System", 15));
-        label.setTextFill(Color.color(1, 1, 1));
+        cancelButton.setStyle("-fx-background-color:  #E6D6F1FF");
         pane.getChildren().add(cancelButton);
 
         loginArea.setText("");

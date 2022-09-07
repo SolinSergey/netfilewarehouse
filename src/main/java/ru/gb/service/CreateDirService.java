@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
@@ -50,6 +51,7 @@ public class CreateDirService {
         Pane pane = new Pane();
         Scene dialogScene = new Scene(pane, 400, 200);
         createDirectoryDialog.setScene(dialogScene);
+        dialogScene.getStylesheets().add("my.css");
         createDirectoryDialog.setTitle("Ввод имени папки");
         createDirectoryDialog.initOwner(mainStage);
         createDirectoryDialog.initModality(Modality.APPLICATION_MODAL);
@@ -62,6 +64,7 @@ public class CreateDirService {
         label.setLayoutY(28);
         label.textAlignmentProperty().setValue(TextAlignment.LEFT);
         label.fontProperty().setValue(new Font("System", 16));
+        label.setTextFill(Color.color(1, 1, 1));
         pane.getChildren().add(label);
 
         TextField nameDir = new TextField("Имя папки");
@@ -77,6 +80,7 @@ public class CreateDirService {
         okButton.setLayoutY(141);
         okButton.textAlignmentProperty().setValue(TextAlignment.CENTER);
         okButton.fontProperty().setValue(new Font("System", 16));
+        okButton.setStyle("-fx-background-color:  #E6D6F1FF");
         pane.getChildren().add(okButton);
 
         Button cancelButton = new Button("Отмена");
@@ -85,6 +89,7 @@ public class CreateDirService {
         cancelButton.setLayoutY(141);
         cancelButton.textAlignmentProperty().setValue(TextAlignment.CENTER);
         cancelButton.fontProperty().setValue(new Font("System", 16));
+        cancelButton.setStyle("-fx-background-color:  #E6D6F1FF");
         pane.getChildren().add(cancelButton);
         okButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
