@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
@@ -84,6 +85,7 @@ public class RegistrationService {
         cancelButton.setLayoutY(290);
         cancelButton.textAlignmentProperty().setValue(TextAlignment.CENTER);
         cancelButton.fontProperty().setValue(new Font("System", 15));
+        label.setTextFill(Color.color(1, 1, 1));
         pane.getChildren().add(cancelButton);
 
         loginArea.setText("");

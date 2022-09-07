@@ -10,6 +10,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
@@ -63,6 +64,7 @@ public class AuthService {
         label.setLayoutY(48);
         label.setAlignment(Pos.CENTER);
         label.fontProperty().setValue(new Font("System", 15));
+        label.setTextFill(Color.color(1, 1, 1));
         pane.getChildren().add(label);
 
 
@@ -88,6 +90,7 @@ public class AuthService {
         okButton.setLayoutY(245);
         okButton.textAlignmentProperty().setValue(TextAlignment.CENTER);
         okButton.fontProperty().setValue(new Font("System", 15));
+        okButton.setStyle("-fx-background-color:  #E6D6F1FF");
         pane.getChildren().add(okButton);
 
         Button cancelButton = new Button("Отмена");
@@ -96,6 +99,7 @@ public class AuthService {
         cancelButton.setLayoutY(245);
         cancelButton.textAlignmentProperty().setValue(TextAlignment.CENTER);
         cancelButton.fontProperty().setValue(new Font("System", 15));
+        cancelButton.setStyle("-fx-background-color:  #E6D6F1FF");
         pane.getChildren().add(cancelButton);
 
         Button registrationButton = new Button("Регистрация");
@@ -104,6 +108,7 @@ public class AuthService {
         registrationButton.setLayoutY(310);
         registrationButton.textAlignmentProperty().setValue(TextAlignment.CENTER);
         registrationButton.fontProperty().setValue(new Font("System", 15));
+        registrationButton.setStyle("-fx-background-color:  #E6D6F1FF");
         pane.getChildren().add(registrationButton);
         okButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
