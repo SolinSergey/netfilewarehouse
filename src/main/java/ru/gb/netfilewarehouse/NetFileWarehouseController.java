@@ -205,6 +205,7 @@ public class NetFileWarehouseController implements Initializable {
             localFileTable.requestFocus();
             return;
         }
+        localFileTable.requestFocus();
     }
 
     @FXML
@@ -318,7 +319,7 @@ public class NetFileWarehouseController implements Initializable {
                     ObjectRegistry.getInstance(DeleteFileService.class).deleteFileFromCloud(fileForDelete, currentServerPath, userRights, token);
                 } else System.out.println("Ну нет, так нет...");
             } else {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "У вас нет прав на удаление файлов в удаленном хранилище!!!\n Для изменения разрешений обратитесь к администратору!", ButtonType.OK);
+                Alert alert = new Alert(Alert.AlertType.ERROR, "У вас нет прав на удаление файлов/папок в удаленном хранилище!!!\n Для изменения разрешений обратитесь к администратору!", ButtonType.OK);
                 alert.showAndWait();
             }
             serverFileTable.requestFocus();
@@ -380,6 +381,7 @@ public class NetFileWarehouseController implements Initializable {
                 updateLocalTable(path);
             }
             localFileTable.requestFocus();
+            return;
         }
         if (userRights.equals("full")) {
             if (serverFileTable.isFocused()) {

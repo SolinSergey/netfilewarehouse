@@ -95,7 +95,13 @@ public class CreateDirService {
             @Override
             public void handle(ActionEvent actionEvent) {
                 result = nameDir.getText();
-                createDirectoryDialog.close();
+                if (result.matches("[a-zA-z0-9]{1,128}")){
+                    createDirectoryDialog.close();
+                }
+                else{
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "Некорректное имя папки!\nВозможны только буквы и цифры", ButtonType.OK);
+                    alert.showAndWait();
+                }
             }
         });
 
@@ -110,7 +116,13 @@ public class CreateDirService {
             @Override
             public void handle(ActionEvent actionEvent) {
                 result = nameDir.getText();
-                createDirectoryDialog.close();
+                if (result.matches("[a-zA-z0-9]{1,128}")){
+                    createDirectoryDialog.close();
+                }
+                else{
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "Некорректное имя папки!\nВозможны только буквы и цифры, не более 128 символов", ButtonType.OK);
+                    alert.showAndWait();
+                }
             }
         });
         createDirectoryDialog.showAndWait();
