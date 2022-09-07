@@ -16,6 +16,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import ru.gb.cloudmessages.AuthRequest;
+import ru.gb.netfilewarehouse.NetFileWarehouseController;
 import ru.gb.netfilewarehouse.NetworkNetty;
 import ru.gb.netfilewarehouse.ObjectRegistry;
 
@@ -48,6 +49,7 @@ public class AuthService {
         dialogAuth.setResizable(false);
         Pane pane = new Pane();
         Scene dialogScene = new Scene(pane, 300, 400);
+        dialogScene.getStylesheets().add("my.css");
         dialogAuth.setScene(dialogScene);
         dialogAuth.setTitle("Авторизация");
         dialogAuth.initOwner(stage);

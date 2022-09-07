@@ -30,6 +30,7 @@ public class RegistrationService {
         Pane pane = new Pane();
         Scene dialogScene = new Scene(pane, 300, 400);
         dialogReg.setScene(dialogScene);
+        dialogScene.getStylesheets().add("my.css");
         dialogReg.setTitle("Регистрация");
         dialogReg.initOwner(stage);
         dialogReg.initModality(Modality.APPLICATION_MODAL);
