@@ -247,6 +247,9 @@ public class NetFileWarehouseController implements Initializable {
                         Alert alert = new Alert(Alert.AlertType.WARNING, "В удаленном хранилище недостаточно свободного места!\nНевозможно скопировать файл!", ButtonType.OK);
                         alert.showAndWait();
                     }
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "Копирование невозможно!!!\nВ удаленном хранилище уже имеется указанный файл.", ButtonType.OK);
+                    alert.showAndWait();
                 }
             } else {
                 Alert alert = new Alert(Alert.AlertType.WARNING, "У вас нет прав на загрузку файлов на сервер!!!\n Для изменения прав обратитесь к администратору!", ButtonType.OK);
@@ -266,14 +269,21 @@ public class NetFileWarehouseController implements Initializable {
                     isSelected = true;
                 }
             }
-            if (!isSelected && serverFileTable.getSelectionModel().getSelectedItem().getFileType().equals("FILE")) {
-                DownloadFileService downloadFileService;
-                downloadFileService = ObjectRegistry.getInstance(DownloadFileService.class);
-                downloadFileService.sendRequest(selectFile, currentServerPath);
+            if (serverFileTable.getSelectionModel().getSelectedItem().getFileType().equals("FILE")) {
+                if (!isSelected) {
+                    DownloadFileService downloadFileService;
+                    downloadFileService = ObjectRegistry.getInstance(DownloadFileService.class);
+                    downloadFileService.sendRequest(selectFile, currentServerPath);
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "Копирование невозможно!!!\nВ локальной папке уже имеется указанный файл.", ButtonType.OK);
+                    alert.showAndWait();
+                }
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "У вас нет прав на загрузку папок c сервера!!!\n Для изменения прав обратитесь к администратору!", ButtonType.OK);
+                alert.showAndWait();
             }
         }
     }
-
     @FXML
     public void clickbtnDeleteFile(MouseEvent mouseEvent) {
         String fileForDelete;
