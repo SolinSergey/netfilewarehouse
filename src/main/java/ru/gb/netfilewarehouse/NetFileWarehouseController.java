@@ -59,7 +59,9 @@ public class NetFileWarehouseController implements Initializable {
 
     public Channel channel;
     private String token;
+
     private String userRights;
+
     private String userDir;
     private long freeSpaceUserDir;
     private List<FileData> localList;
@@ -117,6 +119,7 @@ public class NetFileWarehouseController implements Initializable {
             diskBox.getItems().add(p.toString());
         }
         diskBox.getSelectionModel().select(0);
+        localFileTable.requestFocus();
     }
 
     public void createServerFilesTable() {
@@ -179,7 +182,6 @@ public class NetFileWarehouseController implements Initializable {
         serverFileTable.getSelectionModel().select(0);
         CheckUsedSpaceRequest checkUsedSpaceRequest = new CheckUsedSpaceRequest(token, userDir);
         ObjectRegistry.getInstance(NetworkNetty.class).sendCheckFreeSpaceRequest(checkUsedSpaceRequest);
-        serverFileTable.requestFocus();
     }
 
     public void updateLocalTable(Path path) {
@@ -193,7 +195,6 @@ public class NetFileWarehouseController implements Initializable {
             e.printStackTrace();
         }
         localFileTable.getSelectionModel().select(0);
-        localFileTable.requestFocus();
     }
 
     @FXML
@@ -201,6 +202,7 @@ public class NetFileWarehouseController implements Initializable {
         Path upperPath = Paths.get(localPathField.getText()).getParent();
         if (upperPath != null) {
             updateLocalTable(upperPath);
+            localFileTable.requestFocus();
             return;
         }
     }
@@ -213,6 +215,7 @@ public class NetFileWarehouseController implements Initializable {
                 updateLocalTable(path);
             }
         }
+        localFileTable.requestFocus();
     }
 
     public void setTextToTopLabel() {
@@ -223,83 +226,103 @@ public class NetFileWarehouseController implements Initializable {
     @FXML
     public void clickbtnLocalToCloudCopy(MouseEvent mouseEvent) {
         if (localFileTable.isFocused()) {
-            if (!userRights.equals("ro")
-                    && localFileTable.getSelectionModel().getSelectedItem().getFileType().equals("FILE")) {
-                String selectFile = localFileTable.getSelectionModel().getSelectedItem().getFileName();
-                boolean isSelected = false;
-                for (FileData f : serverList) {
-                    if (selectFile.equals(f.getFileName())) {
-                        isSelected = true;
+            if (localList.size() > 0) {
+                if (!userRights.equals("ro")
+                        && localFileTable.getSelectionModel().getSelectedItem().getFileType().equals("FILE")) {
+                    String selectFile = localFileTable.getSelectionModel().getSelectedItem().getFileName();
+                    boolean isSelected = false;
+                    for (FileData f : serverList) {
+                        if (selectFile.equals(f.getFileName())) {
+                            isSelected = true;
+                        }
                     }
-                }
-                long fileSize;
-                if (!isSelected) {
-                    Path path = Paths.get(localPathField.getText() + "//" + selectFile).normalize().toAbsolutePath();
-                    try {
-                        fileSize = Files.size(path);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                    if (fileSize < freeSpaceUserDir) {
-                        UploadFileService uploadFileService = ObjectRegistry.getInstance(UploadFileService.class);
-                        uploadFileService.uploadFile(selectFile);
+                    long fileSize;
+                    if (!isSelected) {
+                        Path path = Paths.get(localPathField.getText() + "//" + selectFile).normalize().toAbsolutePath();
+                        try {
+                            fileSize = Files.size(path);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                        if (fileSize < freeSpaceUserDir) {
+                            UploadFileService uploadFileService = ObjectRegistry.getInstance(UploadFileService.class);
+                            uploadFileService.uploadFile(selectFile);
+                        } else {
+                            Alert alert = new Alert(Alert.AlertType.WARNING, "В удаленном хранилище недостаточно свободного места!\nНевозможно скопировать файл!", ButtonType.OK);
+                            alert.showAndWait();
+                        }
                     } else {
-                        Alert alert = new Alert(Alert.AlertType.WARNING, "В удаленном хранилище недостаточно свободного места!\nНевозможно скопировать файл!", ButtonType.OK);
+                        Alert alert = new Alert(Alert.AlertType.ERROR, "Копирование невозможно!!!\nВ удаленном хранилище уже имеется указанный файл.", ButtonType.OK);
                         alert.showAndWait();
                     }
                 } else {
-                    Alert alert = new Alert(Alert.AlertType.ERROR, "Копирование невозможно!!!\nВ удаленном хранилище уже имеется указанный файл.", ButtonType.OK);
+                    Alert alert = new Alert(Alert.AlertType.WARNING, "У вас нет прав на загрузку файлов на сервер!!!\n Для изменения прав обратитесь к администратору!", ButtonType.OK);
                     alert.showAndWait();
                 }
-            } else {
-                Alert alert = new Alert(Alert.AlertType.WARNING, "У вас нет прав на загрузку файлов на сервер!!!\n Для изменения прав обратитесь к администратору!", ButtonType.OK);
-                alert.showAndWait();
             }
+            localFileTable.requestFocus();
         }
+
     }
 
     @FXML
     public void clickbtnCloudToLocalCopy(MouseEvent mouseEvent) {
         if (serverFileTable.isFocused()) {
-            String selectFile;
-            boolean isSelected = false;
-            selectFile = serverFileTable.getSelectionModel().getSelectedItem().getFileName();
-            for (FileData f : localList) {
-                if (selectFile.equals(f.getFileName())) {
-                    isSelected = true;
+            if (serverList.size() > 0) {
+                String selectFile;
+                boolean isSelected = false;
+                selectFile = serverFileTable.getSelectionModel().getSelectedItem().getFileName();
+                for (FileData f : localList) {
+                    if (selectFile.equals(f.getFileName())) {
+                        isSelected = true;
+                    }
                 }
-            }
-            if (serverFileTable.getSelectionModel().getSelectedItem().getFileType().equals("FILE")) {
-                if (!isSelected) {
-                    DownloadFileService downloadFileService;
-                    downloadFileService = ObjectRegistry.getInstance(DownloadFileService.class);
-                    downloadFileService.sendRequest(selectFile, currentServerPath);
+                if (serverFileTable.getSelectionModel().getSelectedItem().getFileType().equals("FILE")) {
+                    if (!isSelected) {
+                        DownloadFileService downloadFileService;
+                        downloadFileService = ObjectRegistry.getInstance(DownloadFileService.class);
+                        downloadFileService.sendRequest(selectFile, currentServerPath);
+                    } else {
+                        Alert alert = new Alert(Alert.AlertType.ERROR, "Копирование невозможно!!!\nВ локальной папке уже имеется указанный файл.", ButtonType.OK);
+                        alert.showAndWait();
+                    }
                 } else {
-                    Alert alert = new Alert(Alert.AlertType.ERROR, "Копирование невозможно!!!\nВ локальной папке уже имеется указанный файл.", ButtonType.OK);
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "У вас нет прав на загрузку папок c сервера!!!\n Для изменения прав обратитесь к администратору!", ButtonType.OK);
                     alert.showAndWait();
                 }
-            } else {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "У вас нет прав на загрузку папок c сервера!!!\n Для изменения прав обратитесь к администратору!", ButtonType.OK);
-                alert.showAndWait();
             }
+            serverFileTable.requestFocus();
         }
+
     }
+
     @FXML
     public void clickbtnDeleteFile(MouseEvent mouseEvent) {
         String fileForDelete;
-        Alert alert = new Alert(Alert.AlertType.WARNING, "Вы уверены, что хотите удалить?", ButtonType.YES, ButtonType.NO);
-        alert.showAndWait();
-        if (alert.getResult() == ButtonType.YES) {
-            if (localFileTable.isFocused()) {
+        if (localFileTable.isFocused() && localList.size()>0) {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Вы уверены, что хотите удалить?", ButtonType.YES, ButtonType.NO);
+            alert.showAndWait();
+            if (alert.getResult() == ButtonType.YES) {
                 fileForDelete = localFileTable.getSelectionModel().getSelectedItem().getFileName();
                 ObjectRegistry.getInstance(DeleteFileService.class).deleteFileFromLocalDir(fileForDelete, userRights);
                 updateLocalTable(Paths.get(localPathField.getText()));
             }
-            if (serverFileTable.isFocused()) {
-                fileForDelete = serverFileTable.getSelectionModel().getSelectedItem().getFileName();
-                ObjectRegistry.getInstance(DeleteFileService.class).deleteFileFromCloud(fileForDelete, currentServerPath, userRights, token);
+            localFileTable.requestFocus();
+        }
+        if (serverFileTable.isFocused() && serverList.size()>0) {
+            if (userRights.equals("full")) {
+                Alert alert = new Alert(Alert.AlertType.WARNING, "Вы уверены, что хотите удалить?", ButtonType.YES, ButtonType.NO);
+                alert.showAndWait();
+                if (alert.getResult() == ButtonType.YES) {
+                    fileForDelete = serverFileTable.getSelectionModel().getSelectedItem().getFileName();
+                    ObjectRegistry.getInstance(DeleteFileService.class).deleteFileFromCloud(fileForDelete, currentServerPath, userRights, token);
+                } else System.out.println("Ну нет, так нет...");
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "У вас нет прав на удаление файлов в удаленном хранилище!!!\n Для изменения разрешений обратитесь к администратору!", ButtonType.OK);
+                alert.showAndWait();
             }
-        } else System.out.println("Ну нет, так нет...");
+            serverFileTable.requestFocus();
+        }
     }
 
     @FXML
@@ -313,6 +336,7 @@ public class NetFileWarehouseController implements Initializable {
                 serverPathField.setText("\\" + path);
             }
         }
+        serverFileTable.requestFocus();
     }
 
     @FXML
@@ -325,6 +349,7 @@ public class NetFileWarehouseController implements Initializable {
             Path path = Paths.get(currentServerPath).normalize();
             serverPathField.setText("\\" + path);
         }
+        serverFileTable.requestFocus();
     }
 
     public void updateUsedSpaceProgressBar(long userQuote, long usedSpace) {
@@ -340,25 +365,42 @@ public class NetFileWarehouseController implements Initializable {
     public void selectLocalDisk(ActionEvent actionEvent) {
         ComboBox<String> comboBox = (ComboBox<String>) actionEvent.getSource();
         updateLocalTable(Paths.get(comboBox.getSelectionModel().getSelectedItem()));
+        localFileTable.requestFocus();
     }
 
     @FXML
     public void clickbtnCreateDirectory(MouseEvent mouseEvent) {
         CreateDirService createDirService = ObjectRegistry.getInstance(CreateDirService.class);
-        String result = createDirService.createDirectoryDialog(mainStage);
-        ;
-        if (!result.equals("")) {
-            if (localFileTable.isFocused()) {
+        String result;
+        if (localFileTable.isFocused()) {
+            result = createDirService.createDirectoryDialog(mainStage);
+            if (!result.equals("")) {
                 createDirService.creatLocalDirectory(localPathField.getText(), result);
                 Path path = Path.of(localPathField.getText());
                 updateLocalTable(path);
             }
+            localFileTable.requestFocus();
+        }
+        if (userRights.equals("full")) {
             if (serverFileTable.isFocused()) {
-                createDirService.createServerDirectory(token, currentServerPath, result);
-                System.out.println("clickbtnCreateDirectory " + token + " " + currentServerPath + " " + result);
-                GetFilesListRequest getFilesListRequest = new GetFilesListRequest(token, currentServerPath);
-                ObjectRegistry.getInstance(NetworkNetty.class).sendGetFileListRequest(getFilesListRequest);
+                result = createDirService.createDirectoryDialog(mainStage);
+                if (!result.equals("")) {
+                    createDirService.createServerDirectory(token, currentServerPath, result);
+                    System.out.println("clickbtnCreateDirectory " + token + " " + currentServerPath + " " + result);
+                    GetFilesListRequest getFilesListRequest = new GetFilesListRequest(token, currentServerPath);
+                    ObjectRegistry.getInstance(NetworkNetty.class).sendGetFileListRequest(getFilesListRequest);
+                }
+                serverFileTable.requestFocus();
+            }
+        } else {
+            if (userRights.equals("ro")) {
+                Alert alert = new Alert(Alert.AlertType.WARNING, "У Вас нет прав на создание папок в удаленном хранилище!\nДля изменения режима доступа обратитесь к администратору.", ButtonType.OK);
+                alert.showAndWait();
             }
         }
+    }
+
+    public String getUserRights() {
+        return userRights;
     }
 }

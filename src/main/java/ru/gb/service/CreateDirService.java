@@ -11,6 +11,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import ru.gb.cloudmessages.CreateDirRequest;
+import ru.gb.netfilewarehouse.NetFileWarehouseController;
 import ru.gb.netfilewarehouse.NetworkNetty;
 import ru.gb.netfilewarehouse.ObjectRegistry;
 
@@ -36,8 +37,11 @@ public class CreateDirService {
     }
 
     public void createServerDirectory(String userToken, String currentServerDir, String nameNewDir) {
-        CreateDirRequest createDirRequest = new CreateDirRequest(userToken, nameNewDir, currentServerDir);
-        ObjectRegistry.getInstance(NetworkNetty.class).sendCreateDirRequest(createDirRequest);
+
+            CreateDirRequest createDirRequest = new CreateDirRequest(userToken, nameNewDir, currentServerDir);
+            ObjectRegistry.getInstance(NetworkNetty.class).sendCreateDirRequest(createDirRequest);
+
+
     }
 
     public String createDirectoryDialog(Stage mainStage) {
