@@ -3,9 +3,9 @@ package ru.gb.service;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import ru.gb.cloudmessages.DeleteFileRequest;
-import ru.gb.netfilewarehouse.NetFileWarehouseController;
-import ru.gb.netfilewarehouse.NetworkNetty;
-import ru.gb.netfilewarehouse.ObjectRegistry;
+import ru.gb.client.NetFileWarehouseController;
+import ru.gb.client.NetworkNetty;
+import ru.gb.client.ObjectRegistry;
 
 import java.io.File;
 import java.io.IOException;

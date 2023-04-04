@@ -2,9 +2,9 @@ package ru.gb.service;
 
 import ru.gb.cloudmessages.DownloadFileRequest;
 import ru.gb.cloudmessages.DownloadFileResponse;
-import ru.gb.netfilewarehouse.NetFileWarehouseController;
-import ru.gb.netfilewarehouse.NetworkNetty;
-import ru.gb.netfilewarehouse.ObjectRegistry;
+import ru.gb.client.NetFileWarehouseController;
+import ru.gb.client.NetworkNetty;
+import ru.gb.client.ObjectRegistry;
 
 import java.io.IOException;
 import java.nio.file.Files;

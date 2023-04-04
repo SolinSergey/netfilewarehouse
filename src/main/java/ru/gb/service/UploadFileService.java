@@ -1,9 +1,9 @@
 package ru.gb.service;
 
 import ru.gb.cloudmessages.UploadFileRequest;
-import ru.gb.netfilewarehouse.NetFileWarehouseController;
-import ru.gb.netfilewarehouse.NetworkNetty;
-import ru.gb.netfilewarehouse.ObjectRegistry;
+import ru.gb.client.NetFileWarehouseController;
+import ru.gb.client.NetworkNetty;
+import ru.gb.client.ObjectRegistry;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;

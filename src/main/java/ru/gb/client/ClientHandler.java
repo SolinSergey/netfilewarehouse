@@ -1,4 +1,4 @@
-package ru.gb.netfilewarehouse;
+package ru.gb.client;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -11,7 +11,6 @@ import ru.gb.service.DownloadFileService;
 import ru.gb.service.RegistrationService;
 
 import java.nio.file.Paths;
-import java.time.LocalTime;
 
 
 public class ClientHandler extends ChannelInboundHandlerAdapter {

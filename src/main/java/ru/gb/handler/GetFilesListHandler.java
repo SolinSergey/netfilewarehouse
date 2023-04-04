@@ -3,7 +3,7 @@ package ru.gb.handler;
 import io.netty.channel.ChannelHandlerContext;
 import ru.gb.cloudmessages.GetFilesListRequest;
 import ru.gb.cloudmessages.GetFilesListResponse;
-import ru.gb.netfilewarehouse.FileData;
+import ru.gb.client.FileData;
 
 import java.io.IOException;
 import java.nio.file.Files;

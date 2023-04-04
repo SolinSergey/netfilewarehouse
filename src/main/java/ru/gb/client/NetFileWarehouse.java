@@ -1,4 +1,4 @@
-package ru.gb.netfilewarehouse;
+package ru.gb.client;
 
 import javafx.application.Application;
 import javafx.event.EventHandler;

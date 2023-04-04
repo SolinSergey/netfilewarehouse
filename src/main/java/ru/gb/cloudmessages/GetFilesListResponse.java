@@ -1,6 +1,6 @@
 package ru.gb.cloudmessages;
 
-import ru.gb.netfilewarehouse.FileData;
+import ru.gb.client.FileData;
 
 import java.util.List;
 

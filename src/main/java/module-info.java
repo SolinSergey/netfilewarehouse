@@ -6,8 +6,8 @@ module ru.gb.netfilewarehouse {
     requires io.netty.buffer;
     requires java.sql;
 
-    opens ru.gb.netfilewarehouse to javafx.fxml;
-    exports ru.gb.netfilewarehouse;
+    opens ru.gb.client to javafx.fxml;
+    exports ru.gb.client;
     exports ru.gb.cloudmessages;
     opens ru.gb.cloudmessages to javafx.fxml;
 }

@@ -1,4 +1,4 @@
-package ru.gb.netfilewarehouse;
+package ru.gb.client;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;

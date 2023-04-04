@@ -1,4 +1,4 @@
-package ru.gb.netfilewarehouse;
+package ru.gb.client;
 
 import java.io.IOException;
 import java.io.Serializable;

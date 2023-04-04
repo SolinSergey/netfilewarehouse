@@ -14,8 +14,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import ru.gb.cloudmessages.RegisterUserRequest;
-import ru.gb.netfilewarehouse.NetworkNetty;
-import ru.gb.netfilewarehouse.ObjectRegistry;
+import ru.gb.client.NetworkNetty;
+import ru.gb.client.ObjectRegistry;
 
 public class RegistrationService {
     private String userName;

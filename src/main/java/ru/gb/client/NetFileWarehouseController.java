@@ -1,4 +1,4 @@
-package ru.gb.netfilewarehouse;
+package ru.gb.client;
 
 import io.netty.channel.Channel;
 import javafx.beans.property.SimpleObjectProperty;
@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.*;
 import java.util.List;
-import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
@@ -99,7 +98,7 @@ public class NetFileWarehouseController implements Initializable {
         } while (!isAuthorized);
         createLocalFilesTable();
         createServerFilesTable();
-        Path path = Paths.get(".", "local");
+        Path path = Paths.get(".", "");
         setTextToTopLabel();
         if (userRights.equals("ro")) {
             Alert alert = new Alert(Alert.AlertType.WARNING, "Внимание! Ваша учетная запись имеет права только на чтение файлов из облака!\n", ButtonType.OK);

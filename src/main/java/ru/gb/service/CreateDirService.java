@@ -12,9 +12,8 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import ru.gb.cloudmessages.CreateDirRequest;
-import ru.gb.netfilewarehouse.NetFileWarehouseController;
-import ru.gb.netfilewarehouse.NetworkNetty;
-import ru.gb.netfilewarehouse.ObjectRegistry;
+import ru.gb.client.NetworkNetty;
+import ru.gb.client.ObjectRegistry;
 
 import java.io.IOException;
 import java.nio.file.Files;
