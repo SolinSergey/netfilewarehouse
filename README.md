@@ -17,6 +17,7 @@
     OracleJDK 18,
     Netty
     JavaFX
+    SQLite
 
 Для запуска сервера: ./ru/gb/cloudserver/CloudServer
 
